@@ -1,0 +1,3 @@
+[submodule "lib/gorn"]
+	path = lib/gorn
+	url = git@github.com:miguelibero/gorn.git
