@@ -1,25 +1,25 @@
 
 
-#ifndef __mugato__LabelAtlas__
-#define __mugato__LabelAtlas__
+#ifndef __mugato__FontAtlas__
+#define __mugato__FontAtlas__
 
 #include <map>
 #include <vector>
 #include <string>
-#include <mugato/label/LabelAtlasRegion.hpp>
+#include <mugato/label/FontAtlasRegion.hpp>
 
 namespace mugato
 {
-    class LabelAtlas
+    class FontAtlas
     {
     public:
-        typedef LabelAtlasRegion Region;
+        typedef FontAtlasRegion Region;
     private:
         std::vector<std::string> _materials;
         std::map<std::string, Region> _regions;
         std::map<std::string, std::string> _properties;
     public:
-        LabelAtlas();
+        FontAtlas();
 
         const std::string& getMaterial(size_t page=0) const;
         void setMaterial(const std::string& value, size_t page=0);

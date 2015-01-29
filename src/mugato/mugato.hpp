@@ -5,10 +5,11 @@
 #include <mugato/base/Exception.hpp>
 #include <mugato/base/Kinds.hpp>
 
-#include <mugato/label/FntLabelAtlasLoader.hpp>
+#include <mugato/label/FntFontAtlasLoader.hpp>
+#include <mugato/label/GridFontAtlasLoader.hpp>
 #include <mugato/label/Label.hpp>
-#include <mugato/label/LabelAtlas.hpp>
-#include <mugato/label/LabelAtlasRegion.hpp>
+#include <mugato/label/FontAtlas.hpp>
+#include <mugato/label/FontAtlasRegion.hpp>
 #include <mugato/label/LabelCharacter.hpp>
 #include <mugato/label/LabelDefinition.hpp>
 #include <mugato/label/LabelFont.hpp>

@@ -1,6 +1,6 @@
 
-#include <mugato/label/FntLabelAtlasLoader.hpp>
-#include <mugato/label/LabelAtlas.hpp>
+#include <mugato/label/FntFontAtlasLoader.hpp>
+#include <mugato/label/FontAtlas.hpp>
 #include <gorn/base/Data.hpp>
 #include <gorn/base/String.hpp>
 
@@ -11,11 +11,11 @@ namespace mugato {
     const char FntAttrValSepToken = '=';
     const char FntAttrGroupToken = '"';
 
-    FntLabelAtlasLoader::FntLabelAtlasLoader()
+    FntFontAtlasLoader::FntFontAtlasLoader()
     {
     }
 
-    bool FntLabelAtlasLoader::validate(const gorn::Data& data) const
+    bool FntFontAtlasLoader::validate(const gorn::Data& data) const
     {
         gorn::DataInputStream in(data);
         std::string line;
@@ -67,9 +67,9 @@ namespace mugato {
         return map;
     }
 
-    LabelAtlas FntLabelAtlasLoader::load(gorn::Data&& data) const
+    FontAtlas FntFontAtlasLoader::load(gorn::Data&& data) const
     {
-        LabelAtlas atlas;
+        FontAtlas atlas;
         gorn::DataInputStream in(data);
         std::vector<std::string> pages;
         while(!in.reachedEnd())
@@ -90,7 +90,7 @@ namespace mugato {
             }
             else if(name == "char")
             {
-                LabelAtlasRegion region;
+                FontAtlasRegion region;
                 region.setOrigin(SpriteAtlasRegion::Origin::TopLeft);
                 region.setPosition(
                     gorn::String::convertTo<SpriteAtlasRegion::value_type>(map["x"]),

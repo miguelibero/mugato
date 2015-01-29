@@ -2,13 +2,13 @@
 #ifndef __mugato__GdxSpriteAtlasLoader__
 #define __mugato__GdxSpriteAtlasLoader__
 
-#include <gorn/asset/AssetLoader.hpp>
+#include <gorn/asset/DataAssetLoader.hpp>
 
 namespace mugato {
 
     class SpriteAtlas;
 
-    class GdxSpriteAtlasLoader : public gorn::AssetLoader<SpriteAtlas>
+    class GdxSpriteAtlasLoader : public gorn::DataAssetLoader<SpriteAtlas>
     {      
     public:
         GdxSpriteAtlasLoader();

@@ -18,13 +18,12 @@ namespace gorn {
 namespace mugato {
     
     class Label;
-    class LabelAtlas;
-
+    class FontAtlas;
 
     class LabelManager 
     {
     public:
-        typedef LabelAtlas Atlas;
+        typedef FontAtlas Atlas;
         typedef LabelFont Font;
         typedef LabelDefinition Definition;
         typedef gorn::AssetManager<Atlas> Atlases;

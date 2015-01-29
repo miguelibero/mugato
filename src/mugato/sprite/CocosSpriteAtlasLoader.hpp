@@ -2,13 +2,13 @@
 #ifndef __mugato__CocosSpriteAtlasLoader__
 #define __mugato__CocosSpriteAtlasLoader__
 
-#include <gorn/asset/AssetLoader.hpp>
+#include <gorn/asset/DataAssetLoader.hpp>
 
 namespace mugato {
 
     class SpriteAtlas;
 
-    class CocosSpriteAtlasLoader : public gorn::AssetLoader<SpriteAtlas>
+    class CocosSpriteAtlasLoader : public gorn::DataAssetLoader<SpriteAtlas>
     {
     public:
         CocosSpriteAtlasLoader();

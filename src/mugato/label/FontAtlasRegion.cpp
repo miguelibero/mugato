@@ -1,14 +1,14 @@
 
-#include <mugato/label/LabelAtlasRegion.hpp>
+#include <mugato/label/FontAtlasRegion.hpp>
 
 namespace mugato {
 
-    LabelAtlasRegion::LabelAtlasRegion():
+    FontAtlasRegion::FontAtlasRegion():
     _advance(0.0f)
     {
     }
 
-    float LabelAtlasRegion::getAdvance() const
+    float FontAtlasRegion::getAdvance() const
     {
         auto sizex = getOriginalSize().x;
         if(sizex < _advance)
@@ -21,7 +21,7 @@ namespace mugato {
         }
     }
 
-    void LabelAtlasRegion::setAdvance(float value)
+    void FontAtlasRegion::setAdvance(float value)
     {
         _advance = value;
     }

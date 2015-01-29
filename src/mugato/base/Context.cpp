@@ -3,7 +3,7 @@
 #include <mugato/base/Kinds.hpp>
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
-#include <mugato/label/FntLabelAtlasLoader.hpp>
+#include <mugato/label/FntFontAtlasLoader.hpp>
 #include <gorn/render/ProgramManager.hpp>
 #include <gorn/render/Kinds.hpp>
 #include <gorn/asset/FileManager.hpp>
@@ -17,9 +17,9 @@ namespace mugato
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles())
     {
-        _sprites.getAtlases().addDefaultLoader<GdxSpriteAtlasLoader>();
-        _sprites.getAtlases().addDefaultLoader<CocosSpriteAtlasLoader>();
-        _labels.getAtlases().addDefaultLoader<FntLabelAtlasLoader>();
+        _sprites.getAtlases().addDefaultDataLoader<GdxSpriteAtlasLoader>();
+        _sprites.getAtlases().addDefaultDataLoader<CocosSpriteAtlasLoader>();
+        _labels.getAtlases().addDefaultDataLoader<FntFontAtlasLoader>();
 
         _gorn.getMaterials().getDefinitions().set(
             [](const std::string& name){

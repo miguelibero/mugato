@@ -4,14 +4,14 @@
 #define __mugato__LabelCharacter__
 
 #include <mugato/sprite/SpriteFrame.hpp>
-#include <mugato/label/LabelAtlasRegion.hpp>
+#include <mugato/label/FontAtlasRegion.hpp>
 
 namespace mugato {
 
     class LabelCharacter : public SpriteFrame
     {
     public:
-        typedef LabelAtlasRegion Region;
+        typedef FontAtlasRegion Region;
     private:
         bool _dirty;
         glm::mat4 _transform;

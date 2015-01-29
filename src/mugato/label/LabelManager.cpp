@@ -1,7 +1,7 @@
 
 #include <mugato/label/LabelManager.hpp>
 #include <mugato/label/Label.hpp>
-#include <mugato/label/LabelAtlas.hpp>
+#include <mugato/label/FontAtlas.hpp>
 #include <gorn/render/MaterialManager.hpp>
 
 namespace mugato {

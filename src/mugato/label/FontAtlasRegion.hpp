@@ -1,20 +1,20 @@
 
 
-#ifndef __mugato__LabelAtlasRegion__
-#define __mugato__LabelAtlasRegion__
+#ifndef __mugato__FontAtlasRegion__
+#define __mugato__FontAtlasRegion__
 
 #include <mugato/sprite/SpriteAtlasRegion.hpp>
 
 namespace mugato {
 
-    class LabelAtlasRegion : public SpriteAtlasRegion
+    class FontAtlasRegion : public SpriteAtlasRegion
     {
 
     private:
         float _advance;
 
     public:
-        LabelAtlasRegion();
+        FontAtlasRegion();
 
         float getAdvance() const;
         void setAdvance(float value);

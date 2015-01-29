@@ -93,6 +93,11 @@ namespace mugato {
             auto& chr = _font->getCharacter(name);
             chr.render(queue);
         }
+        for(auto& name : _characters)
+        {
+            queue.addCommand().withTransformMode(
+                gorn::RenderCommand::TransformMode::PopLocal);
+        }
     }
 
 }
