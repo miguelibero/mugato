@@ -49,7 +49,6 @@ namespace mugato {
         if(_dirty)
         {
             float x = _region.getAdvance();
-            x *= getMaterial()->getScale();
             glm::vec3 pos(x, 0.0f, 0.0f);
             _transform = glm::translate(glm::mat4(), pos);
             _dirty = false;

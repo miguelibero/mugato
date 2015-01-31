@@ -14,7 +14,7 @@ namespace mugato {
         typedef LabelCharacter Character;
         typedef std::map<std::string, Character> CharacterMap;
     private:
-        CharacterMap _chars;
+        CharacterMap _chars;      
     public:
         LabelFont();
 

@@ -67,6 +67,14 @@ void main()
             .withAttribute("texCoords", gorn::AttributeKind::TexCoords);
     }
 
+    void Context::setScreenSize(const glm::vec2& size)
+    {
+        _gorn.getQueue().setBaseTransform(
+                glm::scale(glm::translate(glm::mat4(),
+                glm::vec3(-1.0f, -1.0f, 0.0f)),
+                glm::vec3(1.0f/size.x, 1.0f/size.y, 1.0f)));
+    }
+
     const gorn::Context& Context::getGorn() const
     {
         return _gorn;

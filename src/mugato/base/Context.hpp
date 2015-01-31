@@ -4,6 +4,7 @@
 #include <gorn/base/Context.hpp>
 #include <mugato/sprite/SpriteManager.hpp>
 #include <mugato/label/LabelManager.hpp>
+#include <glm/glm.hpp>
 
 namespace mugato
 {
@@ -16,6 +17,8 @@ namespace mugato
     public:
 
         Context();
+
+        void setScreenSize(const glm::vec2& size);
 
         const gorn::Context& getGorn() const;
         gorn::Context& getGorn();

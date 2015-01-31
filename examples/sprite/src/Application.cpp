@@ -20,12 +20,12 @@ namespace gorn
 		_ctx.getGorn().getFiles()
             .addDefaultLoader<LocalFileLoader>("../assets/%s");
 		_ctx.getGorn().getImages()
-            .addDefaultLoader<PngImageLoader>();
+            .addDefaultDataLoader<PngImageLoader>();
 #elif GORN_PLATFORM_ANDROID
 		_ctx.getGorn().getFiles()
             .addDefaultLoader<BundleFileLoader>("%s");
 		_ctx.getGorn().getImages()
-            .addDefaultLoader<GraphicsImageLoader>();
+            .addDefaultDataLoader<GraphicsImageLoader>();
 #endif
 
         _ctx.getGorn().getTextures().getDefinitions().get("guybrush.png")
@@ -38,9 +38,7 @@ namespace gorn
                 .withFrames("gb_walk")
                 .withFrameDuration(1.0f/5.0f));
 
-        _ctx.getGorn().getQueue().setBaseTransform(
-                glm::translate(glm::mat4(),
-                glm::vec3(-0.25f, -0.25f, 0.0f)));
+        _ctx.setScreenSize(glm::vec2(200.0f, 200.0f));
 
         _sprite1 = _ctx.getSprites().load("guybrush");
         _sprite1.play("walk");
@@ -65,7 +63,7 @@ namespace gorn
         _ctx.getGorn().getQueue().addCommand()
             .withTransform(
                 glm::translate(glm::mat4(),
-                glm::vec3(-0.5f, -0.5f, 0.0f)));
+                glm::vec3(100.f, 100.f, 0.0f)));
         _sprite2.render(_ctx.getGorn().getQueue());
 
 		_ctx.getGorn().getQueue().draw();

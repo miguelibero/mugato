@@ -37,12 +37,10 @@ namespace gorn
             _ctx.getGorn().getMaterials(), glm::vec2(8.0f));
         loader.setAdvanceDifference(-3.0f);
 
-        _ctx.getGorn().getQueue().setBaseTransform(
-                glm::translate(glm::mat4(),
-                glm::vec3(-0.75f, -0.25f, 0.0f)));
+        _ctx.setScreenSize(glm::vec2(200.0f, 200.0f));
 
         _label1 = _ctx.getLabels().load("font.fnt");
-        _label1.setText("This is a fnt label!");
+        _label1.setText("This is a fnt label! gg_jj");
 
         _label2 = _ctx.getLabels().load("grid_font.png");
         _label2.setText("This is a grid label!");
@@ -63,11 +61,15 @@ namespace gorn
         _label1.update(dt);
         _label2.update(dt);
 
+        _ctx.getGorn().getQueue().addCommand()
+            .withTransform(
+                glm::translate(glm::mat4(),
+                glm::vec3(25.f, 25.f, 0.0f)));
         _label1.render(_ctx.getGorn().getQueue());
         _ctx.getGorn().getQueue().addCommand()
             .withTransform(
                 glm::translate(glm::mat4(),
-                glm::vec3(0.0f, 0.5f, 0.0f)));
+                glm::vec3(25.f, 50.f, 0.0f)));
         _label2.render(_ctx.getGorn().getQueue());
 
 		_ctx.getGorn().getQueue().draw();

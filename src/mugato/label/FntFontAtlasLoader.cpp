@@ -79,10 +79,15 @@ namespace mugato {
             auto map = parseData(line);
             auto name = map[""];
             map.erase("");
-            if(name == "info" || name == "common")
+            float baseline = 0.0f;
+            if(name == "info")
             {
                 // TODO: take font properties
-            }            
+            }
+            else if(name == "common")
+            {
+                baseline = gorn::String::convertTo<float>(map["base"]);
+            } 
             else if(name == "page")
             {
                 auto i = gorn::String::convertTo<size_t>(map["id"]);
@@ -93,29 +98,39 @@ namespace mugato {
                 FontAtlasRegion region;
                 region.setOrigin(SpriteAtlasRegion::Origin::TopLeft);
                 region.setPosition(
-                    gorn::String::convertTo<SpriteAtlasRegion::value_type>(map["x"]),
-                    gorn::String::convertTo<SpriteAtlasRegion::value_type>(map["y"])
+                    gorn::String::convertTo<float>(map["x"]),
+                    gorn::String::convertTo<float>(map["y"])
                 );
                 region.setSize(
-                    gorn::String::convertTo<SpriteAtlasRegion::value_type>(map["width"]),
-                    gorn::String::convertTo<SpriteAtlasRegion::value_type>(map["height"])
+                    gorn::String::convertTo<float>(map["width"]),
+                    gorn::String::convertTo<float>(map["height"])
                 );
                 region.setAdvance(
-                    gorn::String::convertTo<SpriteAtlasRegion::value_type>(map["xadvance"])
+                    gorn::String::convertTo<float>(map["xadvance"])
                 );
 
                 glm::vec2 offset(
-                    gorn::String::convertTo<SpriteAtlasRegion::value_type>(map["xoffset"]),
-                    gorn::String::convertTo<SpriteAtlasRegion::value_type>(map["yoffset"])
+                    gorn::String::convertTo<float>(map["xoffset"]),
+                    gorn::String::convertTo<float>(map["yoffset"])
                 );
+                offset.y = baseline - region.getSize().y - offset.y ;
 
-                region.setOriginalSize(region.getSize()+offset);
-                region.setOffset(offset*glm::vec2(0.5f, -0.5f));
+                region.setOriginalSize(region.getSize());
+                region.setOffset(offset);
 
-                std::string name = map["letter"];
-                if(name == "space")
+                auto itr = map.find("id");
+                std::string name;
+                if(itr != map.end())
                 {
-                    name = " ";
+                     name += (char)gorn::String::convertTo<int>(itr->second);
+                }
+                else
+                {
+                    name = map["letter"];
+                    if(name == "space")
+                    {
+                        name = " ";
+                    }
                 }
                 region.setPage(gorn::String::convertTo<size_t>(map["page"]));
                 atlas.setRegion(name, region);

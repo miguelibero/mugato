@@ -93,9 +93,6 @@ namespace mugato {
         auto rsize = _region.getSize();
         auto bl = (osize-rsize)*0.5f+_region.getOffset();
         auto tr = bl + rsize;
-        auto s = _material->getScale();
-        bl *= s;
-        tr *= s;
 
         _posVerts = {
             bl.x, tr.y,
