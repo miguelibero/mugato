@@ -4,6 +4,10 @@
 #include <mugato/base/Context.hpp>
 #include <mugato/base/Exception.hpp>
 #include <mugato/base/Kinds.hpp>
+#include <mugato/base/QuadTree.hpp>
+#include <mugato/base/QuadTreeElement.hpp>
+#include <mugato/base/QuadTreeNode.hpp>
+#include <mugato/base/Rectangle.hpp>
 
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/GridFontAtlasLoader.hpp>

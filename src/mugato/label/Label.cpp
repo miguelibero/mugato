@@ -88,16 +88,16 @@ namespace mugato {
     
     void Label::render(gorn::RenderQueue& queue)
     {
+        queue.addCommand().withTransformMode(
+                gorn::RenderCommand::TransformMode::PushCheckpoint);
         for(auto& name : _characters)
         {
             auto& chr = _font->getCharacter(name);
             chr.render(queue);
         }
-        for(auto& name : _characters)
-        {
-            queue.addCommand().withTransformMode(
-                gorn::RenderCommand::TransformMode::PopLocal);
-        }
+        queue.addCommand().withTransformMode(
+                gorn::RenderCommand::TransformMode::PopCheckpoint);
+
     }
 
 }

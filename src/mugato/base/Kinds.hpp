@@ -1,7 +1,6 @@
 #ifndef __mugato__Kinds__
 #define __mugato__Kinds__
 
-
 namespace mugato
 {
     class ProgramKind

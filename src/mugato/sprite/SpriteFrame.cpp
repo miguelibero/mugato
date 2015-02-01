@@ -157,10 +157,10 @@ namespace mugato {
         queue.addCommand()
             .withMaterial(_material)
             .withAttribute(gorn::AttributeKind::Position, 
-                _posVerts, GL_FLOAT, 2)
+                _posVerts, 2, gorn::BasicType::Float)
             .withAttribute(gorn::AttributeKind::TexCoords, 
-                _texVerts, GL_FLOAT, 2)
+                _texVerts, 2, gorn::BasicType::Float)
             .withElements(
-                _elmVerts, GL_UNSIGNED_INT, 6);
+                _elmVerts, 6, gorn::BasicType::UnsignedInteger);
     }
 }
