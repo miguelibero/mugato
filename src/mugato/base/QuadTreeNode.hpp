@@ -43,7 +43,11 @@ namespace mugato
         void find(Elements& elms) const;
         bool empty() const;
         size_t size() const;
-        size_t sizeNodes() const;
+
+        bool clear(const Area& area, bool contained=false);
+        void find(Elements& elms, const Area& area, bool contained=false) const;
+        bool empty(const Area& area, bool contained=false) const;
+        size_t size(const Area& area, bool contained=false) const;
 
         template<typename Filter>
         bool clear(Filter f);
@@ -57,8 +61,14 @@ namespace mugato
         template<typename Filter>
         size_t size(Filter f) const;
 
+        size_t sizeNodes() const;
+
         gorn::Data getElementsVertices(DrawMode mode=DrawMode::Triangles) const;
         gorn::Data getNodesVertices(DrawMode mode=DrawMode::Triangles) const;
+        gorn::Data getElementsVertices(const Area& area, bool contained=false,
+            DrawMode mode=DrawMode::Triangles) const;
+        gorn::Data getNodesVertices(const Area& area, bool contained=false,
+            DrawMode mode=DrawMode::Triangles) const;
     };
 
     template<typename T>
@@ -97,17 +107,20 @@ namespace mugato
     template<typename T>
     bool QuadTreeNode<T>::remove(const Element& elm)
     {
-        auto itr = std::remove(_elements.begin(), _elements.end(), elm);
-        if(itr != _elements.end())
-        {
-            _elements.erase(itr, _elements.end());
-            join();
-            return true;
-        }
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
             if((*itr)->remove(elm))
             {
+                return true;
+            }
+        }
+        if(_area.intersects(elm.getArea()))
+        {
+            auto itr = std::remove(_elements.begin(), _elements.end(), elm);
+            if(itr != _elements.end())
+            {
+                _elements.erase(itr, _elements.end());
+                join();
                 return true;
             }
         }
@@ -117,33 +130,55 @@ namespace mugato
     template<typename T>
     bool QuadTreeNode<T>::clear()
     {
-        return clear([](const Element&){
-            return true;
-        });
+        bool change = !_elements.empty();
+        _elements.clear();
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
+            if((*itr)->clear())
+            {
+                change = true;
+            }
+        }
+        _branches.clear();
+        return change;
     }
 
     template<typename T>
     void QuadTreeNode<T>::find(Elements& elms) const
     {
-        return find(elms, [](const Element&){
-            return true;
-        });
+        elms.insert(elms.end(), _elements.begin(), _elements.end());
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
+            (*itr)->find(elms);
+        }
     }
 
     template<typename T>
     bool QuadTreeNode<T>::empty() const
     {
-        return empty([](const Element&){
-            return true;
-        });
+        if(!_elements.empty())
+        {
+            return false;
+        }
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
+            if(!(*itr)->empty())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     template<typename T>
     size_t QuadTreeNode<T>::size() const
     {
-        return size([](const Element&){
-            return true;
-        });
+        size_t size = _elements.size();
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
+            size += (*itr)->size();
+        }
+        return size;
     }
 
     template<typename T>
@@ -158,24 +193,114 @@ namespace mugato
     }
 
     template<typename T>
+    bool QuadTreeNode<T>::clear(const Area& area, bool contained)
+    {
+        bool change = false;
+        if(!area.intersects(_area))
+        {
+            return change;
+        }
+        auto itr = std::remove_if(_elements.begin(), _elements.end(),
+            [&area, contained](const Element& elm){
+            return area.matches(elm.getArea(), contained);
+        });
+        if(itr != _elements.end())
+        {
+            _elements.erase(itr, _elements.end());
+            change = true;
+        }
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
+            if((*itr)->clear(area, contained))
+            {
+                change = true;
+            }
+        }
+        if(change)
+        {
+            join();
+        }
+        return change;
+    }
+
+    template<typename T>
+    void QuadTreeNode<T>::find(Elements& elms,
+        const Area& area, bool contained) const
+    {
+        if(!area.intersects(_area))
+        {
+            return;
+        }
+        for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        {
+            const auto& elm = *itr;
+            if (area.matches(elm.getArea(), contained))
+            {
+                elms.push_back(elm);
+            }
+        }
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
+            (*itr)->find(elms, area, contained);
+        }
+    }
+
+    template<typename T>
+    bool QuadTreeNode<T>::empty(const Area& area, bool contained) const
+    {
+        if(!area.intersects(_area))
+        {
+            return true;
+        }
+        for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        {
+            const auto& elm = *itr;
+            if (area.matches(elm.getArea(), contained))
+            {
+                return false;
+            }
+        }
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
+            if(!(*itr)->empty(area, contained))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    template<typename T>
+    size_t QuadTreeNode<T>::size(const Area& area, bool contained) const
+    {
+        if(!area.intersects(_area))
+        {
+            return 0;
+        }
+        size_t size = std::count_if(
+                _elements.begin(), _elements.end(),
+            [&area, contained](const Element& elm){
+                return area.matches(elm.getArea(), contained);
+        });
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
+            size += (*itr)->size(area, contained);
+        }
+        return size;
+    }
+
+    template<typename T>
     template<typename Filter>
     bool QuadTreeNode<T>::clear(Filter filter)
     {
         bool change = false;
-        if(filter)
+        auto itr = std::remove_if(_elements.begin(), _elements.end(), filter);
+        if(itr != _elements.end())
         {
-            auto itr = std::remove_if(_elements.begin(), _elements.end(), filter);
-            if(itr != _elements.end())
-            {
-                _elements.erase(itr, _elements.end());
-                change = true;
-            }
+            _elements.erase(itr, _elements.end());
+            change = true;
         }
-        else
-        {
-            change = !_elements.empty();
-            _elements.clear();
-        }
+
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
             if((*itr)->clear(filter))
@@ -197,9 +322,9 @@ namespace mugato
         for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
         {
             const auto& elm = *itr;
-            if (!filter || filter(elm))
+            if (filter(elm))
             {
-                insert(elm, elms);
+                elms.push_back(elm);
             }
         }
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
@@ -215,7 +340,7 @@ namespace mugato
         for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
         {
             const auto& elm = *itr;
-            if (!filter || filter(elm))
+            if (filter(elm))
             {
                 return false;
             }
@@ -234,16 +359,8 @@ namespace mugato
     template<typename Filter>
     size_t QuadTreeNode<T>::size(Filter filter) const
     {
-        size_t size = 0;
-        if(filter)
-        {
-            size += std::count_if(
+        size_t size = std::count_if(
                 _elements.begin(), _elements.end(), filter);
-        }
-        else
-        {
-            size += _elements.size();
-        }
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
             size += (*itr)->size(filter);
@@ -342,6 +459,49 @@ namespace mugato
             out.write((*itr)->getNodesVertices(mode));
         }
         out.write(_area.getVertices(mode));
+
+        return data;
+    }
+
+    template<typename T>
+    gorn::Data QuadTreeNode<T>::getElementsVertices(const Area& area,
+        bool contained, DrawMode mode) const
+    {
+        gorn::Data data;
+        gorn::DataOutputStream out(data);
+        
+        if(area.intersects(_area))
+        {
+            for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+            {
+                out.write((*itr)->getElementsVertices(area, contained, mode));
+            }
+            for(auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+            {
+                const auto& earea = itr->getArea();
+                if(area.matches(earea, contained))
+                {
+                    out.write(earea.getVertices(mode));
+                }
+            }
+        }
+        return data;
+    }
+
+    template<typename T>
+    gorn::Data QuadTreeNode<T>::getNodesVertices(const Area& area,
+        bool contained, DrawMode mode) const
+    {
+        gorn::Data data;
+        if(area.matches(_area, contained))
+        {
+            gorn::DataOutputStream out(data);
+            for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+            {
+                out.write((*itr)->getNodesVertices(area, contained, mode));
+            }
+            out.write(_area.getVertices(mode));
+        }
 
         return data;
     }

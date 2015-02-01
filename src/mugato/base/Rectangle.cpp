@@ -60,6 +60,18 @@ namespace mugato
         );
     }
 
+    bool Rectangle::matches(const Rectangle& other, bool contained) const
+    {
+        if(contained)
+        {
+            return contains(other);
+        }
+        else
+        {
+            return intersects(other);
+        }
+    }
+
     float Rectangle::area() const
     {
         return size.x*size.y;

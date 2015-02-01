@@ -27,6 +27,7 @@ namespace mugato
         bool contains(const glm::vec2& point) const;
         bool contains(const Rectangle& other) const;
         bool intersects(const Rectangle& other) const;
+        bool matches(const Rectangle& other, bool contained) const;
         float area() const;
 
         glm::vec2 min() const;

@@ -78,7 +78,7 @@ namespace gorn
         if(_deltaTime == 0.0f)
         {
             _quadtree.clear();
-            for(size_t i=0; i<100; i++)
+            for(size_t i=0; i<1000; i++)
             {            
                 mugato::Rectangle rect(
                     randomPos(),
@@ -90,8 +90,7 @@ namespace gorn
             }
 
             _vboElms->setData(
-                _quadtree.getElementsVertices(
-                    gorn::DrawMode::Lines),
+                _quadtree.getElementsVertices(gorn::DrawMode::Lines),
                 VertexBufferUsage::DynamicDraw);
 
             _vboNodes->setData(
