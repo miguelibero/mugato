@@ -119,6 +119,10 @@ namespace mugato {
     
     bool CocosSpriteAtlasLoader::validate(const gorn::Data& data) const
     {
+        if(data.isBinary())
+        {
+            return false;
+        }
         xml_document<> doc;
         loadXmlDocument(doc, data);
         return std::string(doc.first_node()->name()) == "plist";

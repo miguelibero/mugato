@@ -18,6 +18,7 @@ namespace mugato {
         typedef SpriteAnimation Animation;
         typedef SpriteAtlasRegion Region;
         static const char* kDefaultAnimation;
+        static const char* kDefaultFrame;
     private:
         std::map<std::string, Animation> _anims;
         std::string _currentAnim;

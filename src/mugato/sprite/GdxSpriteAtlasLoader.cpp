@@ -12,7 +12,7 @@ namespace mugato {
     
     bool GdxSpriteAtlasLoader::validate(const gorn::Data& data) const
     {
-        return true;
+        return !data.isBinary();
     }
 
     SpriteAtlas GdxSpriteAtlasLoader::load(gorn::Data&& data) const

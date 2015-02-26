@@ -18,7 +18,7 @@ namespace mugato {
         SpriteAnimationDefinition();
 
         SpriteAnimationDefinition& withAtlas(const std::string& atlas);
-        SpriteAnimationDefinition& withFrames(const std::string& frame);
+        SpriteAnimationDefinition& withFrame(const std::string& frame);
         SpriteAnimationDefinition& withFrameDuration(double duration);
 
         const std::string& getAtlas() const;

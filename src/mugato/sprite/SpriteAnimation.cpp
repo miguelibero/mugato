@@ -100,9 +100,12 @@ namespace mugato {
     {
         _time += dt;
         auto duration = getDuration();
-        while(_time > duration)
+        if(duration > 0)
         {
-            _time -= duration;
+            while(_time > duration)
+            {
+                _time -= duration;
+            }
         }
         getCurrentFrame().update();
     }

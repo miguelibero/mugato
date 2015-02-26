@@ -35,7 +35,7 @@ namespace gorn
         _ctx.getSprites().getDefinitions().get("guybrush")
             .withAtlas("guybrush.atlas")
             .withAnimation("walk", mugato::SpriteAnimationDefinition()
-                .withFrames("gb_walk")
+                .withFrame("gb_walk")
                 .withFrameDuration(1.0f/5.0f));
 
         _ctx.setScreenSize(glm::vec2(200.0f, 200.0f));

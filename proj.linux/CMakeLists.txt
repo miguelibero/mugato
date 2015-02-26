@@ -21,6 +21,7 @@ file(GLOB MUGATO_SOURCES
 	"${MUGATO_SOURCE_DIR}/base/*.cpp"
 	"${MUGATO_SOURCE_DIR}/label/*.cpp"
 	"${MUGATO_SOURCE_DIR}/sprite/*.cpp"
+	"${MUGATO_SOURCE_DIR}/scene/*.cpp"
 )
 add_library(mugato ${MUGATO_SOURCES})
 target_link_libraries(mugato gorn)

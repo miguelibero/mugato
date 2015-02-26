@@ -15,7 +15,7 @@ namespace mugato {
         return *this;
     }
 
-    SpriteAnimationDefinition& SpriteAnimationDefinition::withFrames(
+    SpriteAnimationDefinition& SpriteAnimationDefinition::withFrame(
         const std::string& frame)
     {
         _frames.push_back(frame);

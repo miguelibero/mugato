@@ -42,7 +42,7 @@ namespace mugato {
         Definitions& getDefinitions();
 
         Sprite load(const std::string& name);
-        const FrameList& loadFrames(
+        FrameList loadFrames(
             const std::string& aname, const std::string& fname);
         const FrameMap& loadFrames(
             const std::string& aname);

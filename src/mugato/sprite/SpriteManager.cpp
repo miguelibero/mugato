@@ -37,10 +37,19 @@ namespace mugato {
         return _definitions;
     }
 
-    const SpriteManager::FrameList& SpriteManager::loadFrames(
+    SpriteManager::FrameList SpriteManager::loadFrames(
         const std::string& aname, const std::string& fname)
     {
-        return loadFrames(aname).at(fname);
+        auto& frames = loadFrames(aname);
+        auto itr = frames.find(fname);
+        if(itr != frames.end())
+        {
+            return itr->second;
+        }
+        else
+        {
+            return FrameList();
+        }
     }
 
     const SpriteManager::FrameMap& SpriteManager::loadFrames(
@@ -79,6 +88,12 @@ namespace mugato {
     Sprite SpriteManager::load(const std::string& dname)
     {
         auto& def = getDefinitions().get(dname);
+        if(def.getAnimations().empty())
+        {
+            def.setAnimation(Sprite::kDefaultAnimation)
+                .withAtlas(dname)
+                .withFrame(Sprite::kDefaultFrame);
+        }
         Sprite sprite;
         for(auto itr = def.getAnimations().begin();
             itr != def.getAnimations().end(); ++itr)
@@ -92,7 +107,12 @@ namespace mugato {
             }
             for(auto& fname : itr->second.getFrames())
             {
-                anim.withFrames(loadFrames(aname, fname));
+                auto& frames = loadFrames(aname);
+                auto itr = frames.find(fname);
+                if(itr != frames.end())
+                {
+                    anim.withFrames(itr->second);
+                }
             }
         }
         return sprite;

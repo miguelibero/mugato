@@ -7,6 +7,7 @@
 namespace mugato {
 
     const char* Sprite::kDefaultAnimation = "default";
+    const char* Sprite::kDefaultFrame = "default";
 
     Sprite::Sprite()
     {

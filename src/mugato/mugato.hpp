@@ -21,6 +21,7 @@
 
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
+#include <mugato/sprite/MaterialSpriteAtlasLoader.hpp>
 #include <mugato/sprite/Sprite.hpp>
 #include <mugato/sprite/SpriteAnimation.hpp>
 #include <mugato/sprite/SpriteAnimationDefinition.hpp>
@@ -29,6 +30,12 @@
 #include <mugato/sprite/SpriteDefinition.hpp>
 #include <mugato/sprite/SpriteFrame.hpp>
 #include <mugato/sprite/SpriteManager.hpp>
+
+#include <mugato/scene/Component.hpp>
+#include <mugato/scene/Entity.hpp>
+#include <mugato/scene/EntityStack.hpp>
+#include <mugato/scene/SpriteComponent.hpp>
+
 
 #endif
 

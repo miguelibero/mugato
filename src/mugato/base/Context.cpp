@@ -1,6 +1,7 @@
 
 #include <mugato/base/Context.hpp>
 #include <mugato/base/Kinds.hpp>
+#include <mugato/sprite/MaterialSpriteAtlasLoader.hpp>
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
 #include <mugato/label/FntFontAtlasLoader.hpp>
@@ -17,9 +18,14 @@ namespace mugato
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles())
     {
-        _sprites.getAtlases().addDefaultDataLoader<GdxSpriteAtlasLoader>();
-        _sprites.getAtlases().addDefaultDataLoader<CocosSpriteAtlasLoader>();
-        _labels.getAtlases().addDefaultDataLoader<FntFontAtlasLoader>();
+        _sprites.getAtlases().addDefaultDataLoader
+            <GdxSpriteAtlasLoader>();
+        _sprites.getAtlases().addDefaultDataLoader
+            <CocosSpriteAtlasLoader>();
+        _labels.getAtlases().addDefaultDataLoader
+            <FntFontAtlasLoader>();
+        _sprites.getAtlases().addDefaultLoader
+            <MaterialSpriteAtlasLoader>(_gorn.getMaterials());
 
         _gorn.getMaterials().getDefinitions().set(
             [](const std::string& name){
@@ -33,17 +39,18 @@ namespace mugato
 
 precision highp float;
 
-attribute vec2 position;
+attribute vec3 position;
 attribute vec2 texCoords;
 
-varying vec2 TexCoords;
+uniform mat4 model;
+uniform mat4 view;
 
-uniform mat4 transform;
+varying vec2 TexCoords;
 
 void main()
 {
     TexCoords = texCoords;
-    gl_Position = transform*vec4(position, 0.0, 1.0);
+    gl_Position = view * model * vec4(position, 1.0);
 }
 
 )")
@@ -61,15 +68,17 @@ void main()
 }
 
 )")
-            .withUniform("transform", gorn::UniformKind::Transform)
+            .withUniform("model", gorn::UniformKind::Model)
             .withUniform("texture", gorn::UniformKind::Texture0)
             .withAttribute("position", gorn::AttributeKind::Position)
             .withAttribute("texCoords", gorn::AttributeKind::TexCoords);
+
+        _scenes.setContext(*this);
     }
 
     void Context::setScreenSize(const glm::vec2& size)
     {
-        _gorn.getQueue().setBaseTransform(
+        _gorn.getQueue().setUniformValue(gorn::UniformKind::View,
                 glm::scale(glm::translate(glm::mat4(),
                 glm::vec3(-1.0f, -1.0f, 0.0f)),
                 glm::vec3(1.0f/size.x, 1.0f/size.y, 1.0f)));
@@ -104,5 +113,26 @@ void main()
     {
         return _labels;
     }
+
+    const EntityStack& Context::getScenes() const
+    {
+        return _scenes;
+    }
+
+    EntityStack& Context::getScenes()
+    {
+        return _scenes;
+    }
+
+    void Context::update(double dt)
+    {
+        _scenes.update(dt);
+    }
+
+    void Context::render()
+    {
+        _scenes.render(_gorn.getQueue());
+    }
+
 }
 

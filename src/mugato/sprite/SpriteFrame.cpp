@@ -161,6 +161,6 @@ namespace mugato {
             .withAttribute(gorn::AttributeKind::TexCoords, 
                 _texVerts, 2, gorn::BasicType::Float)
             .withElements(
-                _elmVerts, 6, gorn::BasicType::UnsignedInteger);
+                _elmVerts, gorn::BasicType::UnsignedInteger);
     }
 }
