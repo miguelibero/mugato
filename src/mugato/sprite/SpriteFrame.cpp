@@ -64,6 +64,11 @@ namespace mugato {
         return _region;
     }
 
+    const glm::vec2 SpriteFrame::getSize() const
+    {
+        return _region.getOriginalSize();
+    }
+
     void SpriteFrame::update()
     {
         updateElementData();

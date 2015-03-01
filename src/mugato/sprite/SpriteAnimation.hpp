@@ -46,6 +46,8 @@ namespace mugato {
         double getCurrentTime() const;
         double getDuration() const;
 
+        glm::vec2 getSize() const;
+
         void update(double dt);
         void render(gorn::RenderQueue& queue) const;
     };

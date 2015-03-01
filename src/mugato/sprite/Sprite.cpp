@@ -29,6 +29,24 @@ namespace mugato {
     {
     }
 
+    glm::vec2 Sprite::Sprite::getSize() const
+    {
+        glm::vec2 size;
+        for(auto itr = _anims.begin(); itr != _anims.end(); ++itr)
+        {
+            auto asize = itr->second.getSize();
+            if(asize.x > size.x)
+            {
+                size.x = asize.x;
+            }
+            if(asize.y > size.y)
+            {
+                size.y = asize.y;
+            }
+        }
+        return size;
+    }
+
     void Sprite::setAnimation(const std::string& name, const Animation& anim)
     {
         _anims[name] = anim;

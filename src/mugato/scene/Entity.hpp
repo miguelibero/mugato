@@ -18,6 +18,9 @@ namespace mugato
     class Entity : public std::enable_shared_from_this<Entity>
     {
     public:
+        typedef glm::vec3 Vector;
+        typedef glm::vec2 Vector2;
+        typedef glm::mat4 Transform;
         typedef std::vector<std::shared_ptr<Entity>> Children;
         typedef std::weak_ptr<Entity> Parent;
         typedef std::vector<std::unique_ptr<Component>> Components;
@@ -25,31 +28,44 @@ namespace mugato
         Components _components;
         Children _children;
         Parent _parent;
-        glm::vec2 _position;
-        glm::vec2 _rotation;
-        glm::vec2 _scale;
-        glm::mat4 _transform;
+        Transform _transform;
         bool _transformDirty;
         Context* _ctx;
+        Vector _position;
+        Vector _rotation;
+        Vector _scale;
+        Vector _pivot;
     public:
 
         Entity();
 
+        std::shared_ptr<Entity> getSharedPtr();
+
         void setContext(Context& ctx);
         Context& getContext() const;
 
-        const glm::vec2& getPosition() const;
-        const glm::vec2& getRotation() const;
-        const glm::vec2& getScale() const;
+        const Vector& getPosition() const;
+        const Vector& getRotation() const;
+        const Vector& getScale() const;
+        const Vector& getPivot() const;
 
-        void setPosition(const glm::vec2& val);
-        void setRotation(const glm::vec2& val);
-        void setScale(const glm::vec2& val);
+        void setPosition(const Vector& val);
+        void setRotation(const Vector& val);
+        void setScale(const Vector& val);
+        void setPivot(const Vector& val);
+
+        void setPosition(const Vector2& val);
+        void setRotation(const Vector2& val);
+        void setScale(const Vector2& val);
+        void setPivot(const Vector2& val);
+
+        void setRotation(float val);
+        void setScale(float val);
 
         void update(double dt);
         void render(gorn::RenderQueue& queue);
 
-        Entity& addChild(std::shared_ptr<Entity> child=nullptr);
+        std::shared_ptr<Entity> addChild(std::shared_ptr<Entity> child=nullptr);
         Component& addComponent(std::unique_ptr<Component> comp);
 
         template<typename C, typename... Args>

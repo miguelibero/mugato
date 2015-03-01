@@ -16,7 +16,8 @@ namespace mugato
 
     Context::Context():
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
-    _labels(_gorn.getMaterials(), _gorn.getFiles())
+    _labels(_gorn.getMaterials(), _gorn.getFiles()),
+    _screenSize(2.0f)
     {
         _sprites.getAtlases().addDefaultDataLoader
             <GdxSpriteAtlasLoader>();
@@ -78,10 +79,15 @@ void main()
 
     void Context::setScreenSize(const glm::vec2& size)
     {
-        _gorn.getQueue().setUniformValue(gorn::UniformKind::View,
-                glm::scale(glm::translate(glm::mat4(),
-                glm::vec3(-1.0f, -1.0f, 0.0f)),
-                glm::vec3(1.0f/size.x, 1.0f/size.y, 1.0f)));
+        _screenSize = size;
+        auto trans = glm::translate(glm::mat4(), glm::vec3(-1.0f, -1.0f, 0.0f))
+            *glm::scale(glm::mat4(), glm::vec3(2.0f/size.x, 2.0f/size.y, 1.0f));
+        _gorn.getQueue().setUniformValue(gorn::UniformKind::View, trans);
+    }
+
+    const glm::vec2& Context::getScreenSize()
+    {
+        return _screenSize;
     }
 
     const gorn::Context& Context::getGorn() const
@@ -129,9 +135,10 @@ void main()
         _scenes.update(dt);
     }
 
-    void Context::render()
+    void Context::draw()
     {
         _scenes.render(_gorn.getQueue());
+        _gorn.getQueue().draw();
     }
 
 }

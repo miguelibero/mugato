@@ -1,11 +1,12 @@
 
 #include <gorn/gorn.hpp>
 #include <mugato/mugato.hpp>
+#include <glm/gtc/constants.hpp>
 
 namespace gorn
 {
 	mugato::Context _ctx;
-
+    std::shared_ptr<mugato::Entity> _guy;
 
 	Application::Application()
 	{
@@ -25,13 +26,21 @@ namespace gorn
             .addDefaultDataLoader<GraphicsImageLoader>();
 #endif
 
-        auto& scene = _ctx.getScenes().push();
-        scene.addComponent<mugato::SpriteComponent>("background.png");
-        scene.setPosition(glm::vec2(-1.0f, -1.0f));
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        auto& guy = scene.addChild();
-        guy.addComponent<mugato::SpriteComponent>("character.png");
-        guy.setPosition(glm::vec2(1.0f, 1.0f));
+        _ctx.setScreenSize(glm::vec2(480.0f, 320.0f));
+
+        auto scene = _ctx.getScenes().push();
+        auto& bg = scene->addComponent<mugato::SpriteComponent>("background.png");
+        scene->setScale(_ctx.getScreenSize()/bg.getSprite().getSize());
+
+        _guy = scene->addChild();
+        auto& guySprite = _guy->addComponent<mugato::SpriteComponent>("character.png");
+        guySprite.setPivotPercent(glm::vec2(0.5f));
+        _guy->setRotation(glm::pi<float>()/2.0f);
+        _guy->setPosition(glm::vec2(200.0f, 100.0f));
+        _guy->setScale(2.0f);
 	}
 
 	void Application::unload()
@@ -43,8 +52,12 @@ namespace gorn
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        auto pos = _guy->getPosition();
+        pos.x += 30.0f*dt;
+        _guy->setPosition(pos);
+
        _ctx.update(dt);
-       _ctx.render();
+       _ctx.draw();
 	}
 
 }

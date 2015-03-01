@@ -1,12 +1,20 @@
 #include <mugato/scene/Entity.hpp>
 #include <mugato/base/Context.hpp>
 #include <mugato/base/Exception.hpp>
+#include <gorn/render/RenderQueue.hpp>
+#include <gorn/render/RenderCommand.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp> 
 
 namespace mugato
 {
     Entity::Entity():
-    _transformDirty(false),
-    _ctx(nullptr)
+    _transformDirty(true),
+    _ctx(nullptr),
+    _position(0.0f),
+    _rotation(0.0f),
+    _scale(1.0f, 1.0f, 0.0f),
+    _pivot(0.0f)
     {
     }
 
@@ -31,22 +39,27 @@ namespace mugato
         }
     }
 
-    const glm::vec2& Entity::getPosition() const
+    const Entity::Vector& Entity::getPosition() const
     {
         return _position;
     }
 
-    const glm::vec2& Entity::getRotation() const
+    const Entity::Vector& Entity::getRotation() const
     {
         return _rotation;
     }
 
-    const glm::vec2& Entity::getScale() const
+    const Entity::Vector& Entity::getScale() const
     {
         return _scale;
     }
 
-    void Entity::setPosition(const glm::vec2& val)
+    const Entity::Vector& Entity::getPivot() const
+    {
+        return _pivot;
+    }
+
+    void Entity::setPosition(const Vector& val)
     {
         if(_position != val)
         {
@@ -55,7 +68,37 @@ namespace mugato
         }
     }
 
-    void Entity::setRotation(const glm::vec2& val)
+    void Entity::setPosition(const Vector2& val)
+    {
+        setPosition(Vector(val.x, val.y, 0.0f));
+    }
+
+    void Entity::setRotation(const Vector2& val)
+    {
+        setRotation(Vector(val.x, val.y, 0.0f));
+    }
+
+    void Entity::setScale(const Vector2& val)
+    {
+        setScale(Vector(val.x, val.y, 0.0f));
+    }
+
+    void Entity::setPivot(const Vector2& val)
+    {
+        setPivot(Vector(val.x, val.y, 0.0f));
+    }
+
+    void Entity::setRotation(float val)
+    {
+        setRotation(glm::vec3(0.0f, val, 0.0f));
+    }
+
+    void Entity::setScale(float val)
+    {
+        setScale(glm::vec2(val));
+    }
+
+    void Entity::setRotation(const Vector& val)
     {
         if(_rotation != val)
         {
@@ -64,7 +107,7 @@ namespace mugato
         }
     }
 
-    void Entity::setScale(const glm::vec2& val)
+    void Entity::setScale(const Vector& val)
     {
         if(_scale != val)
         {
@@ -73,8 +116,35 @@ namespace mugato
         }
     }
 
+
+    void Entity::setPivot(const Vector& val)
+    {
+        if(_pivot != val)
+        {
+            _transformDirty = true;
+            _pivot = val;
+        }
+    }
+
+    std::shared_ptr<Entity> Entity::getSharedPtr()
+    {
+        return shared_from_this();
+    }
+
     void Entity::update(double dt)
     {
+        if(_transformDirty)
+        {
+
+            _transform = glm::translate(glm::mat4(), _position)                
+                * glm::translate(glm::mat4(), _pivot)
+                * glm::scale(glm::mat4(), _scale)
+                * glm::orientate4(_rotation)
+                * glm::translate(glm::mat4(), -_pivot)
+                ;
+
+            _transformDirty = false;
+        }
         for(auto& comp : _components)
         {
             comp->update(dt);
@@ -87,6 +157,11 @@ namespace mugato
 
     void Entity::render(gorn::RenderQueue& queue)
     {
+        queue.addCommand()
+            .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
+        queue.addCommand()
+            .withTransform(_transform)
+            .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal);     
         for(auto& comp : _components)
         {
             comp->render(queue);
@@ -95,17 +170,19 @@ namespace mugato
         {
             child->render(queue);
         }
+        queue.addCommand()
+            .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
     }
 
-    Entity& Entity::addChild(std::shared_ptr<Entity> child)
+    std::shared_ptr<Entity> Entity::addChild(std::shared_ptr<Entity> child)
     {
         if(child == nullptr)
         {
             child = std::make_shared<Entity>();
         }
-        child->_parent = shared_from_this();
+        child->_parent = getSharedPtr();
         _children.push_back(child);
-        return *child;
+        return child;
     }
 
     Component& Entity::addComponent(std::unique_ptr<Component> comp)

@@ -48,6 +48,8 @@ namespace mugato {
         void setRegion(const Region& region);
         const Region& getRegion() const;
 
+        const glm::vec2 getSize() const;
+
         void update();
         void render(gorn::RenderQueue& queue) const;
     };

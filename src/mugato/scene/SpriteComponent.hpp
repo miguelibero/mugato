@@ -13,6 +13,8 @@ namespace mugato
         std::string _name;
         std::string _animation;
         Sprite _sprite;
+        std::weak_ptr<Entity> _entity;
+        glm::vec2 _pivotPercent;
     public:
         SpriteComponent(const std::string& name);
 
@@ -20,7 +22,9 @@ namespace mugato
         Sprite& getSprite();
         const Sprite& getSprite() const;
 
-        void onAddedToEntity(const Entity& entity) override;
+        void setPivotPercent(const glm::vec2& val);
+
+        void onAddedToEntity(Entity& entity) override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };

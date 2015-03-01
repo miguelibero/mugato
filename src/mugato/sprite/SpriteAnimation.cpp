@@ -96,6 +96,24 @@ namespace mugato {
         return _frames.size()*_frameDuration;
     }
 
+    glm::vec2 SpriteAnimation::getSize() const
+    {
+        glm::vec2 size;
+        for(auto& frame : _frames)
+        {
+            auto& fsize = frame->getSize();
+            if(fsize.x > size.x)
+            {
+                size.x = fsize.x;
+            }
+            if(fsize.y > size.y)
+            {
+                size.y = fsize.y;
+            }
+        }
+        return size;
+    }
+
     void SpriteAnimation::update(double dt)
     {
         _time += dt;

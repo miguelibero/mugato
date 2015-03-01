@@ -21,9 +21,9 @@ namespace mugato {
 
     SpriteAtlas MaterialSpriteAtlasLoader::load(const std::string& name) const
     {
-        auto material = _materials.load(name);
+        auto size = _materials.loadSize(name);
         SpriteAtlasRegion region;
-        region.setSize(material->getSize());
+        region.setSize(size);
         SpriteAtlas atlas;
         atlas.setMaterial(name);
         atlas.addRegion(Sprite::kDefaultFrame, region);

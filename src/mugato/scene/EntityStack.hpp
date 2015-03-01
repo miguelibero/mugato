@@ -27,13 +27,13 @@ namespace mugato
 
         void render(gorn::RenderQueue& queue) override;
         
-        Entity& push(std::shared_ptr<Entity> entity=nullptr);
+        std::shared_ptr<Entity> push(std::shared_ptr<Entity> entity=nullptr);
 
-        Entity& get();
+        std::shared_ptr<Entity> get();
 
         void pop();
 
-        Entity& set(std::shared_ptr<Entity> entity=nullptr);
+        std::shared_ptr<Entity> set(std::shared_ptr<Entity> entity=nullptr);
     };
 }
 

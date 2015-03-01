@@ -32,6 +32,8 @@ namespace mugato {
         void setAnimation(const std::string& name, const Animation& anim);
         Animation& setAnimation(const std::string& name);
 
+        glm::vec2 getSize() const;
+
         void play(const std::string& name);
 
         void update(double dt);

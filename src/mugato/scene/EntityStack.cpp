@@ -30,7 +30,7 @@ namespace mugato
         }
     }
 
-    Entity& EntityStack::push(std::shared_ptr<Entity> entity)
+    std::shared_ptr<Entity> EntityStack::push(std::shared_ptr<Entity> entity)
     {
         if(entity == nullptr)
         {
@@ -44,13 +44,13 @@ namespace mugato
         return get();
     }
 
-    Entity& EntityStack::get()
+    std::shared_ptr<Entity> EntityStack::get()
     {
         if(_stack.empty())
         {
             throw Exception("empty stack");
         }
-        return *_stack.back();
+        return _stack.back();
     }
 
     void EntityStack::pop()
@@ -62,7 +62,7 @@ namespace mugato
         _stack.pop_back();
     }
 
-    Entity& EntityStack::set(std::shared_ptr<Entity> entity)
+    std::shared_ptr<Entity> EntityStack::set(std::shared_ptr<Entity> entity)
     {
         _stack.clear();
         return push(entity);
