@@ -13,6 +13,7 @@ include_directories(../src)
 include_directories(../lib)
 include_directories(../lib/gorn/src)
 include_directories(../lib/gorn/lib)
+include_directories(../lib/gorn/lib/buffer/src)
 set(MUGATO_SOURCE_DIR "../src/mugato")
 set(MUGATO_INCLUDE_DIR "../src")
 

@@ -18,7 +18,7 @@ namespace mugato {
         gorn::MaterialManager& _materials;
     public:
         MaterialSpriteAtlasLoader(gorn::MaterialManager& materials);
-        bool validate(const std::string& name) const;
+        bool validate(const std::string& name) const NOEXCEPT;
         SpriteAtlas load(const std::string& name) const;
     };
 }

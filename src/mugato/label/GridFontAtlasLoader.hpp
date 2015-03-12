@@ -21,10 +21,10 @@ namespace mugato {
         float _advanceDifference;
     public:
         GridFontAtlasLoader(gorn::MaterialManager& textures, const glm::vec2& regionSize);
-        bool validate(const std::string& name) const;
+        bool validate(const std::string& name) const NOEXCEPT;
         FontAtlas load(const std::string& name) const;
-        void setInitialCharacter(char chr);
-        void setAdvanceDifference(float val);
+        void setInitialCharacter(char chr) NOEXCEPT;
+        void setAdvanceDifference(float val) NOEXCEPT;
     };
 }
 

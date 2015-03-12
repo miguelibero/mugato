@@ -5,7 +5,7 @@
 
 #include <memory>
 #include <glm/glm.hpp>
-#include <gorn/base/Data.hpp>
+#include <buffer.hpp>
 #include <mugato/sprite/SpriteAtlasRegion.hpp>
 
 namespace gorn {
@@ -27,9 +27,9 @@ namespace mugato {
         bool _dirtyPosVerts;
         bool _dirtyElmVerts;
 
-        mutable gorn::Data _texVerts;
-        mutable gorn::Data _posVerts;
-        mutable gorn::Data _elmVerts;
+        mutable buffer _texVerts;
+        mutable buffer _posVerts;
+        mutable buffer _elmVerts;
 
         void updateElementData();
         void updatePositionData();

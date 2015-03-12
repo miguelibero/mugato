@@ -11,8 +11,8 @@ namespace mugato {
     {
     public:
         FntFontAtlasLoader();
-        bool validate(const gorn::Data& data) const;
-        FontAtlas load(gorn::Data&& data) const; 
+        bool validate(const buffer& data) const NOEXCEPT;
+        FontAtlas load(const buffer& data) const; 
     };
 }
 

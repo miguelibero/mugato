@@ -2,7 +2,8 @@
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
 #include <mugato/sprite/SpriteAtlas.hpp>
 #include <gorn/base/String.hpp>
-#include <gorn/base/Data.hpp>
+#include <buffer.hpp>
+#include <buffer_reader.hpp>
 
 namespace mugato {
 
@@ -10,19 +11,19 @@ namespace mugato {
     {
     }
     
-    bool GdxSpriteAtlasLoader::validate(const gorn::Data& data) const
+    bool GdxSpriteAtlasLoader::validate(const buffer& data) const NOEXCEPT
     {
-        return !data.isBinary();
+        return !data.binary();
     }
 
-    SpriteAtlas GdxSpriteAtlasLoader::load(gorn::Data&& data) const
+    SpriteAtlas GdxSpriteAtlasLoader::load(const buffer& data) const
     {
         SpriteAtlas atlas;
         std::string line;
-        gorn::DataInputStream input(data);
+        buffer_reader input(data);
 
         // texture name
-        while(line.empty() && !input.reachedEnd())
+        while(line.empty() && !input.end())
         {
             input.read(line);
             gorn::String::trim(line);
@@ -34,7 +35,7 @@ namespace mugato {
         std::string regionName;
         size_t regionIndex = 0;
 
-        while(!input.reachedEnd())
+        while(!input.end())
         {
             input.read(line);
             std::size_t sep = line.find(':');

@@ -5,10 +5,7 @@
 #include <glm/glm.hpp>
 #include <gorn/render/VertexArray.hpp>
 
-namespace gorn
-{
-    class Data;
-}
+class buffer;
 
 namespace mugato
 {
@@ -33,7 +30,7 @@ namespace mugato
         glm::vec2 min() const;
         glm::vec2 max() const;
 
-        gorn::Data getVertices(DrawMode mode=DrawMode::Triangles) const;
+        buffer getVertices(DrawMode mode=DrawMode::Triangles) const;
     };
 }
 

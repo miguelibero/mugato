@@ -14,26 +14,19 @@ namespace mugato {
     {
     }
 
-    void GridFontAtlasLoader::setInitialCharacter(char chr)
+    void GridFontAtlasLoader::setInitialCharacter(char chr) NOEXCEPT
     {
         _initialCharacter = chr;
     }
 
-    void GridFontAtlasLoader::setAdvanceDifference(float val)
+    void GridFontAtlasLoader::setAdvanceDifference(float val) NOEXCEPT
     {
         _advanceDifference = val;
     }
 
-    bool GridFontAtlasLoader::validate(const std::string& name) const
+    bool GridFontAtlasLoader::validate(const std::string& name) const NOEXCEPT
     {
-        try
-        {
-            return _materials.load(name) != nullptr;
-        }
-        catch(const gorn::Exception& e)
-        {
-            return false;
-        }
+        return _materials.validate(name);
     }
 
     FontAtlas GridFontAtlasLoader::load(const std::string& name) const

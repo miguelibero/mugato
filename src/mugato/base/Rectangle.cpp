@@ -1,5 +1,5 @@
 #include <mugato/base/Rectangle.hpp>
-#include <gorn/base/Data.hpp>
+#include <buffer.hpp>
 
 namespace mugato
 {
@@ -77,7 +77,7 @@ namespace mugato
         return size.x*size.y;
     }
 
-    gorn::Data Rectangle::getVertices(DrawMode mode) const
+    buffer Rectangle::getVertices(DrawMode mode) const
     {
         auto tmin = min();
         auto tmax = max();
@@ -85,7 +85,7 @@ namespace mugato
         switch(mode)
         {
         case DrawMode::Quads:
-            return gorn::Data({
+            return buffer({
                 tmin.x, tmin.y,
                 tmax.x, tmin.y,
                 tmax.x, tmax.y,
@@ -93,7 +93,7 @@ namespace mugato
             });
             break;
         case DrawMode::Triangles:
-            return gorn::Data({
+            return buffer({
                 tmin.x, tmin.y,
                 tmax.x, tmin.y,
                 tmin.x, tmax.y,
@@ -103,7 +103,7 @@ namespace mugato
             });
             break;
         case DrawMode::Lines:
-            return gorn::Data({
+            return buffer({
                 tmin.x, tmin.y,
                 tmax.x, tmin.y,
                 tmax.x, tmin.y,
@@ -115,7 +115,7 @@ namespace mugato
             });
             break;
         default:
-            return gorn::Data();
+            return buffer();
             break;
         }
     }

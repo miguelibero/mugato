@@ -17,6 +17,7 @@ include_directories(../../../src)
 include_directories(../../../lib)
 include_directories(../../../lib/gorn/src)
 include_directories(../../../lib/gorn/lib)
+include_directories(../../../lib/gorn/lib/buffer/src)
 
 file(GLOB SOURCES "../src/*.cpp")
 add_executable(sprite ${SOURCES})

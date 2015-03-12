@@ -5,7 +5,8 @@
 #include <algorithm>
 #include <mugato/base/Rectangle.hpp>
 #include <mugato/base/QuadTreeElement.hpp>
-#include <gorn/base/Data.hpp>
+#include <buffer.hpp>
+#include <buffer_writer.hpp>
 
 namespace mugato
 {
@@ -63,11 +64,11 @@ namespace mugato
 
         size_t sizeNodes() const;
 
-        gorn::Data getElementsVertices(DrawMode mode=DrawMode::Triangles) const;
-        gorn::Data getNodesVertices(DrawMode mode=DrawMode::Triangles) const;
-        gorn::Data getElementsVertices(const Area& area, bool contained=false,
+        buffer getElementsVertices(DrawMode mode=DrawMode::Triangles) const;
+        buffer getNodesVertices(DrawMode mode=DrawMode::Triangles) const;
+        buffer getElementsVertices(const Area& area, bool contained=false,
             DrawMode mode=DrawMode::Triangles) const;
-        gorn::Data getNodesVertices(const Area& area, bool contained=false,
+        buffer getNodesVertices(const Area& area, bool contained=false,
             DrawMode mode=DrawMode::Triangles) const;
     };
 
@@ -432,10 +433,10 @@ namespace mugato
     }
 
     template<typename T>
-    gorn::Data QuadTreeNode<T>::getElementsVertices(DrawMode mode) const
+    buffer QuadTreeNode<T>::getElementsVertices(DrawMode mode) const
     {
-        gorn::Data data;
-        gorn::DataOutputStream out(data);
+        buffer data;
+        buffer_writer out(data);
         
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
@@ -449,10 +450,10 @@ namespace mugato
     }
 
     template<typename T>
-    gorn::Data QuadTreeNode<T>::getNodesVertices(DrawMode mode) const
+    buffer QuadTreeNode<T>::getNodesVertices(DrawMode mode) const
     {
-        gorn::Data data;
-        gorn::DataOutputStream out(data);
+        buffer data;
+        buffer_writer out(data);
         
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
@@ -464,11 +465,11 @@ namespace mugato
     }
 
     template<typename T>
-    gorn::Data QuadTreeNode<T>::getElementsVertices(const Area& area,
+    buffer QuadTreeNode<T>::getElementsVertices(const Area& area,
         bool contained, DrawMode mode) const
     {
-        gorn::Data data;
-        gorn::DataOutputStream out(data);
+        buffer data;
+        buffer_writer out(data);
         
         if(area.intersects(_area))
         {
@@ -489,13 +490,13 @@ namespace mugato
     }
 
     template<typename T>
-    gorn::Data QuadTreeNode<T>::getNodesVertices(const Area& area,
+    buffer QuadTreeNode<T>::getNodesVertices(const Area& area,
         bool contained, DrawMode mode) const
     {
-        gorn::Data data;
+        buffer data;
         if(area.matches(_area, contained))
         {
-            gorn::DataOutputStream out(data);
+            buffer_writer out(data);
             for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
             {
                 out.write((*itr)->getNodesVertices(area, contained, mode));

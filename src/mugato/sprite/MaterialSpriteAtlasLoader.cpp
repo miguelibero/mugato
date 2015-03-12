@@ -14,7 +14,7 @@ namespace mugato {
     {
     }
 
-    bool MaterialSpriteAtlasLoader::validate(const std::string& name) const
+    bool MaterialSpriteAtlasLoader::validate(const std::string& name) const NOEXCEPT
     {
         return _materials.validate(name);
     }

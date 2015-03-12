@@ -13,8 +13,8 @@ namespace mugato {
     public:
         GdxSpriteAtlasLoader();
 
-        bool validate(const gorn::Data& data) const;
-        SpriteAtlas load(gorn::Data&& data) const;
+        bool validate(const buffer& data) const NOEXCEPT;
+        SpriteAtlas load(const buffer& data) const;
     };
 }
 

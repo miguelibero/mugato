@@ -2,27 +2,22 @@
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/SpriteAtlas.hpp>
 #include <gorn/base/String.hpp>
-#include <gorn/base/Data.hpp>
 #include <gorn/render/MaterialManager.hpp>
 #include <rapidxml/rapidxml.hpp>
+#include <buffer.hpp>
+#include <buffer_writer.hpp>
 
 using namespace rapidxml;
 
 namespace mugato {
 
-    void loadXmlDocument(rapidxml::xml_document<>& doc, const gorn::Data& data)
+    void loadXmlDocument(rapidxml::xml_document<>& doc, const buffer& data)
     {
-        gorn::Data buffer(data);
-        gorn::DataOutputStream output(buffer);
-        output.write("\0");
-        doc.parse<0>(reinterpret_cast<char*>(buffer.ptr()));
-    }
-
-    void loadXmlDocument(rapidxml::xml_document<>& doc, gorn::Data&& data)
-    {
-        gorn::DataOutputStream output(data);
-        output.write("\0");
-        doc.parse<0>(reinterpret_cast<char*>(data.ptr()));
+        buffer temp;
+        buffer_writer output(temp);
+        output.write(data);
+        output.fill(0);
+        doc.parse<0>(reinterpret_cast<char*>(temp.data()));
     }
 
     std::vector<int> loadIntegerParts(const std::string& value)
@@ -117,9 +112,9 @@ namespace mugato {
     {
     }
     
-    bool CocosSpriteAtlasLoader::validate(const gorn::Data& data) const
+    bool CocosSpriteAtlasLoader::validate(const buffer& data) const NOEXCEPT
     {
-        if(data.isBinary())
+        if(data.binary())
         {
             return false;
         }
@@ -128,7 +123,7 @@ namespace mugato {
         return std::string(doc.first_node()->name()) == "plist";
     }
 
-    SpriteAtlas CocosSpriteAtlasLoader::load(gorn::Data&& data) const
+    SpriteAtlas CocosSpriteAtlasLoader::load(const buffer& data) const
     {
         xml_document<> doc;
         loadXmlDocument(doc, data);

@@ -1,7 +1,8 @@
 
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/FontAtlas.hpp>
-#include <gorn/base/Data.hpp>
+#include <buffer.hpp>
+#include <buffer_reader.hpp>
 #include <gorn/base/String.hpp>
 
 namespace mugato {
@@ -15,9 +16,13 @@ namespace mugato {
     {
     }
 
-    bool FntFontAtlasLoader::validate(const gorn::Data& data) const
+    bool FntFontAtlasLoader::validate(const buffer& data) const NOEXCEPT
     {
-        gorn::DataInputStream in(data);
+        if(data.binary())
+        {
+            return false;
+        }
+        buffer_reader in(data);
         std::string line;
         in.read(line);
         return line.find(FntSignature) == 0;
@@ -67,12 +72,12 @@ namespace mugato {
         return map;
     }
 
-    FontAtlas FntFontAtlasLoader::load(gorn::Data&& data) const
+    FontAtlas FntFontAtlasLoader::load(const buffer& data) const
     {
         FontAtlas atlas;
-        gorn::DataInputStream in(data);
+        buffer_reader in(data);
         std::vector<std::string> pages;
-        while(!in.reachedEnd())
+        while(!in.end())
         {
             std::string line;
             in.read(line);
