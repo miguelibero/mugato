@@ -3,34 +3,29 @@
 
 namespace mugato
 {
-    Rectangle::Rectangle(const glm::vec2& origin, const glm::vec2& size):
+    Rectangle::Rectangle(const glm::vec3& origin, const glm::vec3& size):
     origin(origin), size(size)
     {
     }
 
-    Rectangle::Rectangle(float x, float y, float width, float height):
-    origin(x, y), size(width, height)
-    {
-    }
-    
-    Rectangle::Rectangle(const glm::vec2& origin):
-    origin(origin)
+    Rectangle::Rectangle(const glm::vec2& origin, const glm::vec2& size):
+    origin(origin.x, origin.y, 0.0f), size(size.x, size.y, 0.0f)
     {
     }
 
-    Rectangle::Rectangle(float x, float y):
-    origin(x, y)
-    {
-    }
-
-    glm::vec2 Rectangle::min() const
+    glm::vec3 Rectangle::min() const
     {
         return origin;
     }
 
-    glm::vec2 Rectangle::max() const
+    glm::vec3 Rectangle::max() const
     {
         return origin+size;
+    }
+
+    bool Rectangle::isTwoDimentional() const
+    {
+        return origin.z == 0.0f && size.z == 0.0f;
     }
 
     bool Rectangle::contains(const glm::vec2& point) const
@@ -39,6 +34,15 @@ namespace mugato
         auto tmax = max();
         return point.x >= tmin.x && point.x <= tmax.x
             && point.y >= tmin.y && point.y <= tmax.y;
+    }
+
+    bool Rectangle::contains(const glm::vec3& point) const
+    {
+        auto tmin = min();
+        auto tmax = max();
+        return point.x >= tmin.x && point.x <= tmax.x
+            && point.y >= tmin.y && point.y <= tmax.y
+            && point.z >= tmin.z && point.z <= tmax.z;
     }
 
     bool Rectangle::contains(const Rectangle& other) const
@@ -53,10 +57,12 @@ namespace mugato
         auto omin = other.min();
         auto omax = other.max();
         return !( 
-            tmax.x <= omin.x ||
-            omax.x <= tmin.x ||
-            tmax.y <= omin.y ||
-            omax.y <= tmin.y
+            tmax.x < omin.x ||
+            omax.x < tmin.x ||
+            tmax.y < omin.y ||
+            omax.y < tmin.y ||
+            tmax.z < omin.z ||
+            omax.z < tmin.z
         );
     }
 
@@ -81,39 +87,68 @@ namespace mugato
     {
         auto tmin = min();
         auto tmax = max();
-        
+        bool flat = isTwoDimentional();
         switch(mode)
         {
         case DrawMode::Quads:
-            return buffer({
-                tmin.x, tmin.y,
-                tmax.x, tmin.y,
-                tmax.x, tmax.y,
-                tmin.x, tmax.y
-            });
+        {
+            if(flat)
+            {
+                return buffer({
+                    tmin.x, tmin.y,
+                    tmax.x, tmin.y,
+                    tmax.x, tmax.y,
+                    tmin.x, tmax.y
+                });
+            }
+            else
+            {
+                // TODO
+                return buffer();
+            }
             break;
+        }
         case DrawMode::Triangles:
-            return buffer({
-                tmin.x, tmin.y,
-                tmax.x, tmin.y,
-                tmin.x, tmax.y,
-                tmax.x, tmax.y,
-                tmin.x, tmax.y,
-                tmax.x, tmin.y
-            });
+        {
+            if(flat)
+            {
+                return buffer({
+                    tmin.x, tmin.y,
+                    tmax.x, tmin.y,
+                    tmin.x, tmax.y,
+                    tmax.x, tmax.y,
+                    tmin.x, tmax.y,
+                    tmax.x, tmin.y
+                });
+            }
+            else
+            {
+                // TODO
+                return buffer();
+            }
             break;
+        }
         case DrawMode::Lines:
-            return buffer({
-                tmin.x, tmin.y,
-                tmax.x, tmin.y,
-                tmax.x, tmin.y,
-                tmax.x, tmax.y,
-                tmax.x, tmax.y,
-                tmin.x, tmax.y,
-                tmin.x, tmax.y,
-                tmin.x, tmin.y
-            });
+        {
+            if(flat)
+            {
+                return buffer({
+                    tmin.x, tmin.y,
+                    tmax.x, tmin.y,
+                    tmax.x, tmin.y,
+                    tmax.x, tmax.y,
+                    tmax.x, tmax.y,
+                    tmin.x, tmax.y,
+                    tmin.x, tmax.y,
+                    tmin.x, tmin.y
+                });
+            else
+            {
+                // TODO
+                return buffer();
+            }
             break;
+        }
         default:
             return buffer();
             break;

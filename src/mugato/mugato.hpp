@@ -4,9 +4,9 @@
 #include <mugato/base/Context.hpp>
 #include <mugato/base/Exception.hpp>
 #include <mugato/base/Kinds.hpp>
-#include <mugato/base/QuadTree.hpp>
-#include <mugato/base/QuadTreeElement.hpp>
-#include <mugato/base/QuadTreeNode.hpp>
+#include <mugato/base/OcTree.hpp>
+#include <mugato/base/OcTreeElement.hpp>
+#include <mugato/base/OcTreeNode.hpp>
 #include <mugato/base/Rectangle.hpp>
 
 #include <mugato/label/FntFontAtlasLoader.hpp>

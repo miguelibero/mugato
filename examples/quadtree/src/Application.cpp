@@ -7,7 +7,7 @@
 class QuadTreeApplication : public gorn::Application
 {
 	mugato::Context _ctx;
-    mugato::QuadTree<void> _quadtree;
+    mugato::OcTree<void> _quadtree;
 
     std::mt19937 _randomAlgo;
     std::uniform_real_distribution<float> _randomPosDistri;
@@ -43,7 +43,7 @@ namespace gorn
 }
 
 QuadTreeApplication::QuadTreeApplication():
-_quadtree(mugato::Rectangle(-1.0, -1.0, 2.0, 2.0), 2),
+_quadtree(mugato::Rectangle(glm::vec2(-1.0), glm::vec2(2.0)), 2),
 _randomPosDistri(-1.0, 1.0),
 _randomSizeDistri(0.0, 0.1)
 {
@@ -96,10 +96,8 @@ void QuadTreeApplication::update(double dt)
         for(size_t i=0; i<1000; i++)
         {            
             mugato::Rectangle rect(
-                randomPos(),
-                randomPos(),
-                randomSize(),
-                randomSize()
+                glm::vec2(randomPos(), randomPos()),
+                glm::vec2(randomSize(), randomSize())
             );
             _quadtree.insert(rect);
         }

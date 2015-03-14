@@ -1,12 +1,12 @@
-#ifndef __mugato__QuadTreeElement__
-#define __mugato__QuadTreeElement__
+#ifndef __mugato__OcTreeElement__
+#define __mugato__OcTreeElement__
 
 #include <mugato/base/Rectangle.hpp>
 
 namespace mugato
 {
     template<typename T>
-    class QuadTreeElement
+    class OcTreeElement
     {
     public:
         typedef Rectangle Area;
@@ -14,8 +14,8 @@ namespace mugato
         Area _area;
         T _content;
     public:
-        QuadTreeElement(const Area& area, const T& content);
-        QuadTreeElement(const Area& area, T&& content);
+        OcTreeElement(const Area& area, const T& content);
+        OcTreeElement(const Area& area, T&& content);
 
         const T& getContent() const;
         T& getContent();
@@ -24,14 +24,14 @@ namespace mugato
     };
 
     template<>
-    class QuadTreeElement<void>
+    class OcTreeElement<void>
     {
     public:
         typedef Rectangle Area;
     private:
         Area _area;
     public:
-        QuadTreeElement(const Area& area):
+        OcTreeElement(const Area& area):
         _area(area)
         {
         }
@@ -43,32 +43,32 @@ namespace mugato
     };
 
     template<typename T>
-    QuadTreeElement<T>::QuadTreeElement(const Area& area, const T& content):
+    OcTreeElement<T>::OcTreeElement(const Area& area, const T& content):
     _area(area), _content(content)
     {
     }
 
     template<typename T>
-    QuadTreeElement<T>::QuadTreeElement(const Area& area, T&& content):
+    OcTreeElement<T>::OcTreeElement(const Area& area, T&& content):
     _area(area), _content(std::move(content))
     {
     }
 
     template<typename T>
-    const T& QuadTreeElement<T>::getContent() const
+    const T& OcTreeElement<T>::getContent() const
     {
         return _content;
     }
 
     template<typename T>
-    T& QuadTreeElement<T>::getContent()
+    T& OcTreeElement<T>::getContent()
     {
         return _content;
     }
 
     template<typename T>
-    const typename QuadTreeElement<T>::Area&
-        QuadTreeElement<T>::getArea() const
+    const typename OcTreeElement<T>::Area&
+        OcTreeElement<T>::getArea() const
     {
         return _area;
     }

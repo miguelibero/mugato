@@ -1,22 +1,22 @@
-#ifndef __mugato__QuadTreeNode__
-#define __mugato__QuadTreeNode__
+#ifndef __mugato__OcTreeNode__
+#define __mugato__OcTreeNode__
 
 #include <memory>
 #include <algorithm>
 #include <mugato/base/Rectangle.hpp>
-#include <mugato/base/QuadTreeElement.hpp>
+#include <mugato/base/OcTreeElement.hpp>
 #include <buffer.hpp>
 #include <buffer_writer.hpp>
 
 namespace mugato
 {
     template<typename T>
-    class QuadTreeNode
+    class OcTreeNode
     {
     public:
-        typedef QuadTreeElement<T> Element;
+        typedef OcTreeElement<T> Element;
         typedef std::vector<Element> Elements;
-        typedef QuadTreeNode<T> Node;
+        typedef OcTreeNode<T> Node;
         typedef Rectangle Area;
         typedef std::vector<std::unique_ptr<Node>> Branches;
         typedef Rectangle::DrawMode DrawMode;
@@ -26,14 +26,14 @@ namespace mugato
         Node* _parent;
         Branches _branches;
         size_t _maxElements;
-        glm::vec2 _divisions;
+        glm::vec3 _divisions;
 
         bool split();
         bool join();
 
     public:
-        QuadTreeNode(const Area& area, Node* parent,
-            size_t max, const glm::vec2& divs);
+        OcTreeNode(const Area& area, Node* parent,
+            size_t max, const glm::vec3& divs);
 
         const Area& getArea() const;
 
@@ -73,21 +73,21 @@ namespace mugato
     };
 
     template<typename T>
-    QuadTreeNode<T>::QuadTreeNode(const Area& area, Node* parent,
-            size_t max, const glm::vec2& divs):
+    OcTreeNode<T>::OcTreeNode(const Area& area, Node* parent,
+            size_t max, const glm::vec3& divs):
         _area(area), _parent(parent),
         _maxElements(max), _divisions(divs)
     {
     }
 
     template<typename T>
-    const typename QuadTreeNode<T>::Area& QuadTreeNode<T>::getArea() const
+    const typename OcTreeNode<T>::Area& OcTreeNode<T>::getArea() const
     {
         return _area;
     }
 
     template<typename T>
-    bool QuadTreeNode<T>::insert(const Element& elm)
+    bool OcTreeNode<T>::insert(const Element& elm)
     {
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
@@ -106,7 +106,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool QuadTreeNode<T>::remove(const Element& elm)
+    bool OcTreeNode<T>::remove(const Element& elm)
     {
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
@@ -129,7 +129,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool QuadTreeNode<T>::clear()
+    bool OcTreeNode<T>::clear()
     {
         bool change = !_elements.empty();
         _elements.clear();
@@ -145,7 +145,7 @@ namespace mugato
     }
 
     template<typename T>
-    void QuadTreeNode<T>::find(Elements& elms) const
+    void OcTreeNode<T>::find(Elements& elms) const
     {
         elms.insert(elms.end(), _elements.begin(), _elements.end());
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
@@ -155,7 +155,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool QuadTreeNode<T>::empty() const
+    bool OcTreeNode<T>::empty() const
     {
         if(!_elements.empty())
         {
@@ -172,7 +172,7 @@ namespace mugato
     }
 
     template<typename T>
-    size_t QuadTreeNode<T>::size() const
+    size_t OcTreeNode<T>::size() const
     {
         size_t size = _elements.size();
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
@@ -183,7 +183,7 @@ namespace mugato
     }
 
     template<typename T>
-    size_t QuadTreeNode<T>::sizeNodes() const
+    size_t OcTreeNode<T>::sizeNodes() const
     {
         size_t size = 1;
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
@@ -194,7 +194,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool QuadTreeNode<T>::clear(const Area& area, bool contained)
+    bool OcTreeNode<T>::clear(const Area& area, bool contained)
     {
         bool change = false;
         if(!area.intersects(_area))
@@ -225,7 +225,7 @@ namespace mugato
     }
 
     template<typename T>
-    void QuadTreeNode<T>::find(Elements& elms,
+    void OcTreeNode<T>::find(Elements& elms,
         const Area& area, bool contained) const
     {
         if(!area.intersects(_area))
@@ -247,7 +247,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool QuadTreeNode<T>::empty(const Area& area, bool contained) const
+    bool OcTreeNode<T>::empty(const Area& area, bool contained) const
     {
         if(!area.intersects(_area))
         {
@@ -272,7 +272,7 @@ namespace mugato
     }
 
     template<typename T>
-    size_t QuadTreeNode<T>::size(const Area& area, bool contained) const
+    size_t OcTreeNode<T>::size(const Area& area, bool contained) const
     {
         if(!area.intersects(_area))
         {
@@ -292,7 +292,7 @@ namespace mugato
 
     template<typename T>
     template<typename Filter>
-    bool QuadTreeNode<T>::clear(Filter filter)
+    bool OcTreeNode<T>::clear(Filter filter)
     {
         bool change = false;
         auto itr = std::remove_if(_elements.begin(), _elements.end(), filter);
@@ -318,7 +318,7 @@ namespace mugato
 
     template<typename T>
     template<typename Filter>
-    void QuadTreeNode<T>::find(Elements& elms, Filter filter) const
+    void OcTreeNode<T>::find(Elements& elms, Filter filter) const
     {
         for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
         {
@@ -336,7 +336,7 @@ namespace mugato
 
     template<typename T>
     template<typename Filter>
-    bool QuadTreeNode<T>::empty(Filter filter) const
+    bool OcTreeNode<T>::empty(Filter filter) const
     {
         for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
         {
@@ -358,7 +358,7 @@ namespace mugato
 
     template<typename T>
     template<typename Filter>
-    size_t QuadTreeNode<T>::size(Filter filter) const
+    size_t OcTreeNode<T>::size(Filter filter) const
     {
         size_t size = std::count_if(
                 _elements.begin(), _elements.end(), filter);
@@ -370,7 +370,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool QuadTreeNode<T>::split()
+    bool OcTreeNode<T>::split()
     {
         if(_maxElements == 0 || _elements.size() < _maxElements || !_branches.empty())
         {
@@ -408,7 +408,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool QuadTreeNode<T>::join()
+    bool OcTreeNode<T>::join()
     {
         if(_maxElements == 0)
         {
@@ -433,7 +433,7 @@ namespace mugato
     }
 
     template<typename T>
-    buffer QuadTreeNode<T>::getElementsVertices(DrawMode mode) const
+    buffer OcTreeNode<T>::getElementsVertices(DrawMode mode) const
     {
         buffer data;
         buffer_writer out(data);
@@ -450,7 +450,7 @@ namespace mugato
     }
 
     template<typename T>
-    buffer QuadTreeNode<T>::getNodesVertices(DrawMode mode) const
+    buffer OcTreeNode<T>::getNodesVertices(DrawMode mode) const
     {
         buffer data;
         buffer_writer out(data);
@@ -465,7 +465,7 @@ namespace mugato
     }
 
     template<typename T>
-    buffer QuadTreeNode<T>::getElementsVertices(const Area& area,
+    buffer OcTreeNode<T>::getElementsVertices(const Area& area,
         bool contained, DrawMode mode) const
     {
         buffer data;
@@ -490,7 +490,7 @@ namespace mugato
     }
 
     template<typename T>
-    buffer QuadTreeNode<T>::getNodesVertices(const Area& area,
+    buffer OcTreeNode<T>::getNodesVertices(const Area& area,
         bool contained, DrawMode mode) const
     {
         buffer data;
