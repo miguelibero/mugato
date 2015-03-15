@@ -35,6 +35,7 @@
 #include <mugato/scene/Entity.hpp>
 #include <mugato/scene/EntityStack.hpp>
 #include <mugato/scene/SpriteComponent.hpp>
+#include <mugato/scene/OcTreeRenderComponent.hpp>
 
 
 #endif

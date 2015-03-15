@@ -66,16 +66,29 @@ namespace mugato
         );
     }
 
-    bool Rectangle::matches(const Rectangle& other, bool contained) const
+    bool Rectangle::overlaps(const Rectangle& other) const
     {
-        if(contained)
+        return contains(other.min()) || contains(other.max());
+    }
+
+    bool Rectangle::matches(const Rectangle& other, MatchType type) const
+    {
+        switch(type)
         {
+        case MatchType::Contain:
             return contains(other);
-        }
-        else
-        {
+        case MatchType::Overlap:
+            return overlaps(other);
+        case MatchType::Intersect:
             return intersects(other);
+        default:
+            return false;
         }
+    }
+
+    bool Rectangle::matches(const RectangleMatch& match) const
+    {
+        return matches(match.rectangle, match.type);
     }
 
     float Rectangle::area() const
@@ -142,6 +155,7 @@ namespace mugato
                     tmin.x, tmax.y,
                     tmin.x, tmin.y
                 });
+            }
             else
             {
                 // TODO
@@ -153,5 +167,30 @@ namespace mugato
             return buffer();
             break;
         }
+    }
+
+    size_t Rectangle::getVertexCount(DrawMode mode)
+    {
+        switch(mode)
+        {
+        case DrawMode::Quads:
+            return 4;
+        case DrawMode::Triangles:
+            return 6;
+        case DrawMode::Lines:
+            return 8;
+        default:
+            return 0;
+        }
+    }
+
+    RectangleMatch::RectangleMatch(const Rectangle& r, Type t):
+    rectangle(r), type(t)
+    {
+    }
+
+    bool RectangleMatch::matches(const Rectangle& other) const
+    {
+        return rectangle.matches(other, type);
     }
 }

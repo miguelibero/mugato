@@ -4,4 +4,5 @@
 namespace mugato
 {
     const char* ProgramKind::Sprite = "mugato:sprite";
+    const char* ProgramKind::Color = "mugato:color";
 }

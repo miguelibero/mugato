@@ -128,9 +128,10 @@ void QuadTreeApplication::draw()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    size_t c = mugato::Rectangle::getVertexCount(gorn::DrawMode::Lines);
     _vaoElms.setUniformValue("color", glm::vec3(1.0f, 0.0f, 0.0f));
-    _vaoElms.draw(_quadtree.size()*8, gorn::DrawMode::Lines);
+    _vaoElms.draw(_quadtree.size()*c, gorn::DrawMode::Lines);
     _vaoNodes.setUniformValue("color", glm::vec3(0.0f, 1.0f, 0.0f));
-    _vaoNodes.draw(_quadtree.sizeNodes()*8, gorn::DrawMode::Lines);
+    _vaoNodes.draw(_quadtree.sizeNodes()*c, gorn::DrawMode::Lines);
 }
 

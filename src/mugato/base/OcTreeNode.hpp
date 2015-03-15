@@ -17,25 +17,27 @@ namespace mugato
         typedef OcTreeElement<T> Element;
         typedef std::vector<Element> Elements;
         typedef OcTreeNode<T> Node;
-        typedef Rectangle Area;
         typedef std::vector<std::unique_ptr<Node>> Branches;
         typedef Rectangle::DrawMode DrawMode;
+        typedef Rectangle::MatchType MatchType;
     private:
-        Area _area;
+        Rectangle _area;
         Elements _elements;
         Node* _parent;
         Branches _branches;
         size_t _maxElements;
         glm::vec3 _divisions;
+        MatchType _matchType;
 
         bool split();
         bool join();
 
     public:
-        OcTreeNode(const Area& area, Node* parent,
+        OcTreeNode(const Rectangle& area, Node* parent,
             size_t max, const glm::vec3& divs);
 
-        const Area& getArea() const;
+        const Rectangle& getArea() const;
+        void setArea(const Rectangle& area);
 
         bool insert(const Element& elm);
         bool remove(const Element& elm);
@@ -45,10 +47,10 @@ namespace mugato
         bool empty() const;
         size_t size() const;
 
-        bool clear(const Area& area, bool contained=false);
-        void find(Elements& elms, const Area& area, bool contained=false) const;
-        bool empty(const Area& area, bool contained=false) const;
-        size_t size(const Area& area, bool contained=false) const;
+        bool clear(const RectangleMatch& match);
+        void find(Elements& elms, const RectangleMatch& match) const;
+        bool empty(const RectangleMatch& match) const;
+        size_t size(const RectangleMatch& match) const;
 
         template<typename Filter>
         bool clear(Filter f);
@@ -66,24 +68,31 @@ namespace mugato
 
         buffer getElementsVertices(DrawMode mode=DrawMode::Triangles) const;
         buffer getNodesVertices(DrawMode mode=DrawMode::Triangles) const;
-        buffer getElementsVertices(const Area& area, bool contained=false,
+        buffer getElementsVertices(const RectangleMatch& match,
             DrawMode mode=DrawMode::Triangles) const;
-        buffer getNodesVertices(const Area& area, bool contained=false,
+        buffer getNodesVertices(const RectangleMatch& match,
             DrawMode mode=DrawMode::Triangles) const;
     };
 
     template<typename T>
-    OcTreeNode<T>::OcTreeNode(const Area& area, Node* parent,
+    OcTreeNode<T>::OcTreeNode(const Rectangle& area, Node* parent,
             size_t max, const glm::vec3& divs):
         _area(area), _parent(parent),
-        _maxElements(max), _divisions(divs)
+        _maxElements(max), _divisions(divs),
+        _matchType(MatchType::Overlap)
     {
     }
 
     template<typename T>
-    const typename OcTreeNode<T>::Area& OcTreeNode<T>::getArea() const
+    const Rectangle& OcTreeNode<T>::getArea() const
     {
         return _area;
+    }
+
+    template<typename T>
+    void OcTreeNode<T>::setArea(const Rectangle& area)
+    {
+        _area = area;
     }
 
     template<typename T>
@@ -96,7 +105,9 @@ namespace mugato
                 return true;
             }
         }
-        if(_area.intersects(elm.getArea()))
+        _elements.erase(std::remove(_elements.begin(), _elements.end(), elm),
+            _elements.end());
+        if(_area.matches(elm.getArea(), _matchType))
         {
             _elements.push_back(elm);
             split();
@@ -115,7 +126,7 @@ namespace mugato
                 return true;
             }
         }
-        if(_area.intersects(elm.getArea()))
+        if(_area.matches(elm.getArea(), _matchType))
         {
             auto itr = std::remove(_elements.begin(), _elements.end(), elm);
             if(itr != _elements.end())
@@ -194,16 +205,16 @@ namespace mugato
     }
 
     template<typename T>
-    bool OcTreeNode<T>::clear(const Area& area, bool contained)
+    bool OcTreeNode<T>::clear(const RectangleMatch& match)
     {
         bool change = false;
-        if(!area.intersects(_area))
+        if(!match.matches(_area))
         {
             return change;
         }
         auto itr = std::remove_if(_elements.begin(), _elements.end(),
-            [&area, contained](const Element& elm){
-            return area.matches(elm.getArea(), contained);
+            [&match](const Element& elm){
+            return match.matches(elm.getArea());
         });
         if(itr != _elements.end())
         {
@@ -212,7 +223,7 @@ namespace mugato
         }
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
-            if((*itr)->clear(area, contained))
+            if((*itr)->clear(match))
             {
                 change = true;
             }
@@ -225,45 +236,44 @@ namespace mugato
     }
 
     template<typename T>
-    void OcTreeNode<T>::find(Elements& elms,
-        const Area& area, bool contained) const
+    void OcTreeNode<T>::find(Elements& elms, const RectangleMatch& match) const
     {
-        if(!area.intersects(_area))
+        if(!match.matches(_area))
         {
             return;
         }
         for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
         {
             const auto& elm = *itr;
-            if (area.matches(elm.getArea(), contained))
+            if (match.matches(elm.getArea()))
             {
                 elms.push_back(elm);
             }
         }
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
-            (*itr)->find(elms, area, contained);
+            (*itr)->find(elms, match);
         }
     }
 
     template<typename T>
-    bool OcTreeNode<T>::empty(const Area& area, bool contained) const
+    bool OcTreeNode<T>::empty(const RectangleMatch& match) const
     {
-        if(!area.intersects(_area))
+        if(!match.matches(_area))
         {
             return true;
         }
         for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
         {
             const auto& elm = *itr;
-            if (area.matches(elm.getArea(), contained))
+            if (match.matches(elm.getArea()))
             {
                 return false;
             }
         }
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
-            if(!(*itr)->empty(area, contained))
+            if(!(*itr)->empty(match))
             {
                 return false;
             }
@@ -272,20 +282,20 @@ namespace mugato
     }
 
     template<typename T>
-    size_t OcTreeNode<T>::size(const Area& area, bool contained) const
+    size_t OcTreeNode<T>::size(const RectangleMatch& match) const
     {
-        if(!area.intersects(_area))
+        if(!match.matches(_area))
         {
             return 0;
         }
         size_t size = std::count_if(
                 _elements.begin(), _elements.end(),
-            [&area, contained](const Element& elm){
-                return area.matches(elm.getArea(), contained);
+            [&match](const Element& elm){
+                return match.matches(elm.getArea());
         });
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
-            size += (*itr)->size(area, contained);
+            size += (*itr)->size(match);
         }
         return size;
     }
@@ -372,7 +382,7 @@ namespace mugato
     template<typename T>
     bool OcTreeNode<T>::split()
     {
-        if(_maxElements == 0 || _elements.size() < _maxElements || !_branches.empty())
+        if(_maxElements == 0 || _elements.size() <= _maxElements || !_branches.empty())
         {
             return false;
         }
@@ -388,7 +398,8 @@ namespace mugato
             for(p.x=min.x;p.x<max.x;p.x+=size.x)
             {
                 _branches.push_back(std::unique_ptr<Node>(
-                    new Node(Area(p, size), this, _maxElements, _divisions)));
+                    new Node(Rectangle(p, size), this,
+                    _maxElements, _divisions)));
             }
         }
 
@@ -419,7 +430,7 @@ namespace mugato
         {
             size += (*itr)->_elements.size();
         }
-        if(size >= _maxElements)
+        if(size > _maxElements)
         {
             return false;
         }
@@ -465,22 +476,22 @@ namespace mugato
     }
 
     template<typename T>
-    buffer OcTreeNode<T>::getElementsVertices(const Area& area,
-        bool contained, DrawMode mode) const
+    buffer OcTreeNode<T>::getElementsVertices(const RectangleMatch& match,
+        DrawMode mode) const
     {
         buffer data;
         buffer_writer out(data);
         
-        if(area.intersects(_area))
+        if(match.matches(_area))
         {
             for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
             {
-                out.write((*itr)->getElementsVertices(area, contained, mode));
+                out.write((*itr)->getElementsVertices(match, mode));
             }
             for(auto itr = _elements.begin(); itr != _elements.end(); ++itr)
             {
                 const auto& earea = itr->getArea();
-                if(area.matches(earea, contained))
+                if(match.matches(earea))
                 {
                     out.write(earea.getVertices(mode));
                 }
@@ -490,16 +501,16 @@ namespace mugato
     }
 
     template<typename T>
-    buffer OcTreeNode<T>::getNodesVertices(const Area& area,
-        bool contained, DrawMode mode) const
+    buffer OcTreeNode<T>::getNodesVertices(const RectangleMatch& match,
+        DrawMode mode) const
     {
         buffer data;
-        if(area.matches(_area, contained))
+        if(match.matches(_area))
         {
             buffer_writer out(data);
             for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
             {
-                out.write((*itr)->getNodesVertices(area, contained, mode));
+                out.write((*itr)->getNodesVertices(match, mode));
             }
             out.write(_area.getVertices(mode));
         }

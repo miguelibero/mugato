@@ -22,7 +22,8 @@ namespace mugato
         Sprite& getSprite();
         const Sprite& getSprite() const;
 
-        void setPivotPercent(const glm::vec2& val);
+        void setEntityPivotPercent(const glm::vec2& val);
+        void setEntitySize();
 
         void onAddedToEntity(Entity& entity) override;
         void update(double dt) override;

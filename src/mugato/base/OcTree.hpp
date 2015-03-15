@@ -11,7 +11,7 @@ namespace mugato
     class OcTree : public OcTreeNode<T>
     {
     public:
-        OcTree(const Rectangle& area=Rectangle(1.0f, 1.0f), size_t max=1,
+        OcTree(const Rectangle& area=Rectangle(), size_t max=1,
             const glm::vec3& divs=glm::vec3(2.0f));
     };
 

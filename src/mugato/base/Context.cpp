@@ -70,9 +70,45 @@ void main()
 
 )")
             .withUniform("model", gorn::UniformKind::Model)
+            .withUniform("view", gorn::UniformKind::View)
             .withUniform("texture", gorn::UniformKind::Texture0)
             .withAttribute("position", gorn::AttributeKind::Position)
             .withAttribute("texCoords", gorn::AttributeKind::TexCoords);
+
+
+ _gorn.getPrograms().getDefinitions().get(ProgramKind::Color)
+            .withShaderData(gorn::ShaderType::Vertex, R"(#version 100
+
+precision highp float;
+
+attribute vec2 position;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform vec4 color;
+
+void main()
+{
+    gl_Position = view * model * vec4(position, 0.0, 1.0);
+}
+
+)")
+            .withShaderData(gorn::ShaderType::Fragment, R"(#version 100
+
+precision highp float;
+
+uniform vec4 color;
+
+void main()
+{
+    gl_FragColor = color;
+}
+
+)")
+            .withUniform("model", gorn::UniformKind::Model)
+            .withUniform("view", gorn::UniformKind::View)
+            .withUniform("color", gorn::UniformKind::Color)
+            .withAttribute("position", gorn::AttributeKind::Position);
 
         _scenes.setContext(*this);
     }

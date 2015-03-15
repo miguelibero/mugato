@@ -10,6 +10,7 @@ namespace mugato
 {
     Entity::Entity():
     _transformDirty(true),
+    _areaDirty(true),
     _ctx(nullptr),
     _position(0.0f),
     _rotation(0.0f),
@@ -59,13 +60,14 @@ namespace mugato
         return _pivot;
     }
 
-    void Entity::setPosition(const Vector& val)
+    const Entity::Vector& Entity::getSize() const
     {
-        if(_position != val)
-        {
-            _transformDirty = true;
-            _position = val;
-        }
+        return _size;
+    }
+
+    const Rectangle& Entity::getArea() const
+    {
+        return _area;
     }
 
     void Entity::setPosition(const Vector2& val)
@@ -88,6 +90,11 @@ namespace mugato
         setPivot(Vector(val.x, val.y, 0.0f));
     }
 
+    void Entity::setSize(const Vector2& val)
+    {
+        setSize(Vector(val.x, val.y, 0.0f));
+    }
+
     void Entity::setRotation(float val)
     {
         setRotation(glm::vec3(0.0f, val, 0.0f));
@@ -96,6 +103,16 @@ namespace mugato
     void Entity::setScale(float val)
     {
         setScale(glm::vec2(val));
+    }
+
+    void Entity::setPosition(const Vector& val)
+    {
+        if(_position != val)
+        {
+            _transformDirty = true;
+            _areaDirty = true;
+            _position = val;
+        }
     }
 
     void Entity::setRotation(const Vector& val)
@@ -116,7 +133,6 @@ namespace mugato
         }
     }
 
-
     void Entity::setPivot(const Vector& val)
     {
         if(_pivot != val)
@@ -126,32 +142,65 @@ namespace mugato
         }
     }
 
+    void Entity::setSize(const Vector& val)
+    {
+        if(_size != val)
+        {
+            _size = val;
+            _areaDirty = true;
+            _children.setArea(
+                Rectangle(Vector(0.0f), _size));
+        }
+    }
+
     std::shared_ptr<Entity> Entity::getSharedPtr()
     {
         return shared_from_this();
     }
 
-    void Entity::update(double dt)
+    void Entity::updateTransform()
     {
         if(_transformDirty)
         {
-
             _transform = glm::translate(glm::mat4(), _position)                
                 * glm::translate(glm::mat4(), _pivot)
                 * glm::scale(glm::mat4(), _scale)
                 * glm::orientate4(_rotation)
                 * glm::translate(glm::mat4(), -_pivot)
                 ;
-
             _transformDirty = false;
         }
+    }
+
+    void Entity::updateArea()
+    {
+        if(_areaDirty)
+        {
+            _area.origin = _position;
+            _area.size = _size;
+            _areaDirty = false;
+
+            if(auto parent = _parent.lock())
+            {
+                parent->addChild(getSharedPtr());
+            }
+        }
+    }
+
+    void Entity::update(double dt)
+    {
+        updateTransform();
+        updateArea();
+
         for(auto& comp : _components)
         {
             comp->update(dt);
         }
-        for(auto& child : _children)
+        Children::Elements elements;
+        _children.find(elements);
+        for(auto& elm : elements)
         {
-            child->update(dt);
+            elm.getContent()->update(dt);
         }
     }
 
@@ -166,9 +215,11 @@ namespace mugato
         {
             comp->render(queue);
         }
-        for(auto& child : _children)
+        Children::Elements elements;
+        _children.find(elements);
+        for(auto& elm : elements)
         {
-            child->render(queue);
+            elm.getContent()->render(queue);
         }
         queue.addCommand()
             .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
@@ -181,8 +232,20 @@ namespace mugato
             child = std::make_shared<Entity>();
         }
         child->_parent = getSharedPtr();
-        _children.push_back(child);
+        _children.insert(Children::Element(child->getArea(), child));
         return child;
+    }
+
+    bool Entity::removeFromParent()
+    {
+        if(auto parent = _parent.lock())
+        {
+            auto ptr = getSharedPtr();
+            return parent->_children.clear([&ptr](const Children::Element& elm){
+                return elm.getContent() == ptr;
+            });
+        }
+        return false;
     }
 
     Component& Entity::addComponent(std::unique_ptr<Component> comp)
@@ -206,6 +269,16 @@ namespace mugato
     const Entity& Entity::getParent() const
     {
         return *_parent.lock();
+    }
+
+    const Entity::Children& Entity::getChildren() const
+    {
+        return _children;
+    }
+
+    Entity::Children& Entity::getChildren()
+    {
+        return _children;
     }
 }
 

@@ -27,7 +27,7 @@ namespace mugato
         _animation = name;
     }
 
-    void SpriteComponent::setPivotPercent(const glm::vec2& val)
+    void SpriteComponent::setEntityPivotPercent(const glm::vec2& val)
     {
         _pivotPercent = val;
         if(auto ptr = _entity.lock())
@@ -36,11 +36,20 @@ namespace mugato
         }
     }
 
+    void SpriteComponent::setEntitySize()
+    {
+        if(auto ptr = _entity.lock())
+        {
+            ptr->setSize(_sprite.getSize());
+        }
+    }
+
     void SpriteComponent::onAddedToEntity(Entity& entity)
     {
         _sprite = entity.getContext().getSprites().load(_name);
         _entity = entity.getSharedPtr();
-        setPivotPercent(_pivotPercent);
+        setEntityPivotPercent(_pivotPercent);
+        setEntitySize();
         _sprite.play(_animation);
     }
 

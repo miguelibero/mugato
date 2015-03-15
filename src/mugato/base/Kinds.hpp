@@ -9,6 +9,7 @@ namespace mugato
         ProgramKind() = delete;
 
         static const char* Sprite;
+        static const char* Color;
     };
 }
 

@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
+#include <mugato/base/OcTree.hpp>
 
 namespace gorn
 {
@@ -21,7 +22,7 @@ namespace mugato
         typedef glm::vec3 Vector;
         typedef glm::vec2 Vector2;
         typedef glm::mat4 Transform;
-        typedef std::vector<std::shared_ptr<Entity>> Children;
+        typedef OcTree<std::shared_ptr<Entity>> Children;
         typedef std::weak_ptr<Entity> Parent;
         typedef std::vector<std::unique_ptr<Component>> Components;
     private:
@@ -30,11 +31,17 @@ namespace mugato
         Parent _parent;
         Transform _transform;
         bool _transformDirty;
+        bool _areaDirty;
         Context* _ctx;
         Vector _position;
         Vector _rotation;
         Vector _scale;
         Vector _pivot;
+        Vector _size;
+        Rectangle _area;
+
+        void updateTransform();
+        void updateArea();
     public:
 
         Entity();
@@ -48,16 +55,20 @@ namespace mugato
         const Vector& getRotation() const;
         const Vector& getScale() const;
         const Vector& getPivot() const;
+        const Vector& getSize() const;
+        const Rectangle& getArea() const;
 
         void setPosition(const Vector& val);
         void setRotation(const Vector& val);
         void setScale(const Vector& val);
         void setPivot(const Vector& val);
+        void setSize(const Vector& val);
 
         void setPosition(const Vector2& val);
         void setRotation(const Vector2& val);
         void setScale(const Vector2& val);
         void setPivot(const Vector2& val);
+        void setSize(const Vector2& val);
 
         void setRotation(float val);
         void setScale(float val);
@@ -66,6 +77,11 @@ namespace mugato
         void render(gorn::RenderQueue& queue);
 
         std::shared_ptr<Entity> addChild(std::shared_ptr<Entity> child=nullptr);
+        bool removeFromParent();
+
+        const Children& getChildren() const;
+        Children& getChildren();
+
         Component& addComponent(std::unique_ptr<Component> comp);
 
         template<typename C, typename... Args>
