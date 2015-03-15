@@ -4,6 +4,7 @@
 #include <gorn/render/RenderQueue.hpp>
 #include <gorn/render/RenderCommand.hpp>
 #include <gorn/render/Kinds.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace mugato
 {
@@ -49,18 +50,28 @@ namespace mugato
         if(auto ptr = _entity.lock())
         {
             auto& children = ptr->getChildren();
-            size_t c = mugato::Rectangle::getVertexCount(_elementsDrawMode);
+            size_t c = children.getArea().flat()?2:3;
+
+            queue.addCommand()
+                .withTransform(glm::translate(glm::mat4(),
+                    glm::vec3(0.0f, 0.0f, 1.0f)),
+                    gorn::RenderCommand::TransformMode::PushLocal);
             queue.addCommand()
                 .withMaterial(_elementsMaterial)
+                .withDrawMode(_elementsDrawMode)
                 .withAttribute(gorn::AttributeKind::Position,
                     children.getElementsVertices(_elementsDrawMode),
-                    children.size()*c);
-            c = mugato::Rectangle::getVertexCount(_nodesDrawMode);
+                    c, gorn::BasicType::Float);
             queue.addCommand()
                 .withMaterial(_nodesMaterial)
+                .withDrawMode(_nodesDrawMode)
                 .withAttribute(gorn::AttributeKind::Position,
                     children.getNodesVertices(_nodesDrawMode),
-                    children.sizeNodes()*c);
+                    c, gorn::BasicType::Float);
+            queue.addCommand()
+                .withTransformMode(
+                    gorn::RenderCommand::TransformMode::PopLocal);
+
         }
     }
 }

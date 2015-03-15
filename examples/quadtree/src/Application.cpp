@@ -19,7 +19,7 @@ class QuadTreeApplication : public gorn::Application
     gorn::VertexArray _vaoNodes;
     std::shared_ptr<gorn::VertexBuffer> _vboNodes;
 
-    double _deltaTime = 0.0f;
+    double _deltaTime;
 
     float randomPos();
     float randomSize();
@@ -45,7 +45,8 @@ namespace gorn
 QuadTreeApplication::QuadTreeApplication():
 _quadtree(mugato::Rectangle(glm::vec2(-1.0), glm::vec2(2.0)), 2),
 _randomPosDistri(-1.0, 1.0),
-_randomSizeDistri(0.0, 0.1)
+_randomSizeDistri(0.0, 0.1),
+_deltaTime(0.0f)
 {
 }
 
@@ -120,7 +121,6 @@ void QuadTreeApplication::update(double dt)
     {
         _deltaTime = 0.0f;
     }
-
 }
 
 void QuadTreeApplication::draw()

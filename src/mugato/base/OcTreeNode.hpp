@@ -39,7 +39,7 @@ namespace mugato
         const Rectangle& getArea() const;
         void setArea(const Rectangle& area);
 
-        bool insert(const Element& elm);
+        bool insert(const Element& elm, bool check=true);
         bool remove(const Element& elm);
 
         bool clear();
@@ -96,21 +96,23 @@ namespace mugato
     }
 
     template<typename T>
-    bool OcTreeNode<T>::insert(const Element& elm)
+    bool OcTreeNode<T>::insert(const Element& elm, bool check)
     {
+        remove(elm);
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
-            if((*itr)->insert(elm))
+            if((*itr)->insert(elm, check))
             {
                 return true;
             }
         }
-        _elements.erase(std::remove(_elements.begin(), _elements.end(), elm),
-            _elements.end());
         if(_area.matches(elm.getArea(), _matchType))
         {
             _elements.push_back(elm);
-            split();
+            if(check)
+            {
+                split();
+            }
             return true;
         }
         return false;
@@ -123,18 +125,16 @@ namespace mugato
         {
             if((*itr)->remove(elm))
             {
-                return true;
-            }
-        }
-        if(_area.matches(elm.getArea(), _matchType))
-        {
-            auto itr = std::remove(_elements.begin(), _elements.end(), elm);
-            if(itr != _elements.end())
-            {
-                _elements.erase(itr, _elements.end());
                 join();
                 return true;
             }
+        }
+        auto itr = std::remove(_elements.begin(), _elements.end(), elm);
+        if(itr != _elements.end())
+        {
+            _elements.erase(itr, _elements.end());
+            join();
+            return true;
         }
         return false;
     }
@@ -387,28 +387,30 @@ namespace mugato
             return false;
         }
         _branches.clear();
-        _branches.reserve(_divisions.x*_divisions.y);
+        _branches.reserve(_divisions.x*_divisions.y*_divisions.z);
 
         auto min = _area.min();
         auto max = _area.max();
         auto size = _area.size/_divisions;
         auto p = min;
-        for(p.y=min.y;p.y<max.y;p.y+=size.y)
+        for(p.z=min.z;p.z<max.z;p.z+=size.z)
         {
-            for(p.x=min.x;p.x<max.x;p.x+=size.x)
+            for(p.y=min.y;p.y<max.y;p.y+=size.y)
             {
-                _branches.push_back(std::unique_ptr<Node>(
-                    new Node(Rectangle(p, size), this,
-                    _maxElements, _divisions)));
+                for(p.x=min.x;p.x<max.x;p.x+=size.x)
+                {
+                    _branches.push_back(std::unique_ptr<Node>(
+                        new Node(Rectangle(p, size), this,
+                        _maxElements, _divisions)));
+                }
             }
         }
-
         _elements.erase(std::remove_if(_elements.begin(), _elements.end(),
             [this](Element& elm)
             {
                 for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
                 {
-                    if((*itr)->insert(elm))
+                    if((*itr)->insert(elm, false))
                     {
                         return true;
                     }
@@ -428,6 +430,7 @@ namespace mugato
         size_t size = _elements.size();
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
+            (*itr)->join();
             size += (*itr)->_elements.size();
         }
         if(size > _maxElements)

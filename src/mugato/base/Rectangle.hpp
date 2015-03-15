@@ -30,6 +30,11 @@ namespace mugato
             const glm::vec3& size=glm::vec3(0.0f));
         Rectangle(const glm::vec2& origin, const glm::vec2& size=glm::vec2(0.0f));
 
+        // Axis Aligned Bounding Box
+        Rectangle operator*(const glm::mat4& transform) const;
+        Rectangle& operator*=(const glm::mat4& transform);
+
+        std::array<glm::vec3,8> corners() const;
         bool contains(const glm::vec3& point) const;
         bool contains(const glm::vec2& point) const;
         bool contains(const Rectangle& other) const;
@@ -39,7 +44,7 @@ namespace mugato
         bool matches(const RectangleMatch& match) const;
         float area() const;
 
-        bool isTwoDimentional() const;
+        bool flat() const;
         glm::vec3 min() const;
         glm::vec3 max() const;
 

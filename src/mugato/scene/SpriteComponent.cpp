@@ -7,7 +7,8 @@
 namespace mugato
 {
     SpriteComponent::SpriteComponent(const std::string& name):
-    _name(name), _animation(Sprite::kDefaultAnimation)
+    _name(name), _animation(Sprite::kDefaultAnimation),
+    _pivotPercent(0.0f)
     {
     }
 

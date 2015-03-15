@@ -10,7 +10,6 @@ namespace mugato
 {
     Entity::Entity():
     _transformDirty(true),
-    _areaDirty(true),
     _ctx(nullptr),
     _position(0.0f),
     _rotation(0.0f),
@@ -110,7 +109,6 @@ namespace mugato
         if(_position != val)
         {
             _transformDirty = true;
-            _areaDirty = true;
             _position = val;
         }
     }
@@ -147,9 +145,7 @@ namespace mugato
         if(_size != val)
         {
             _size = val;
-            _areaDirty = true;
-            _children.setArea(
-                Rectangle(Vector(0.0f), _size));
+            _children.setArea(Rectangle(glm::vec3(0.0f), _size));
         }
     }
 
@@ -169,17 +165,7 @@ namespace mugato
                 * glm::translate(glm::mat4(), -_pivot)
                 ;
             _transformDirty = false;
-        }
-    }
-
-    void Entity::updateArea()
-    {
-        if(_areaDirty)
-        {
-            _area.origin = _position;
-            _area.size = _size;
-            _areaDirty = false;
-
+            _area = _children.getArea()*_transform;
             if(auto parent = _parent.lock())
             {
                 parent->addChild(getSharedPtr());
@@ -190,7 +176,6 @@ namespace mugato
     void Entity::update(double dt)
     {
         updateTransform();
-        updateArea();
 
         for(auto& comp : _components)
         {
@@ -231,6 +216,7 @@ namespace mugato
         {
             child = std::make_shared<Entity>();
         }
+        child->updateTransform();
         child->_parent = getSharedPtr();
         _children.insert(Children::Element(child->getArea(), child));
         return child;

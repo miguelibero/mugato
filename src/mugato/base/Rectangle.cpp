@@ -1,5 +1,6 @@
 #include <mugato/base/Rectangle.hpp>
 #include <buffer.hpp>
+#include <limits>
 
 namespace mugato
 {
@@ -23,7 +24,7 @@ namespace mugato
         return origin+size;
     }
 
-    bool Rectangle::isTwoDimentional() const
+    bool Rectangle::flat() const
     {
         return origin.z == 0.0f && size.z == 0.0f;
     }
@@ -100,12 +101,12 @@ namespace mugato
     {
         auto tmin = min();
         auto tmax = max();
-        bool flat = isTwoDimentional();
+        bool tflat = flat();
         switch(mode)
         {
         case DrawMode::Quads:
         {
-            if(flat)
+            if(tflat)
             {
                 return buffer({
                     tmin.x, tmin.y,
@@ -123,7 +124,7 @@ namespace mugato
         }
         case DrawMode::Triangles:
         {
-            if(flat)
+            if(tflat)
             {
                 return buffer({
                     tmin.x, tmin.y,
@@ -143,7 +144,7 @@ namespace mugato
         }
         case DrawMode::Lines:
         {
-            if(flat)
+            if(tflat)
             {
                 return buffer({
                     tmin.x, tmin.y,
@@ -182,6 +183,57 @@ namespace mugato
         default:
             return 0;
         }
+    }
+
+    std::array<glm::vec3,8> Rectangle::corners() const
+    {
+        return {            
+            glm::vec3(origin.x,        origin.y,        origin.z),
+            glm::vec3(origin.x+size.x, origin.y,        origin.z),
+            glm::vec3(origin.x+size.x, origin.y+size.y, origin.z),
+            glm::vec3(origin.x,        origin.y+size.y, origin.z),
+            glm::vec3(origin.x,        origin.y,        origin.z+size.z),
+            glm::vec3(origin.x+size.x, origin.y,        origin.z+size.z),
+            glm::vec3(origin.x+size.x, origin.y+size.y, origin.z+size.z),
+            glm::vec3(origin.x,        origin.y+size.y, origin.z+size.z)
+        };
+    }
+
+    Rectangle Rectangle::operator*(const glm::mat4& t) const
+    {
+        Rectangle r(*this);
+        r *= t;
+        return r;
+    }
+
+    Rectangle& Rectangle::operator*=(const glm::mat4& t)
+    {
+        auto cs = corners();
+        glm::vec3 max;
+        glm::vec3 min;
+        bool init = false;    
+        for(auto& p : cs)
+        {
+            p = glm::vec3(t*glm::vec4(p, 1.0f));
+            if(init)
+            {
+                min.x = glm::min(min.x, p.x);
+                min.y = glm::min(min.y, p.y);
+                min.z = glm::min(min.z, p.z);
+                max.x = glm::max(max.x, p.x);
+                max.y = glm::max(max.y, p.y);
+                max.z = glm::max(max.z, p.z);
+            }
+            else
+            {
+                min = p;
+                max = p;
+                init = true;
+            }
+        }
+        origin = min;
+        size = max - min;
+        return *this;
     }
 
     RectangleMatch::RectangleMatch(const Rectangle& r, Type t):

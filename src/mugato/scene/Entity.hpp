@@ -31,7 +31,6 @@ namespace mugato
         Parent _parent;
         Transform _transform;
         bool _transformDirty;
-        bool _areaDirty;
         Context* _ctx;
         Vector _position;
         Vector _rotation;
@@ -41,7 +40,6 @@ namespace mugato
         Rectangle _area;
 
         void updateTransform();
-        void updateArea();
     public:
 
         Entity();
