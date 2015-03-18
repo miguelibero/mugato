@@ -34,6 +34,8 @@ namespace mugato
         Rectangle operator*(const glm::mat4& transform) const;
         Rectangle& operator*=(const glm::mat4& transform);
 
+        std::vector<Rectangle> divide(const glm::vec3& divisions) const;
+
         std::array<glm::vec3,8> corners() const;
         bool contains(const glm::vec3& point) const;
         bool contains(const glm::vec2& point) const;

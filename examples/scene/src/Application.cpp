@@ -5,11 +5,19 @@
 
 class SceneApplication : public gorn::Application
 {
+    typedef std::uniform_real_distribution<float> RandomDistri;
+    typedef std::mt19937 RandomAlgo;
 	mugato::Context _ctx;
-    std::shared_ptr<mugato::Entity> _guy1;
-    std::shared_ptr<mugato::Entity> _guy2;
+    RandomAlgo _randomAlgo;
+    RandomDistri _posXDistri;
+    RandomDistri _posYDistri;
+    RandomDistri _rotDistri;
+
+    float randomPos();
 
 public:
+
+    SceneApplication();
 
     void load() override;
     void update(double dt) override;
@@ -23,6 +31,10 @@ namespace gorn
     {
         return std::unique_ptr<Application>(new SceneApplication());
     }
+}
+
+SceneApplication::SceneApplication()
+{
 }
 
 void SceneApplication::load()
@@ -57,7 +69,8 @@ void SceneApplication::load()
     auto scene = _ctx.getScenes().push();
     auto& bg = scene->addComponent<mugato::SpriteComponent>("background.png");
     bg.setEntityPivotPercent(glm::vec2(0.0f));
-    scene->setScale(_ctx.getScreenSize()/bg.getSprite().getSize());
+    auto bgsize = bg.getSprite().getSize();
+    scene->setScale(_ctx.getScreenSize()/bgsize);
     
     auto& materials = _ctx.getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
@@ -66,27 +79,25 @@ void SceneApplication::load()
     octree.setNodesMaterial(materials.load("octree_nodes"));
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
-    _guy1 = scene->addChild();
-    _guy1->addComponent<mugato::SpriteComponent>("character.png");
-    _guy1->setRotation(glm::pi<float>()/4.0f);
-    _guy1->setPosition(glm::vec2(4.0f, 160.0f));
+    _randomAlgo = RandomAlgo(time(0));
+    _posXDistri = RandomDistri(0.0f, bgsize.x);
+    _posYDistri = RandomDistri(0.0f, bgsize.y);
+    _rotDistri = RandomDistri(0.0f, glm::pi<float>()*2.0f);
 
-    _guy2 = scene->addChild();
-    _guy2->addComponent<mugato::SpriteComponent>("character.png");
-    _guy2->setRotation(glm::pi<float>()/-4.0f);
-    _guy2->setPosition(glm::vec2(4.0f, 160.0f));
+    for(int i=0; i<100; ++i)
+    {
+        auto guy = scene->addChild();
+        guy->addComponent<mugato::SpriteComponent>("character.png");
+        guy->setScale(0.2f);
+        guy->setRotation(_rotDistri(_randomAlgo));
+        guy->setPosition(glm::vec2(
+            _posXDistri(_randomAlgo),
+            _posYDistri(_randomAlgo)));
+    }
 }
 
 void SceneApplication::update(double dt)
 {
-    auto pos = _guy1->getPosition();
-    pos.x += 30.0f*dt;
-    _guy1->setPosition(pos);
-
-    pos = _guy2->getPosition();
-    pos.y += 30.0f*dt;
-    _guy2->setPosition(pos);
-
     _ctx.update(dt);
 }
 

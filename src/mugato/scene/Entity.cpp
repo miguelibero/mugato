@@ -176,11 +176,11 @@ namespace mugato
     void Entity::update(double dt)
     {
         updateTransform();
-
         for(auto& comp : _components)
         {
             comp->update(dt);
         }
+        _children.adjust();
         Children::Elements elements;
         _children.find(elements);
         for(auto& elm : elements)

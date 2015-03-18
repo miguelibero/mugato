@@ -236,6 +236,42 @@ namespace mugato
         return *this;
     }
 
+    std::vector<Rectangle> Rectangle::divide(const glm::vec3& divs) const
+    {
+        auto fdivs = glm::round(glm::max(divs, glm::vec3(1.0f)));
+        std::vector<Rectangle> parts;
+        parts.reserve(fdivs.x*fdivs.y*fdivs.z);
+        auto tmin = min();
+        auto tmax = max();
+        auto tsize = size/fdivs;
+        auto p = tmin;
+
+        for(p.z=tmin.z;p.z<tmax.z||p.z==tmin.z;p.z+=tsize.z)
+        {
+            for(p.y=tmin.y;p.y<tmax.y||p.y==tmin.y;p.y+=tsize.y)
+            {
+                for(p.x=tmin.x;p.x<tmax.x||p.x==tmin.x;p.x+=tsize.x)
+                {
+                    parts.push_back(Rectangle(p, tsize));
+                    if(tsize.x == 0.0f)
+                    {
+                        break;
+                    }
+                }
+                if(tsize.y == 0.0f)
+                {
+                    break;
+                }
+            }
+            if(tsize.z == 0.0f)
+            {
+                break;
+            }
+        }
+
+        return parts;
+    }
+
     RectangleMatch::RectangleMatch(const Rectangle& r, Type t):
     rectangle(r), type(t)
     {

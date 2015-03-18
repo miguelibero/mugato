@@ -43,9 +43,9 @@ namespace gorn
 }
 
 QuadTreeApplication::QuadTreeApplication():
-_quadtree(mugato::Rectangle(glm::vec2(-1.0), glm::vec2(2.0)), 2),
-_randomPosDistri(-1.0, 1.0),
-_randomSizeDistri(0.0, 0.1),
+_quadtree(mugato::Rectangle(glm::vec2(-1.0f), glm::vec2(2.0f)), 2),
+_randomPosDistri(-1.0f, 1.0f),
+_randomSizeDistri(0.0f, 0.1f),
 _deltaTime(0.0f)
 {
 }
@@ -102,6 +102,7 @@ void QuadTreeApplication::update(double dt)
             );
             _quadtree.insert(rect);
         }
+        _quadtree.adjust();
 
         _vboElms->setData(
             _quadtree.getElementsVertices(gorn::DrawMode::Lines),
