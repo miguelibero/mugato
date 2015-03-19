@@ -34,7 +34,8 @@ namespace mugato {
         Definitions _definitions;
     public:
         SpriteManager(gorn::MaterialManager& materials, gorn::FileManager& files);
-
+        SpriteManager(const SpriteManager& other) = delete;
+    
         const Atlases& getAtlases() const;
         Atlases& getAtlases();
 

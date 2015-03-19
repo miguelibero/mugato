@@ -6,7 +6,8 @@
 
 namespace mugato
 {
-    Entity::Entity()
+    Entity::Entity():
+    _ctx(nullptr)
     {
     }
 

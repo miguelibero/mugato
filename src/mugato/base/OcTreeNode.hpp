@@ -424,24 +424,29 @@ namespace mugato
     template<typename T>
     bool OcTreeNode<T>::join()
     {
-        if(_maxElements == 0)
+        if(_maxElements == 0 || _branches.empty())
         {
             return false;
         }
-        if(_branches.empty() || size() > _maxElements)
-        {
-            return false;
-        }
+        size_t size = _elements.size();
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
             if((*itr)->join())
             {
                 return true;
             }
+        }
+        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        {
             if((*itr)->sizeNodes() > 1)
             {
                 return false;
             }
+            size += (*itr)->_elements.size();
+        }
+        if(size > _maxElements)
+        {
+            return false;
         }
         for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
         {
@@ -451,7 +456,6 @@ namespace mugato
         _branches.clear();
         return true;
     }
-
 
     template<typename T>
     bool OcTreeNode<T>::adjust(bool all)

@@ -5,6 +5,7 @@
 
 #include <mugato/label/LabelCharacter.hpp>
 #include <map>
+#include <string>
 
 namespace mugato {
 

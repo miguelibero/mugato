@@ -36,6 +36,7 @@ namespace mugato {
         Definitions _definitions;
     public:
         LabelManager(gorn::MaterialManager& materials, gorn::FileManager& files);
+        LabelManager(const LabelManager& other) = delete;
 
         const Atlases& getAtlases() const;
         Atlases& getAtlases();

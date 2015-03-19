@@ -84,11 +84,11 @@ void SceneApplication::load()
     _posYDistri = RandomDistri(0.0f, bgsize.y);
     _rotDistri = RandomDistri(0.0f, glm::pi<float>()*2.0f);
 
-    for(int i=0; i<10; ++i)
+    for(int i=0; i<100; ++i)
     {
         auto guy = scene->addChild();
         guy->addComponent<mugato::SpriteComponent>("character.png");
-        guy->getTransform().setScale(0.2f);
+        guy->getTransform().setScale(0.5f);
         guy->getTransform().setRotation(_rotDistri(_randomAlgo));
         guy->getTransform().setPosition(glm::vec2(
             _posXDistri(_randomAlgo),

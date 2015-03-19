@@ -3,6 +3,7 @@
 
 
 #include <glm/glm.hpp>
+#include <array>
 #include <gorn/render/VertexArray.hpp>
 
 class buffer;
@@ -21,6 +22,7 @@ namespace mugato
 
     struct Rectangle
     {
+        typedef std::array<glm::vec3,8> Corners;
         typedef RectangleMatchType MatchType;
         typedef gorn::DrawMode DrawMode;
         glm::vec3 origin;
@@ -36,7 +38,7 @@ namespace mugato
 
         std::vector<Rectangle> divide(const glm::vec3& divisions) const;
 
-        std::array<glm::vec3,8> corners() const;
+        Corners corners() const;
         bool contains(const glm::vec3& point) const;
         bool contains(const glm::vec2& point) const;
         bool contains(const Rectangle& other) const;

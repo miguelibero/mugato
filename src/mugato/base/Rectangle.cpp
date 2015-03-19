@@ -185,9 +185,9 @@ namespace mugato
         }
     }
 
-    std::array<glm::vec3,8> Rectangle::corners() const
+    Rectangle::Corners Rectangle::corners() const
     {
-        return {            
+        return Corners({            
             glm::vec3(origin.x,        origin.y,        origin.z),
             glm::vec3(origin.x+size.x, origin.y,        origin.z),
             glm::vec3(origin.x+size.x, origin.y+size.y, origin.z),
@@ -196,7 +196,7 @@ namespace mugato
             glm::vec3(origin.x+size.x, origin.y,        origin.z+size.z),
             glm::vec3(origin.x+size.x, origin.y+size.y, origin.z+size.z),
             glm::vec3(origin.x,        origin.y+size.y, origin.z+size.z)
-        };
+        });
     }
 
     Rectangle Rectangle::operator*(const glm::mat4& t) const

@@ -5,6 +5,7 @@
 
 #include <mugato/sprite/SpriteAnimation.hpp>
 #include <map>
+#include <string>
 
 namespace gorn {
     class RenderQueue;
