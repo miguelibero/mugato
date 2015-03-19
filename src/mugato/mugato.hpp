@@ -33,9 +33,13 @@
 
 #include <mugato/scene/Component.hpp>
 #include <mugato/scene/Entity.hpp>
+#include <mugato/scene/EntityTransform.hpp>
 #include <mugato/scene/EntityStack.hpp>
 #include <mugato/scene/SpriteComponent.hpp>
 #include <mugato/scene/OcTreeRenderComponent.hpp>
+#include <mugato/scene/ActionComponent.hpp>
+#include <mugato/scene/Action.hpp>
+#include <mugato/scene/TweenAction.hpp>
 
 
 #endif

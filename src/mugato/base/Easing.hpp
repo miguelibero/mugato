@@ -4,32 +4,31 @@
 
 #include <glm/gtc/constants.hpp>
 #include <cmath>
+#include <functional>
 
 namespace mugato {
 
+  	typedef float easing_t;
+
+    template<typename T>
 	class Easing
 	{
-	private:
-		Easing(){}
-
 	public:
+        typedef std::function<T(easing_t p, const T& b, const T& c)> Callback;
 
-    	typedef double easing_t;
+        Easing() = delete;
 
-        template<typename T>
-	    T linear(easing_t p, const T& b, easing_t c)
+	    static T linear(easing_t p, const T& b, const T& c)
 	    {
 		    return c*p + b;
 	    }
 
-        template<typename T>
-	    T swing(easing_t p, const T& b, easing_t c)
+	    static T swing(easing_t p, const T& b, const T& c)
 	    {
 		    return linear(0.5 - cosf( p*glm::pi<easing_t>() ) / 2, b, c);
 	    }
 
-        template<typename T>
-        T expo(easing_t p, const T& b, easing_t c)
+        static T expo(easing_t p, const T& b, const T& c)
         {
             return (p==0) ? b : c * pow(2, 10 * (p - 1)) + b;
         }

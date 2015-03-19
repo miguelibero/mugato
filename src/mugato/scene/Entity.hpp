@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 #include <mugato/base/OcTree.hpp>
+#include <mugato/scene/Component.hpp>
+#include <mugato/scene/EntityTransform.hpp>
 
 namespace gorn
 {
@@ -19,9 +21,7 @@ namespace mugato
     class Entity : public std::enable_shared_from_this<Entity>
     {
     public:
-        typedef glm::vec3 Vector;
-        typedef glm::vec2 Vector2;
-        typedef glm::mat4 Transform;
+        typedef EntityTransform Transform;
         typedef OcTree<std::shared_ptr<Entity>> Children;
         typedef std::weak_ptr<Entity> Parent;
         typedef std::vector<std::unique_ptr<Component>> Components;
@@ -32,13 +32,7 @@ namespace mugato
         Transform _transform;
         bool _transformDirty;
         Context* _ctx;
-        Vector _position;
-        Vector _rotation;
-        Vector _scale;
-        Vector _pivot;
-        Vector _size;
-        Rectangle _area;
-
+        
         void updateTransform();
     public:
 
@@ -49,27 +43,8 @@ namespace mugato
         void setContext(Context& ctx);
         Context& getContext() const;
 
-        const Vector& getPosition() const;
-        const Vector& getRotation() const;
-        const Vector& getScale() const;
-        const Vector& getPivot() const;
-        const Vector& getSize() const;
-        const Rectangle& getArea() const;
-
-        void setPosition(const Vector& val);
-        void setRotation(const Vector& val);
-        void setScale(const Vector& val);
-        void setPivot(const Vector& val);
-        void setSize(const Vector& val);
-
-        void setPosition(const Vector2& val);
-        void setRotation(const Vector2& val);
-        void setScale(const Vector2& val);
-        void setPivot(const Vector2& val);
-        void setSize(const Vector2& val);
-
-        void setRotation(float val);
-        void setScale(float val);
+        Transform& getTransform();
+        const Transform& getTransform() const;
 
         void update(double dt);
         void render(gorn::RenderQueue& queue);

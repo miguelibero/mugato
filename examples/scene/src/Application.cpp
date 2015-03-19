@@ -70,7 +70,7 @@ void SceneApplication::load()
     auto& bg = scene->addComponent<mugato::SpriteComponent>("background.png");
     bg.setEntityPivotPercent(glm::vec2(0.0f));
     auto bgsize = bg.getSprite().getSize();
-    scene->setScale(_ctx.getScreenSize()/bgsize);
+    scene->getTransform().setScale(_ctx.getScreenSize()/bgsize);
     
     auto& materials = _ctx.getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
@@ -84,15 +84,23 @@ void SceneApplication::load()
     _posYDistri = RandomDistri(0.0f, bgsize.y);
     _rotDistri = RandomDistri(0.0f, glm::pi<float>()*2.0f);
 
-    for(int i=0; i<100; ++i)
+    for(int i=0; i<10; ++i)
     {
         auto guy = scene->addChild();
         guy->addComponent<mugato::SpriteComponent>("character.png");
-        guy->setScale(0.2f);
-        guy->setRotation(_rotDistri(_randomAlgo));
-        guy->setPosition(glm::vec2(
+        guy->getTransform().setScale(0.2f);
+        guy->getTransform().setRotation(_rotDistri(_randomAlgo));
+        guy->getTransform().setPosition(glm::vec2(
             _posXDistri(_randomAlgo),
             _posYDistri(_randomAlgo)));
+
+        auto& actions = guy->addComponent<mugato::ActionComponent>();
+        auto endt = guy->getTransform();
+        endt.setPosition(glm::vec2(
+            _posXDistri(_randomAlgo),
+            _posYDistri(_randomAlgo)));
+        endt.setRotation(_rotDistri(_randomAlgo));
+        actions.add<mugato::TweenAction>(10.0f, endt);
     }
 }
 

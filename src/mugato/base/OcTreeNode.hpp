@@ -7,7 +7,6 @@
 #include <mugato/base/OcTreeElement.hpp>
 #include <buffer.hpp>
 #include <buffer_writer.hpp>
-#include <iostream>
 
 namespace mugato
 {
@@ -386,7 +385,17 @@ namespace mugato
             }
             return changed;
         }
-        if(_elements.size() <= _maxElements)
+        std::vector<glm::vec3> origins;
+        for(auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        {
+            auto& p = itr->getArea().origin;
+            auto fitr = std::find(origins.begin(), origins.end(), p);
+            if(fitr == origins.end())
+            {
+                origins.insert(fitr, p);
+            }
+        }
+        if(origins.size() <= _maxElements)
         {
             return false;
         }

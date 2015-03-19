@@ -1,6 +1,7 @@
 
 #include <mugato/scene/SpriteComponent.hpp>
 #include <mugato/scene/Entity.hpp>
+#include <mugato/scene/EntityTransform.hpp>
 #include <mugato/base/Context.hpp>
 #include <mugato/sprite/SpriteManager.hpp>
 
@@ -33,7 +34,7 @@ namespace mugato
         _pivotPercent = val;
         if(auto ptr = _entity.lock())
         {
-            ptr->setPivot(_pivotPercent*_sprite.getSize());
+            ptr->getTransform().setPivot(_pivotPercent*_sprite.getSize());
         }
     }
 
@@ -41,7 +42,7 @@ namespace mugato
     {
         if(auto ptr = _entity.lock())
         {
-            ptr->setSize(_sprite.getSize());
+            ptr->getTransform().setSize(_sprite.getSize());
         }
     }
 

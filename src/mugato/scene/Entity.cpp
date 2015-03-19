@@ -3,18 +3,10 @@
 #include <mugato/base/Exception.hpp>
 #include <gorn/render/RenderQueue.hpp>
 #include <gorn/render/RenderCommand.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/euler_angles.hpp> 
 
 namespace mugato
 {
-    Entity::Entity():
-    _transformDirty(true),
-    _ctx(nullptr),
-    _position(0.0f),
-    _rotation(0.0f),
-    _scale(1.0f, 1.0f, 0.0f),
-    _pivot(0.0f)
+    Entity::Entity()
     {
     }
 
@@ -39,114 +31,14 @@ namespace mugato
         }
     }
 
-    const Entity::Vector& Entity::getPosition() const
+    const Entity::Transform& Entity::getTransform() const
     {
-        return _position;
+        return _transform;
     }
 
-    const Entity::Vector& Entity::getRotation() const
+    Entity::Transform& Entity::getTransform()
     {
-        return _rotation;
-    }
-
-    const Entity::Vector& Entity::getScale() const
-    {
-        return _scale;
-    }
-
-    const Entity::Vector& Entity::getPivot() const
-    {
-        return _pivot;
-    }
-
-    const Entity::Vector& Entity::getSize() const
-    {
-        return _size;
-    }
-
-    const Rectangle& Entity::getArea() const
-    {
-        return _area;
-    }
-
-    void Entity::setPosition(const Vector2& val)
-    {
-        setPosition(Vector(val.x, val.y, 0.0f));
-    }
-
-    void Entity::setRotation(const Vector2& val)
-    {
-        setRotation(Vector(val.x, val.y, 0.0f));
-    }
-
-    void Entity::setScale(const Vector2& val)
-    {
-        setScale(Vector(val.x, val.y, 0.0f));
-    }
-
-    void Entity::setPivot(const Vector2& val)
-    {
-        setPivot(Vector(val.x, val.y, 0.0f));
-    }
-
-    void Entity::setSize(const Vector2& val)
-    {
-        setSize(Vector(val.x, val.y, 0.0f));
-    }
-
-    void Entity::setRotation(float val)
-    {
-        setRotation(glm::vec3(0.0f, val, 0.0f));
-    }
-
-    void Entity::setScale(float val)
-    {
-        setScale(glm::vec2(val));
-    }
-
-    void Entity::setPosition(const Vector& val)
-    {
-        if(_position != val)
-        {
-            _transformDirty = true;
-            _position = val;
-        }
-    }
-
-    void Entity::setRotation(const Vector& val)
-    {
-        if(_rotation != val)
-        {
-            _transformDirty = true;
-            _rotation = val;
-        }
-    }
-
-    void Entity::setScale(const Vector& val)
-    {
-        if(_scale != val)
-        {
-            _transformDirty = true;
-            _scale = val;
-        }
-    }
-
-    void Entity::setPivot(const Vector& val)
-    {
-        if(_pivot != val)
-        {
-            _transformDirty = true;
-            _pivot = val;
-        }
-    }
-
-    void Entity::setSize(const Vector& val)
-    {
-        if(_size != val)
-        {
-            _size = val;
-            _children.setArea(Rectangle(glm::vec3(0.0f), _size));
-        }
+        return _transform;
     }
 
     std::shared_ptr<Entity> Entity::getSharedPtr()
@@ -156,16 +48,10 @@ namespace mugato
 
     void Entity::updateTransform()
     {
-        if(_transformDirty)
+        if(_transform.update())
         {
-            _transform = glm::translate(glm::mat4(), _position)                
-                * glm::translate(glm::mat4(), _pivot)
-                * glm::scale(glm::mat4(), _scale)
-                * glm::orientate4(_rotation)
-                * glm::translate(glm::mat4(), -_pivot)
-                ;
-            _transformDirty = false;
-            _area = _children.getArea()*_transform;
+            _children.setArea(Rectangle(
+                glm::vec3(0.0f), _transform.getSize()));
             if(auto parent = _parent.lock())
             {
                 parent->addChild(getSharedPtr());
@@ -194,7 +80,7 @@ namespace mugato
         queue.addCommand()
             .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
         queue.addCommand()
-            .withTransform(_transform)
+            .withTransform(_transform.getMatrix())
             .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal);     
         for(auto& comp : _components)
         {
@@ -216,9 +102,10 @@ namespace mugato
         {
             child = std::make_shared<Entity>();
         }
+        updateTransform();
         child->updateTransform();
         child->_parent = getSharedPtr();
-        _children.insert(Children::Element(child->getArea(), child));
+        _children.insert(Children::Element(child->getTransform().getArea(), child));
         return child;
     }
 
