@@ -63,10 +63,12 @@ namespace mugato
     void Entity::update(double dt)
     {
         updateTransform();
-        for(auto& comp : _components)
+        _components.erase(std::remove_if(_components.begin(), _components.end(),
+            [&dt](std::unique_ptr<Component>& comp)
         {
             comp->update(dt);
-        }
+            return false;
+        }), _components.end());
         _children.adjust();
         Children::Elements elements;
         _children.find(elements);

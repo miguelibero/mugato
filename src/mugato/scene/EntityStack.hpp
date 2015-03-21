@@ -23,7 +23,7 @@ namespace mugato
 
         void setContext(Context& ctx);
 
-        void update(double dt) override;
+        bool update(double dt) override;
 
         void render(gorn::RenderQueue& queue) override;
         

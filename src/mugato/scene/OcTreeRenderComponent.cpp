@@ -41,8 +41,9 @@ namespace mugato
         _entity = entity.getSharedPtr();
     }
 
-    void OcTreeRenderComponent::update(double dt)
+    bool OcTreeRenderComponent::update(double dt)
     {
+        return true;
     }
 
     void OcTreeRenderComponent::render(gorn::RenderQueue& queue)

@@ -1,29 +1,41 @@
 
 
-#ifndef __mugato__LabelCharacter__
-#define __mugato__LabelCharacter__
+#ifndef __mugato__SpriteFrameLabelCharacter__
+#define __mugato__SpriteFrameLabelCharacter__
 
 #include <mugato/sprite/SpriteFrame.hpp>
 #include <mugato/label/FontAtlasRegion.hpp>
+#include <mugato/label/LabelCharacter.hpp>
 
 namespace mugato {
 
-    class LabelCharacter : public SpriteFrame
+    enum class LabelCharacterMode
+    {
+        Character,
+        Line
+    };
+
+    class LabelCharacter
     {
     public:
         typedef FontAtlasRegion Region;
+        typedef LabelCharacterMode Mode;
     private:
-        bool _dirty;
-        glm::mat4 _transform;
-        Region _region;
         SpriteFrame _frame;
-
-        void init();
+        Region _region;
+        glm::mat4 _transform;
+        glm::vec3 _base;
+        Mode _mode;
+        bool _dirty;
 
     public:
         LabelCharacter();
-        explicit LabelCharacter(const std::shared_ptr<gorn::Material>& material);
-        LabelCharacter(const std::shared_ptr<gorn::Material>& material, const Region& region);
+        LabelCharacter(const glm::vec3& base,
+            Mode mode=Mode::Character);
+        explicit LabelCharacter(
+            const std::shared_ptr<gorn::Material>& material);
+        LabelCharacter(const std::shared_ptr<gorn::Material>& material,
+            const Region& region);
 
         void setRegion(const Region& region);
         const Region& getRegion() const;

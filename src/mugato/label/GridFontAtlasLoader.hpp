@@ -20,7 +20,8 @@ namespace mugato {
         char _initialCharacter;
         float _advanceDifference;
     public:
-        GridFontAtlasLoader(gorn::MaterialManager& textures, const glm::vec2& regionSize);
+        GridFontAtlasLoader(gorn::MaterialManager& materials,
+            const glm::vec2& regionSize, char initialChar=0);
         bool validate(const std::string& name) const NOEXCEPT;
         FontAtlas load(const std::string& name) const;
         void setInitialCharacter(char chr) NOEXCEPT;

@@ -14,12 +14,13 @@ namespace mugato
         _ctx = &ctx;
     }
 
-    void EntityStack::update(double dt)
+    bool EntityStack::update(double dt)
     {
         if(!_stack.empty())
         {
             _stack.back()->update(dt);
         }
+        return true;
     }
 
     void EntityStack::render(gorn::RenderQueue& queue)

@@ -55,9 +55,10 @@ namespace mugato
         _sprite.play(_animation);
     }
 
-    void SpriteComponent::update(double dt)
+    bool SpriteComponent::update(double dt)
     {
         _sprite.update(dt);
+        return true;
     }
 
     void SpriteComponent::render(gorn::RenderQueue& queue)

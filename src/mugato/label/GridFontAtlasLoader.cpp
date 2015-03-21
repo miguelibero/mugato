@@ -8,9 +8,11 @@
 namespace mugato {
 
     GridFontAtlasLoader::GridFontAtlasLoader(
-        gorn::MaterialManager& materials, const glm::vec2& regionSize):
+        gorn::MaterialManager& materials,
+        const glm::vec2& regionSize,
+        char initialChar):
         _materials(materials), _regionSize(regionSize),
-        _initialCharacter(0), _advanceDifference(0.0f)
+        _initialCharacter(initialChar), _advanceDifference(0.0f)
     {
     }
 
@@ -33,12 +35,12 @@ namespace mugato {
     {
         FontAtlas atlas;
         atlas.setMaterial(name);
-        auto material = _materials.load(name);
+        auto msize = _materials.loadSize(name);
 
         char chr = _initialCharacter;
-        for(float y=material->getSize().y-_regionSize.y; y>0; y-=_regionSize.y)
+        for(float y=msize.y-_regionSize.y; y>0; y-=_regionSize.y)
         {
-            for(float x=0; x<material->getSize().x; x+=_regionSize.x)
+            for(float x=0; x<msize.x; x+=_regionSize.x)
             {
                 FontAtlas::Region r;
                 r.setSize(_regionSize);
@@ -48,7 +50,12 @@ namespace mugato {
                 chr++;
             }
         }
-
+        if(!atlas.hasRegion(" "))
+        {
+            FontAtlas::Region r;
+            r.setAdvance(_regionSize.x+_advanceDifference);
+            atlas.setRegion(" ", r); 
+        }
         return atlas;
     }
 

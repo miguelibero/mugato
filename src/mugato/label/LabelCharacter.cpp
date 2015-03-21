@@ -6,27 +6,26 @@
 
 namespace mugato {
 
-    LabelCharacter::LabelCharacter()
+    LabelCharacter::LabelCharacter():
+    _mode(Mode::Character), _dirty(true)
     {
-        init();
+    }
+
+    LabelCharacter::LabelCharacter(const glm::vec3& base, Mode mode):
+    _base(base), _mode(mode), _dirty(true)
+    {
     }
 
     LabelCharacter::LabelCharacter(const std::shared_ptr<gorn::Material>& material):
-    SpriteFrame(material)
+    _frame(material), _mode(Mode::Character), _dirty(true)
     {
-        init();
     }
 
     LabelCharacter::LabelCharacter(
         const std::shared_ptr<gorn::Material>& material, const Region& region):
-        SpriteFrame(material, region), _region(region)
+        _frame(material, region), _region(region),
+        _mode(Mode::Character), _dirty(true)
     {
-        init();
-    }
-
-    void LabelCharacter::init()
-    {
-        _dirty = true;
     }
 
     void LabelCharacter::setRegion(const Region& region)
@@ -34,7 +33,7 @@ namespace mugato {
         if(_region != region)
         {
             _region = region;
-            SpriteFrame::setRegion(region);
+            _frame.setRegion(region);
             _dirty = true;
         }
     }
@@ -48,21 +47,33 @@ namespace mugato {
     {
         if(_dirty)
         {
-            float x = _region.getAdvance();
-            glm::vec3 pos(x, 0.0f, 0.0f);
+            glm::vec3 pos(_base);
+            pos.x += _region.getAdvance();
             _transform = glm::translate(glm::mat4(), pos);
             _dirty = false;
         }
-        SpriteFrame::update();
+        _frame.update();
     }
 
     void LabelCharacter::render(gorn::RenderQueue& queue) const
     {
-        SpriteFrame::render(queue);
+        _frame.render(queue);
+
+        if(_mode == Mode::Line)
+        {
+            queue.addCommand()
+              .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
+        }
 
         queue.addCommand()
           .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
           .withTransform(_transform);
+
+        if(_mode == Mode::Line)
+        {
+            queue.addCommand()
+              .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
+        }
     }
 
 }

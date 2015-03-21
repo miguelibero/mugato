@@ -2,6 +2,7 @@
 #include <gorn/gorn.hpp>
 #include <mugato/mugato.hpp>
 #include <glm/gtc/constants.hpp>
+#include <functional>
 
 class SceneApplication : public gorn::Application
 {
@@ -14,6 +15,8 @@ class SceneApplication : public gorn::Application
     RandomDistri _rotDistri;
 
     float randomPos();
+
+    void moveGuy(std::shared_ptr<mugato::Entity> guy, float duration);
 
 public:
 
@@ -41,18 +44,21 @@ void SceneApplication::load()
 {
 #ifdef GORN_PLATFORM_LINUX
 	_ctx.getGorn().getFiles()
-        .addDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
+        .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
 	_ctx.getGorn().getImages()
-        .addDefaultDataLoader<gorn::PngImageLoader>();
+        .makeDefaultDataLoader<gorn::PngImageLoader>();
 #elif GORN_PLATFORM_ANDROID
 	_ctx.getGorn().getFiles()
-        .addDefaultLoader<gorn::BundleFileLoader>("%s");
+        .makeDefaultLoader<gorn::BundleFileLoader>("%s");
 	_ctx.getGorn().getImages()
-        .addDefaultDataLoader<gorn::GraphicsImageLoader>();
+        .makeDefaultDataLoader<gorn::GraphicsImageLoader>();
 #endif
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    //glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
     _ctx.setScreenSize(glm::vec2(480.0f, 320.0f));
 
@@ -71,6 +77,9 @@ void SceneApplication::load()
     bg.setEntityPivotPercent(glm::vec2(0.0f));
     auto bgsize = bg.getSprite().getSize();
     scene->getTransform().setScale(_ctx.getScreenSize()/bgsize);
+
+    auto& debugInfo = scene->addComponent<mugato::DebugInfoComponent>();
+    debugInfo.getTransform().setPosition(glm::vec3(0.0f, 40.f, 1.0f));
     
     auto& materials = _ctx.getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
@@ -94,14 +103,22 @@ void SceneApplication::load()
             _posXDistri(_randomAlgo),
             _posYDistri(_randomAlgo)));
 
-        auto& actions = guy->addComponent<mugato::ActionComponent>();
-        auto endt = guy->getTransform();
-        endt.setPosition(glm::vec2(
-            _posXDistri(_randomAlgo),
-            _posYDistri(_randomAlgo)));
-        endt.setRotation(_rotDistri(_randomAlgo));
-        actions.add<mugato::TweenAction>(10.0f, endt);
+        moveGuy(guy, 4.0f);
     }
+}
+
+void SceneApplication::moveGuy(
+    std::shared_ptr<mugato::Entity> guy, float duration)
+{
+    auto& actions = guy->addComponent<mugato::ActionComponent>();
+    auto endt = guy->getTransform();
+    endt.setPosition(glm::vec2(
+        _posXDistri(_randomAlgo),
+        _posYDistri(_randomAlgo)));
+    endt.setRotation(_rotDistri(_randomAlgo));
+    actions.add<mugato::TweenAction>(duration, endt)
+        .withComplete(std::bind(
+            &SceneApplication::moveGuy, this, guy, duration));
 }
 
 void SceneApplication::update(double dt)
@@ -112,7 +129,7 @@ void SceneApplication::update(double dt)
 void SceneApplication::draw()
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    _ctx.draw();
 }
 

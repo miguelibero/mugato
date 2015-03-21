@@ -110,7 +110,7 @@ namespace mugato {
 
     void SpriteFrame::updateTextureData()
     {
-        if(!_dirtyTexVerts)
+        if(!_dirtyTexVerts || _material == nullptr)
         {
             return;
         }

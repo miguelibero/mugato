@@ -5,6 +5,7 @@
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
 #include <mugato/label/FntFontAtlasLoader.hpp>
+#include <mugato/label/DebugFontAtlasConfigurator.hpp>
 #include <gorn/render/ProgramManager.hpp>
 #include <gorn/render/Kinds.hpp>
 #include <gorn/asset/FileManager.hpp>
@@ -19,13 +20,13 @@ namespace mugato
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
     _screenSize(2.0f)
     {
-        _sprites.getAtlases().addDefaultDataLoader
+        _sprites.getAtlases().makeDefaultDataLoader
             <GdxSpriteAtlasLoader>();
-        _sprites.getAtlases().addDefaultDataLoader
+        _sprites.getAtlases().makeDefaultDataLoader
             <CocosSpriteAtlasLoader>();
-        _labels.getAtlases().addDefaultDataLoader
+        _labels.getAtlases().makeDefaultDataLoader
             <FntFontAtlasLoader>();
-        _sprites.getAtlases().addDefaultLoader
+        _sprites.getAtlases().makeDefaultLoader
             <MaterialSpriteAtlasLoader>(_gorn.getMaterials());
 
         _gorn.getMaterials().getDefinitions().set(
@@ -110,6 +111,8 @@ void main()
             .withUniform("color", gorn::UniformKind::Color)
             .withAttribute("position", gorn::AttributeKind::Position);
 
+        DebugFontAtlasConfigurator().setup(*this);
+
         _scenes.setContext(*this);
     }
 
@@ -169,6 +172,7 @@ void main()
     void Context::update(double dt)
     {
         _scenes.update(dt);
+        _gorn.getQueue().update(dt);
     }
 
     void Context::draw()

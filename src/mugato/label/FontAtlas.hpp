@@ -8,8 +8,15 @@
 #include <string>
 #include <mugato/label/FontAtlasRegion.hpp>
 
+namespace gorn
+{
+    class MaterialManager;
+}
+
 namespace mugato
 {
+    class LabelFont;
+
     class FontAtlas
     {
     public:
@@ -17,7 +24,7 @@ namespace mugato
     private:
         std::vector<std::string> _materials;
         std::map<std::string, Region> _regions;
-        std::map<std::string, std::string> _properties;
+        float _lineHeight;
     public:
         FontAtlas();
 
@@ -29,6 +36,11 @@ namespace mugato
         const std::map<std::string, Region>& getRegions() const;
         const Region& getRegion(const std::string& name) const;
         bool hasRegion(const std::string& name) const;
+
+        void setLineHeight(float val);
+        float getLineHeight() const;
+
+        LabelFont createFont(gorn::MaterialManager& materials) const;
     };
 
 }

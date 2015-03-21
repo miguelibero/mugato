@@ -26,7 +26,7 @@ namespace mugato
         void setEntitySize();
 
         void onAddedToEntity(Entity& entity) override;
-        void update(double dt) override;
+        bool update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };
 }

@@ -27,16 +27,18 @@ namespace gorn
 
 void SpriteApplication::load()
 {
+    _ctx.setApplication(*this);
+
 #ifdef GORN_PLATFORM_LINUX
 	_ctx.getGorn().getFiles()
-        .addDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
+        .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
 	_ctx.getGorn().getImages()
-        .addDefaultDataLoader<gorn::PngImageLoader>();
+        .makeDefaultDataLoader<gorn::PngImageLoader>();
 #elif GORN_PLATFORM_ANDROID
 	_ctx.getGorn().getFiles()
-        .addDefaultLoader<gorn::BundleFileLoader>("%s");
+        .makeDefaultLoader<gorn::BundleFileLoader>("%s");
 	_ctx.getGorn().getImages()
-        .addDefaultDataLoader<gorn::GraphicsImageLoader>();
+        .makeDefaultDataLoader<gorn::GraphicsImageLoader>();
 #endif
 
     _ctx.getGorn().getTextures().getDefinitions().get("guybrush.png")

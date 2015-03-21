@@ -2,7 +2,6 @@
 #include <mugato/label/LabelManager.hpp>
 #include <mugato/label/Label.hpp>
 #include <mugato/label/FontAtlas.hpp>
-#include <gorn/render/MaterialManager.hpp>
 
 namespace mugato {
     
@@ -42,16 +41,7 @@ namespace mugato {
         if(itr == _fonts.end())
         {
             auto atlas = _atlases.load(name).get();
-            auto font = std::make_shared<Font>();
-            for(auto ritr=atlas->getRegions().begin();
-                ritr!=atlas->getRegions().end(); ++ritr)
-            {
-                auto& region = ritr->second;
-                std::string mname = atlas->getMaterial(region.getPage());
-                auto material = _materials.load(mname);
-                Font::Character chr(material, region);
-                font->setCharacter(ritr->first, chr);
-            }
+            auto font = std::make_shared<Font>(atlas->createFont(_materials));
             itr = _fonts.insert(itr, {name, font});
         }
         return itr->second;

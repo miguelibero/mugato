@@ -54,10 +54,10 @@ void QuadTreeApplication::load()
 {
 #ifdef GORN_PLATFORM_LINUX
 	_ctx.getGorn().getFiles()
-        .addDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
+        .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
 #elif GORN_PLATFORM_ANDROID
 	_ctx.getGorn().getFiles()
-        .addDefaultLoader<gorn::BundleFileLoader>("%s");
+        .makeDefaultLoader<gorn::BundleFileLoader>("%s");
 #endif
 
     std::random_device rd;

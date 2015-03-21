@@ -1,11 +1,14 @@
 
 #include <mugato/label/FontAtlas.hpp>
+#include <mugato/label/LabelFont.hpp>
 #include <mugato/base/Exception.hpp>
 #include <gorn/base/String.hpp>
+#include <gorn/render/MaterialManager.hpp>
 
 namespace mugato {
 
-    FontAtlas::FontAtlas()
+    FontAtlas::FontAtlas():
+    _lineHeight(0.0f)
     {
     }
 
@@ -51,5 +54,50 @@ namespace mugato {
     bool FontAtlas::hasRegion(const std::string& name) const
     {
         return _regions.find(name) != _regions.end();
+    }
+
+    void FontAtlas::setLineHeight(float val)
+    {
+        _lineHeight = val;
+    }
+
+    float FontAtlas::getLineHeight() const
+    {
+        if(_lineHeight == 0.0f)
+        {
+            float max = 0.0f;
+            for(auto itr = _regions.begin(); itr != _regions.end(); ++itr)
+            {
+                auto h = itr->second.getOriginalSize().y;
+                if(max < h)
+                {
+                    max = h;
+                }
+            }
+            return max;
+        }
+        return _lineHeight;
+    }
+
+    LabelFont FontAtlas::createFont(gorn::MaterialManager& materials) const
+    {
+        LabelFont font;
+        for(auto itr=_regions.begin(); itr!=_regions.end(); ++itr)
+        {
+            auto& region = itr->second;
+            std::string mname = getMaterial(region.getPage());
+            auto material = materials.load(mname);
+            LabelFont::Character chr(material, region);
+            font.setCharacter(itr->first, chr);
+        }
+
+        if(!font.hasCharacter("\n"))
+        {
+            LabelFont::Character chr(
+                glm::vec3(0.0f, -1.0f*getLineHeight(), 0.0f),
+                LabelFont::Character::Mode::Line);
+            font.setCharacter("\n", chr);
+        }
+        return font;
     }
 }
