@@ -3,6 +3,7 @@
 #include <mugato/mugato.hpp>
 #include <glm/gtc/constants.hpp>
 #include <functional>
+#include <random>
 
 class SceneApplication : public gorn::Application
 {
@@ -49,7 +50,7 @@ void SceneApplication::load()
         .makeDefaultDataLoader<gorn::PngImageLoader>();
 #elif GORN_PLATFORM_ANDROID
 	_ctx.getGorn().getFiles()
-        .makeDefaultLoader<gorn::BundleFileLoader>("%s");
+        .makeDefaultLoader<gorn::AssetFileLoader>("%s");
 	_ctx.getGorn().getImages()
         .makeDefaultDataLoader<gorn::GraphicsImageLoader>();
 #endif
