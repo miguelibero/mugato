@@ -57,7 +57,7 @@ void QuadTreeApplication::load()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
 #elif GORN_PLATFORM_ANDROID
 	_ctx.getGorn().getFiles()
-        .makeDefaultLoader<gorn::BundleFileLoader>("%s");
+        .makeDefaultLoader<gorn::AssetFileLoader>("%s");
 #endif
 
     std::random_device rd;

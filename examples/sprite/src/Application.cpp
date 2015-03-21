@@ -36,7 +36,7 @@ void SpriteApplication::load()
         .makeDefaultDataLoader<gorn::PngImageLoader>();
 #elif GORN_PLATFORM_ANDROID
 	_ctx.getGorn().getFiles()
-        .makeDefaultLoader<gorn::BundleFileLoader>("%s");
+        .makeDefaultLoader<gorn::AssetFileLoader>("%s");
 	_ctx.getGorn().getImages()
         .makeDefaultDataLoader<gorn::GraphicsImageLoader>();
 #endif
