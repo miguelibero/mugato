@@ -25,13 +25,10 @@ namespace mugato {
 
         bool _dirtyTexVerts;
         bool _dirtyPosVerts;
-        bool _dirtyElmVerts;
 
-        mutable buffer _texVerts;
-        mutable buffer _posVerts;
-        mutable buffer _elmVerts;
+        buffer _texVerts;
+        buffer _posVerts;
 
-        void updateElementData();
         void updatePositionData();
         void updateTextureData();
 

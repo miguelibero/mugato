@@ -70,11 +70,11 @@ void main()
 }
 
 )")
-            .withUniform("model", gorn::UniformKind::Model)
-            .withUniform("view", gorn::UniformKind::View)
-            .withUniform("texture", gorn::UniformKind::Texture0)
-            .withAttribute("position", gorn::AttributeKind::Position)
-            .withAttribute("texCoords", gorn::AttributeKind::TexCoords);
+            .withUniform(gorn::UniformKind::Model, "model")
+            .withUniform(gorn::UniformKind::View, "view")
+            .withUniform(gorn::UniformKind::Texture0, "texture")
+            .withAttribute(gorn::AttributeKind::Position, "position")
+            .withAttribute(gorn::AttributeKind::TexCoords, "texCoords");
 
 
  _gorn.getPrograms().getDefinitions().get(ProgramKind::Color)
@@ -106,10 +106,10 @@ void main()
 }
 
 )")
-            .withUniform("model", gorn::UniformKind::Model)
-            .withUniform("view", gorn::UniformKind::View)
-            .withUniform("color", gorn::UniformKind::Color)
-            .withAttribute("position", gorn::AttributeKind::Position);
+            .withUniform(gorn::UniformKind::Model, "model")
+            .withUniform(gorn::UniformKind::View, "view")
+            .withUniform(gorn::UniformKind::Color, "color")
+            .withAttribute(gorn::AttributeKind::Position, "position");
 
         DebugFontAtlasConfigurator().setup(*this);
 

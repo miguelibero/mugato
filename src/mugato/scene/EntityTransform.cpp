@@ -8,7 +8,7 @@ namespace mugato
     _dirty(true),
     _position(0.0f),
     _rotation(0.0f),
-    _scale(1.0f, 1.0f, 0.0f),
+    _scale(1.0f),
     _pivot(0.0f)
     {
     }
@@ -60,7 +60,7 @@ namespace mugato
 
     void EntityTransform::setScale(const Vector2& val)
     {
-        setScale(Vector(val.x, val.y, 0.0f));
+        setScale(Vector(val.x, val.y, 1.0f));
     }
 
     void EntityTransform::setPivot(const Vector2& val)

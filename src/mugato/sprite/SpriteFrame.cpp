@@ -31,7 +31,6 @@ namespace mugato {
     {
         _dirtyTexVerts = true;
         _dirtyPosVerts = true;
-        _dirtyElmVerts = true;
     }
 
     void SpriteFrame::setMaterial(
@@ -71,21 +70,8 @@ namespace mugato {
 
     void SpriteFrame::update()
     {
-        updateElementData();
         updatePositionData();
         updateTextureData();
-    }
-
-    void SpriteFrame::updateElementData()
-    {
-        if(_dirtyElmVerts)
-        {
-            _elmVerts = {
-                0, 1, 2,
-                2, 3, 0
-            };
-            _dirtyElmVerts = false;
-        }
     }
 
     void SpriteFrame::updatePositionData()
@@ -165,7 +151,9 @@ namespace mugato {
                 _posVerts, 2, gorn::BasicType::Float)
             .withAttribute(gorn::AttributeKind::TexCoords, 
                 _texVerts, 2, gorn::BasicType::Float)
-            .withElements(
-                _elmVerts, gorn::BasicType::UnsignedInteger);
+            .withElements({
+                0, 1, 2,
+                2, 3, 0
+            });
     }
 }

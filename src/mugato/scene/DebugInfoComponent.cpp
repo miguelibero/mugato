@@ -3,6 +3,7 @@
 #include <mugato/base/Context.hpp>
 #include <gorn/base/Context.hpp>
 #include <sstream>
+#include <iostream>
 
 namespace mugato {
 
@@ -37,6 +38,7 @@ namespace mugato {
             ss << "fps: " << info.framesPerSecond << std::endl;
             ss << "draws: " << info.drawCalls << "/";
             ss << info.drawCallsBatched;
+            std::cout << ss.str() << std::endl;
             _label.setText(ss.str());
         }
         _label.update(dt);
