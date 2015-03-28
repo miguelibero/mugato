@@ -47,9 +47,10 @@ namespace mugato
         const Transform& getTransform() const;
 
         void update(double dt);
+        void fixedUpdate(double dt);
         void render(gorn::RenderQueue& queue);
 
-        std::shared_ptr<Entity> addChild(std::shared_ptr<Entity> child=nullptr);
+        std::shared_ptr<Entity> addChild(const std::shared_ptr<Entity>& child=nullptr);
         bool removeFromParent();
 
         const Children& getChildren() const;

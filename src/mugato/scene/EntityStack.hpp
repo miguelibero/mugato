@@ -23,8 +23,8 @@ namespace mugato
 
         void setContext(Context& ctx);
 
-        bool update(double dt) override;
-
+        void update(double dt) override;
+        void fixedUpdate(double dt) override;
         void render(gorn::RenderQueue& queue) override;
         
         std::shared_ptr<Entity> push(std::shared_ptr<Entity> entity=nullptr);

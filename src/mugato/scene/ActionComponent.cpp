@@ -51,7 +51,12 @@ namespace mugato
         _entity = entity.getSharedPtr();
     }
 
-    bool ActionComponent::update(double dt)
+    bool ActionComponent::hasFinished() const
+    {
+        return _actions.empty();
+    }
+
+    void ActionComponent::update(double dt)
     {
         for(auto itr = _actions.begin(); itr != _actions.end(); ++itr)
         {
@@ -68,8 +73,6 @@ namespace mugato
             [&dt](ActionState& state){
                 return state.finished();
             }), _actions.end());
-
-        return !_actions.empty();
     }
 
     void ActionComponent::render(gorn::RenderQueue& queue)

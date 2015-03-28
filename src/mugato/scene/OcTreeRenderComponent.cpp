@@ -41,11 +41,6 @@ namespace mugato
         _entity = entity.getSharedPtr();
     }
 
-    bool OcTreeRenderComponent::update(double dt)
-    {
-        return true;
-    }
-
     void OcTreeRenderComponent::render(gorn::RenderQueue& queue)
     {
         if(auto ptr = _entity.lock())

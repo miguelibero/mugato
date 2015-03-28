@@ -30,7 +30,6 @@ namespace mugato
         void setNodesDrawMode(DrawMode mode);
 
         void onAddedToEntity(Entity& entity) override;
-        bool update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };
 }

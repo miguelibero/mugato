@@ -67,13 +67,32 @@ namespace mugato
         {
             comp->update(dt);
         }
-        _children.adjust();
         Children::Elements elements;
         _children.find(elements);
         for(auto& elm : elements)
         {
             elm.getContent()->update(dt);
         }
+    }
+
+    void Entity::fixedUpdate(double dt)
+    {
+        for(auto& comp : _components)
+        {
+            comp->fixedUpdate(dt);
+        }
+        Children::Elements elements;
+        _children.find(elements);
+        for(auto& elm : elements)
+        {
+            elm.getContent()->fixedUpdate(dt);
+        }
+
+        _children.adjust(false);
+        _components.erase(std::remove_if(_components.begin(),
+            _components.end(), [](const std::unique_ptr<Component>& c){
+                return c->hasFinished();
+            }), _components.end());
     }
 
     void Entity::render(gorn::RenderQueue& queue)
@@ -97,11 +116,11 @@ namespace mugato
             .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
     }
 
-    std::shared_ptr<Entity> Entity::addChild(std::shared_ptr<Entity> child)
+    std::shared_ptr<Entity> Entity::addChild(const std::shared_ptr<Entity>& child)
     {
         if(child == nullptr)
         {
-            child = std::make_shared<Entity>();
+            return addChild(std::make_shared<Entity>());
         }
         updateTransform();
         child->updateTransform();

@@ -99,28 +99,46 @@ namespace mugato
     template<typename T>
     bool OcTreeNode<T>::insert(const Element& elm)
     {
-        remove(elm);
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        auto itr = std::find(_elements.begin(), _elements.end(), elm);
+        if(!_area.matches(elm.getArea(), _matchType))
         {
-            if((*itr)->insert(elm))
+            if(itr != _elements.end())
+            {
+                _elements.erase(itr);
+            }
+            return false;
+        }
+        for(auto& branch : _branches)
+        {
+            if(branch->remove(elm))
+            {
+                break;
+            }
+        }
+        for(auto& branch : _branches)
+        {
+            if(branch->insert(elm))
             {
                 return true;
             }
         }
-        if(_area.matches(elm.getArea(), _matchType))
+        if(itr == _elements.end())
         {
-            _elements.push_back(elm);
-            return true;
+            _elements.insert(itr, elm);
         }
-        return false;
+        else
+        {
+            *itr = elm;
+        }
+        return true;
     }
 
     template<typename T>
     bool OcTreeNode<T>::remove(const Element& elm)
     {
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if((*itr)->remove(elm))
+            if(branch->remove(elm))
             {
                 return true;
             }
@@ -139,9 +157,9 @@ namespace mugato
     {
         bool changed = !_elements.empty();
         _elements.clear();
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if((*itr)->clear())
+            if(branch->clear())
             {
                 changed = true;
             }
@@ -154,9 +172,9 @@ namespace mugato
     void OcTreeNode<T>::find(Elements& elms) const
     {
         elms.insert(elms.end(), _elements.begin(), _elements.end());
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            (*itr)->find(elms);
+            branch->find(elms);
         }
     }
 
@@ -167,9 +185,9 @@ namespace mugato
         {
             return false;
         }
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if(!(*itr)->empty())
+            if(!branch->empty())
             {
                 return false;
             }
@@ -181,9 +199,9 @@ namespace mugato
     size_t OcTreeNode<T>::size() const
     {
         size_t size = _elements.size();
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            size += (*itr)->size();
+            size += branch->size();
         }
         return size;
     }
@@ -192,9 +210,9 @@ namespace mugato
     size_t OcTreeNode<T>::sizeNodes() const
     {
         size_t size = 1;
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            size += (*itr)->sizeNodes();
+            size += branch->sizeNodes();
         }
         return size;
     }
@@ -216,9 +234,9 @@ namespace mugato
             _elements.erase(itr, _elements.end());
             changed = true;
         }
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if((*itr)->clear(match))
+            if(branch->clear(match))
             {
                 changed = true;
             }
@@ -233,17 +251,16 @@ namespace mugato
         {
             return;
         }
-        for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        for(auto& elm : _elements)
         {
-            const auto& elm = *itr;
             if (match.matches(elm.getArea()))
             {
                 elms.push_back(elm);
             }
         }
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            (*itr)->find(elms, match);
+            branch->find(elms, match);
         }
     }
 
@@ -254,17 +271,16 @@ namespace mugato
         {
             return true;
         }
-        for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        for(auto& elm : _elements)
         {
-            const auto& elm = *itr;
             if (match.matches(elm.getArea()))
             {
                 return false;
             }
         }
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if(!(*itr)->empty(match))
+            if(!branch->empty(match))
             {
                 return false;
             }
@@ -284,9 +300,9 @@ namespace mugato
             [&match](const Element& elm){
                 return match.matches(elm.getArea());
         });
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            size += (*itr)->size(match);
+            size += branch->size(match);
         }
         return size;
     }
@@ -303,9 +319,9 @@ namespace mugato
             changed = true;
         }
 
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if((*itr)->clear(filter))
+            if(branch->clear(filter))
             {
                 changed = true;
             }
@@ -317,17 +333,16 @@ namespace mugato
     template<typename Filter>
     void OcTreeNode<T>::find(Elements& elms, Filter filter) const
     {
-        for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        for(auto& elm : _elements)
         {
-            const auto& elm = *itr;
             if (filter(elm))
             {
                 elms.push_back(elm);
             }
         }
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            (*itr)->find(elms, filter);
+            branch->find(elms, filter);
         }
     }
 
@@ -335,17 +350,16 @@ namespace mugato
     template<typename Filter>
     bool OcTreeNode<T>::empty(Filter filter) const
     {
-        for (auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        for(auto& elm : _elements)
         {
-            const auto& elm = *itr;
             if (filter(elm))
             {
                 return false;
             }
         }
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if(!(*itr)->empty(filter))
+            if(!branch->empty(filter))
             {
                 return false;
             }
@@ -359,9 +373,9 @@ namespace mugato
     {
         size_t size = std::count_if(
                 _elements.begin(), _elements.end(), filter);
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            size += (*itr)->size(filter);
+            size += branch->size(filter);
         }
         return size;
     }
@@ -376,9 +390,9 @@ namespace mugato
         if(!_branches.empty())
         {
             bool changed = false;
-            for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+            for(auto& branch : _branches)
             {
-                if((*itr)->split())
+                if(branch->split())
                 {
                     changed =  true;
                 }
@@ -386,13 +400,13 @@ namespace mugato
             return changed;
         }
         std::vector<glm::vec3> origins;
-        for(auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        for(auto& elm : _elements)
         {
-            auto& p = itr->getArea().origin;
-            auto fitr = std::find(origins.begin(), origins.end(), p);
-            if(fitr == origins.end())
+            auto& p = elm.getArea().origin;
+            auto itr = std::find(origins.begin(), origins.end(), p);
+            if(itr == origins.end())
             {
-                origins.insert(fitr, p);
+                origins.insert(itr, p);
             }
         }
         if(origins.size() <= _maxElements)
@@ -401,17 +415,17 @@ namespace mugato
         }
         auto parts = _area.divide(_divisions);
         _branches.reserve(parts.size());
-        for(auto itr = parts.begin(); itr != parts.end(); ++itr)
+        for(auto& part : parts)
         {
             _branches.push_back(std::unique_ptr<Node>(
-                new Node(*itr, this, _maxElements, _divisions)));
+                new Node(part, this, _maxElements, _divisions)));
         }
         _elements.erase(std::remove_if(_elements.begin(), _elements.end(),
             [this](Element& elm)
             {
-                for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+                for(auto& branch : _branches)
                 {
-                    if((*itr)->insert(elm))
+                    if(branch->insert(elm))
                     {
                         return true;
                     }
@@ -429,28 +443,28 @@ namespace mugato
             return false;
         }
         size_t size = _elements.size();
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if((*itr)->join())
+            if(branch->join())
             {
                 return true;
             }
         }
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            if((*itr)->sizeNodes() > 1)
+            if(branch->sizeNodes() > 1)
             {
                 return false;
             }
-            size += (*itr)->_elements.size();
+            size += branch->_elements.size();
         }
         if(size > _maxElements)
         {
             return false;
         }
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            auto& elms = (*itr)->_elements;
+            auto& elms = branch->_elements;
             _elements.insert(_elements.end(), elms.begin(), elms.end());
         }
         _branches.clear();
@@ -460,26 +474,27 @@ namespace mugato
     template<typename T>
     bool OcTreeNode<T>::adjust(bool all)
     {
-        bool changed = false;
         if(all)
         {
+            bool changed = false;
             while(adjust(false))
             {
                 changed = true;
             }
+            return changed;
         }
         else
         {
             if(join())
             {
-                changed = true;
+                return true;
             }
             if(split())
             {
-                changed = true;
+                return true;
             }
+            return false;
         }
-        return changed;
     }
 
     template<typename T>
@@ -488,13 +503,13 @@ namespace mugato
         buffer data;
         buffer_writer out(data);
         
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            out.write((*itr)->getElementsVertices(mode));
+            out.write(branch->getElementsVertices(mode));
         }
-        for(auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+        for(auto& elm : _elements)
         {
-            out.write(itr->getArea().getVertices(mode));
+            out.write(elm.getArea().getVertices(mode));
         }
         return data;
     }
@@ -505,9 +520,9 @@ namespace mugato
         buffer data;
         buffer_writer out(data);
         
-        for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+        for(auto& branch : _branches)
         {
-            out.write((*itr)->getNodesVertices(mode));
+            out.write(branch->getNodesVertices(mode));
         }
         out.write(_area.getVertices(mode));
 
@@ -523,13 +538,13 @@ namespace mugato
         
         if(match.matches(_area))
         {
-            for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+            for(auto& branch : _branches)
             {
-                out.write((*itr)->getElementsVertices(match, mode));
+                out.write(branch->getElementsVertices(match, mode));
             }
-            for(auto itr = _elements.begin(); itr != _elements.end(); ++itr)
+            for(auto& elm : _elements)
             {
-                const auto& earea = itr->getArea();
+                const auto& earea = elm.getArea();
                 if(match.matches(earea))
                 {
                     out.write(earea.getVertices(mode));
@@ -547,9 +562,9 @@ namespace mugato
         if(match.matches(_area))
         {
             buffer_writer out(data);
-            for(auto itr = _branches.begin(); itr != _branches.end(); ++itr)
+            for(auto& branch : _branches)
             {
-                out.write((*itr)->getNodesVertices(match, mode));
+                out.write(branch->getNodesVertices(match, mode));
             }
             out.write(_area.getVertices(mode));
         }

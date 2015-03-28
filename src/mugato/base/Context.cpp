@@ -18,7 +18,8 @@ namespace mugato
     Context::Context():
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
-    _screenSize(2.0f)
+    _screenSize(2.0f), _fixedUpdateInterval(0.0),
+    _fixedUpdatesPerSecond(10.0)
     {
         _sprites.getAtlases().makeDefaultDataLoader
             <GdxSpriteAtlasLoader>();
@@ -169,10 +170,30 @@ void main()
         return _scenes;
     }
 
+    void Context::setFixedUpdatesPerSecond(double fps)
+    {
+        _fixedUpdatesPerSecond = fps;
+    }
+
     void Context::update(double dt)
     {
+        _fixedUpdateInterval += dt;
+        auto fixedUpdateDuration = 1.0/_fixedUpdatesPerSecond;
+        if(_fixedUpdateInterval > fixedUpdateDuration)
+        {
+            fixedUpdate(_fixedUpdateInterval);
+            while(_fixedUpdateInterval > fixedUpdateDuration)
+            {
+                _fixedUpdateInterval -= fixedUpdateDuration;
+            }
+        }
         _scenes.update(dt);
         _gorn.getQueue().update(dt);
+    }
+
+    void Context::fixedUpdate(double dt)
+    {
+        _scenes.fixedUpdate(dt);
     }
 
     void Context::draw()

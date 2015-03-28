@@ -35,7 +35,8 @@ namespace mugato
         A& add(float duration, Args&&... args);
 
         void onAddedToEntity(Entity& entity) override;
-        bool update(double dt) override;
+        bool hasFinished() const override;
+        void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };
 

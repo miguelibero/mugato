@@ -1,5 +1,5 @@
-#ifndef __mugato__DebugInfoComponent__
-#define __mugato__DebugInfoComponent__
+#ifndef __mugato__RenderInfoComponent__
+#define __mugato__RenderInfoComponent__
 
 #include <mugato/scene/Component.hpp>
 #include <mugato/label/Label.hpp>
@@ -9,10 +9,10 @@
 
 namespace mugato
 {
-    class DebugInfoComponent : public Component
+    class RenderInfoComponent : public Component
     {
     public:
-        typedef gorn::RenderQueue::DebugInfo Info;
+        typedef gorn::RenderQueue::Info Info;
         typedef EntityTransform Transform;
     private:
         Transform _transform;
@@ -22,13 +22,13 @@ namespace mugato
         Info _info;
         
     public:
-        DebugInfoComponent(const std::string& font="debug:");
+        RenderInfoComponent(const std::string& font="debug:");
 
         Transform& getTransform();
         const Transform& getTransform() const;
 
         void onAddedToEntity(Entity& entity) override;
-        bool update(double dt) override;
+        void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };
 }

@@ -68,6 +68,7 @@ void SceneApplication::load()
         .withUniformValue(gorn::UniformKind::Color,
             glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
         .withProgram(mugato::ProgramKind::Color));
+
     matdefs.set("octree_nodes", gorn::MaterialDefinition()
         .withUniformValue(gorn::UniformKind::Color,
             glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
@@ -79,9 +80,9 @@ void SceneApplication::load()
     auto bgsize = bg.getSprite().getSize();
     scene->getTransform().setScale(_ctx.getScreenSize()/bgsize);
 
-    auto& debugInfo = scene->addComponent<mugato::DebugInfoComponent>();
-    debugInfo.getTransform().setPosition(glm::vec3(0.0f, 40.f, 1.0f));
-    
+    auto& debugInfo = scene->addComponent<mugato::RenderInfoComponent>();
+    debugInfo.getTransform().setPosition(glm::vec3(0.0f, 60.f, 1.0f));
+
     auto& materials = _ctx.getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
     octree.setElementsMaterial(materials.load("octree_elements"));

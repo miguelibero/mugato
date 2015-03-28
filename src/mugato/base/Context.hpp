@@ -17,9 +17,16 @@ namespace mugato
         LabelManager _labels;
         EntityStack _scenes;
         glm::vec2 _screenSize;
+
+        double _fixedUpdateInterval;
+        double _fixedUpdatesPerSecond;
+
+        void fixedUpdate(double dt);
     public:
 
         Context();
+
+        void setFixedUpdatesPerSecond(double fps);
 
         void update(double dt);
         void draw();

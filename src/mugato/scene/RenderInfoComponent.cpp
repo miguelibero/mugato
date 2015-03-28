@@ -1,52 +1,50 @@
-#include <mugato/scene/DebugInfoComponent.hpp>
+#include <mugato/scene/RenderInfoComponent.hpp>
 #include <mugato/scene/Entity.hpp>
 #include <mugato/base/Context.hpp>
 #include <gorn/base/Context.hpp>
 #include <sstream>
-#include <iostream>
 
 namespace mugato {
 
-    DebugInfoComponent::DebugInfoComponent(const std::string& font):
+    RenderInfoComponent::RenderInfoComponent(const std::string& font):
     _font(font)
     {
     }
 
-    DebugInfoComponent::Transform& DebugInfoComponent::getTransform()
+    RenderInfoComponent::Transform& RenderInfoComponent::getTransform()
     {
         return _transform;
     }
 
-    const DebugInfoComponent::Transform& DebugInfoComponent::
+    const RenderInfoComponent::Transform& RenderInfoComponent::
         getTransform() const
     {
         return _transform;
     }
 
-    void DebugInfoComponent::onAddedToEntity(Entity& entity)
+    void RenderInfoComponent::onAddedToEntity(Entity& entity)
     {
         _entity = entity.getSharedPtr();
         _label = entity.getContext().getLabels().load(_font);
     }
 
-    bool DebugInfoComponent::update(double dt)
+    void RenderInfoComponent::update(double dt)
     {
         if(auto ptr = _entity.lock())
         {
-            auto& info = ptr->getContext().getGorn().getQueue().getDebugInfo();
+            auto& info = ptr->getContext().getGorn().getQueue().getInfo();
             std::stringstream ss;
             ss << "fps: " << info.framesPerSecond << std::endl;
             ss << "draws: " << info.drawCalls << "/";
-            ss << info.drawCallsBatched;
-            std::cout << ss.str() << std::endl;
+            ss << info.drawCallsBatched << std::endl;
+            ss << "verts: " << info.vertexCount;
             _label.setText(ss.str());
         }
         _label.update(dt);
         _transform.update();
-        return true;
     }
 
-    void DebugInfoComponent::render(gorn::RenderQueue& queue)
+    void RenderInfoComponent::render(gorn::RenderQueue& queue)
     {
         queue.addCommand()
             .withTransformMode(
