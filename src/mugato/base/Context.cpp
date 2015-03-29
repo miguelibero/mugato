@@ -18,6 +18,7 @@ namespace mugato
     Context::Context():
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
+    _skeletons(_gorn.getMaterials(), _gorn.getFiles()),
     _screenSize(2.0f), _fixedUpdateInterval(0.0),
     _fixedUpdatesPerSecond(10.0)
     {
@@ -158,6 +159,16 @@ void main()
     LabelManager& Context::getLabels()
     {
         return _labels;
+    }
+
+    const SpineManager& Context::getSkeletons() const
+    {
+        return _skeletons;
+    }
+
+    SpineManager& Context::getSkeletons()
+    {
+        return _skeletons;
     }
 
     const EntityStack& Context::getScenes() const

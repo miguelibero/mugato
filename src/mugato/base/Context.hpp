@@ -3,6 +3,7 @@
 
 #include <gorn/base/Context.hpp>
 #include <mugato/sprite/SpriteManager.hpp>
+#include <mugato/spine/SpineManager.hpp>
 #include <mugato/label/LabelManager.hpp>
 #include <mugato/scene/EntityStack.hpp>
 #include <glm/glm.hpp>
@@ -15,6 +16,7 @@ namespace mugato
         gorn::Context _gorn;
         SpriteManager _sprites;
         LabelManager _labels;
+        SpineManager _skeletons;
         EntityStack _scenes;
         glm::vec2 _screenSize;
 
@@ -43,8 +45,12 @@ namespace mugato
         const LabelManager& getLabels() const;
         LabelManager& getLabels();
 
+        const SpineManager& getSkeletons() const;
+        SpineManager& getSkeletons();
+
         const EntityStack& getScenes() const;
         EntityStack& getScenes();
+
     };
 }
 
