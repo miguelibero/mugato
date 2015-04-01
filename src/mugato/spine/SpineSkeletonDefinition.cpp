@@ -21,6 +21,19 @@ namespace mugato {
         return *this;
     }
 
+    SpineSkeletonDefinition& SpineSkeletonDefinition::
+        withAnimationMix(const AnimationMix& mix)
+    {
+        _mixes.push_back(mix);
+        return *this;
+    }
+
+    const SpineSkeletonDefinition::AnimationMixes&
+        SpineSkeletonDefinition::getAnimationMixes() const
+    {
+        return _mixes;
+    }
+
     const std::string& SpineSkeletonDefinition::getDataFile() const
     {
         return _dataFile;

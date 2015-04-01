@@ -19,7 +19,6 @@ namespace mugato
     public:
         SpineSkeletonComponent(const std::string& name);
 
-        void setAnimation(const std::string& name);
         SpineSkeleton& getSkeleton();
         const SpineSkeleton& getSkeleton() const;
 

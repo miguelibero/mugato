@@ -10,33 +10,37 @@
 
 mugato::SpineManager* s_current = nullptr;
 
-void _spAtlasPage_createTexture(spAtlasPage* self, const char* path)
-{
-    if(s_current == nullptr)
-    {
-        throw mugato::Exception("No mugato::SpineManager found.");
-    }
-    auto material = s_current->getMaterials().load(path);
-	self->rendererObject = new std::shared_ptr<gorn::Material>(material);
-    auto& size = material->getSize();
-	self->width = size.x;
-	self->height = size.y;
-}
+extern "C" {
 
-void _spAtlasPage_disposeTexture(spAtlasPage* self)
-{
-	delete (std::shared_ptr<gorn::Material>*)self->rendererObject;
-}
-
-char* _spUtil_readFile(const char* path, int* length)
-{
-    if(s_current == nullptr)
+    void _spAtlasPage_createTexture(spAtlasPage* self, const char* path)
     {
-        throw mugato::Exception("No mugato::SpineManager found.");
+        if(s_current == nullptr)
+        {
+            throw mugato::Exception("No mugato::SpineManager found.");
+        }
+        auto material = s_current->getMaterials().load(path);
+	    self->rendererObject = new std::shared_ptr<gorn::Material>(material);
+        auto& size = material->getSize();
+	    self->width = size.x;
+	    self->height = size.y;
     }
-    auto buffer = s_current->getFiles().load(path).get();
-    *length = buffer.size()/sizeof(char);
-    return reinterpret_cast<char*>(buffer.detach());
+
+    void _spAtlasPage_disposeTexture(spAtlasPage* self)
+    {
+	    delete (std::shared_ptr<gorn::Material>*)self->rendererObject;
+    }
+
+    char* _spUtil_readFile(const char* path, int* length)
+    {
+        if(s_current == nullptr)
+        {
+            throw mugato::Exception("No mugato::SpineManager found.");
+        }
+        auto buffer = s_current->getFiles().load(path).get();
+        *length = buffer.size()/sizeof(char);
+        return reinterpret_cast<char*>(buffer.detach());
+    }
+
 }
 
 namespace mugato {
@@ -76,44 +80,44 @@ namespace mugato {
         return _files;
     }
 
-    spSkeletonData* SpineManager::loadData(const Definition& def)
+    std::shared_ptr<SpineSkeletonData> SpineManager::loadData(const Definition& def)
     {
         s_current = this;
-        spAtlas* atlas = spAtlas_createFromFile(def.getAtlasFile().c_str(), 0);
-        if(atlas == nullptr)
+        auto itr = _atlases.find(def.getAtlasFile());
+        std::shared_ptr<SpineAtlas> atlas;
+        if(itr == _atlases.end())
         {
-            throw Exception("Error reading atlas data.");
+            atlas = std::make_shared<SpineAtlas>(def.getAtlasFile());
+            _atlases.insert(itr, {def.getAtlasFile(), atlas});
         }
-        spSkeletonJson* json = spSkeletonJson_create(atlas);
-	    spSkeletonData* data =
-            spSkeletonJson_readSkeletonDataFile(json,
-                def.getDataFile().c_str());
-        spSkeletonJson_dispose(json);
-        spAtlas_dispose(atlas);
-        if(data == nullptr)
+        else
         {
-            throw Exception(json->error ? json->error :
-                "Error reading skeleton data.");
+            atlas = itr->second;
         }
-        return data;
-    }
+        auto data = std::make_shared<SkeletonData>(atlas, def.getDataFile());
+        for(auto& mix : def.getAnimationMixes())
+        {
+            data->setAnimationMix(mix.getFrom(), mix.getTo(), mix.getDuration());
+        }
 
-    void SpineManager::deleteSkeletonData(spSkeletonData* data)
-    {
-        spSkeletonData_dispose(data);
+        return data;
     }
 
     SpineSkeleton SpineManager::load(const std::string& name)
     {
         auto itr = _datas.find(name);
+        std::shared_ptr<SkeletonData> data;
         if(itr == _datas.end())
         {
             auto& def = _definitions.get(name);
-            auto data = std::shared_ptr<spSkeletonData>(
-                loadData(def), &deleteSkeletonData);
+            data = loadData(def);
             _datas.insert(itr, {name, data});
         }
-        return SpineSkeleton(itr->second);
-    }
+        else
+        {
+            data = itr->second;
+        }
+        return SpineSkeleton(data);
+    }   
 
 }

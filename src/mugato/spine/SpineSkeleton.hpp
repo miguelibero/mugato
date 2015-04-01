@@ -1,9 +1,9 @@
 #ifndef __mugato__SpineSkeleton__
 #define __mugato__SpineSkeleton__
 
-#include <spine/SkeletonData.h>
 #include <memory>
 #include <glm/glm.hpp>
+#include <mugato/spine/SpineSkeletonData.hpp>
 
 namespace gorn {
     class RenderQueue;
@@ -18,16 +18,28 @@ namespace mugato {
 
     class SpineSkeleton
     {
+    public:
+        typedef SpineSkeletonData Data;
     private:
-        std::shared_ptr<spSkeletonData> _data;
+        std::shared_ptr<Data> _data;
 	    spSkeleton* _skeleton;
-	    spAnimationState* _state;
+        spAnimationState* _anim;
+        
+        void cleanup();
     public:
         SpineSkeleton();
-        SpineSkeleton(const std::shared_ptr<spSkeletonData>& data);
+        SpineSkeleton(const std::shared_ptr<Data>& data);
         ~SpineSkeleton();
 
-        void play(const std::string& anim);
+        SpineSkeleton(const SpineSkeleton& other);
+        SpineSkeleton& operator=(const SpineSkeleton& other);
+
+        void setAnimation(const std::string& name, int track, bool loop=true);
+        void setAnimation(const std::string& name, bool loop=true);
+        void addAnimation(const std::string& name, int track,
+            bool loop=true, float delay=0.0f);
+        void addAnimation(const std::string& name,
+            bool loop=true, float delay=0.0f);
 
         void update(double dt);
         void render(gorn::RenderQueue& queue) const;

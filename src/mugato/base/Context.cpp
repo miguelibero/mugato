@@ -116,11 +116,13 @@ void main()
         DebugFontAtlasConfigurator().setup(*this);
 
         _scenes.setContext(*this);
+        _scenes.getTransform().setSize(_screenSize);
     }
 
     void Context::setScreenSize(const glm::vec2& size)
     {
         _screenSize = size;
+        _scenes.getTransform().setSize(size);
         auto trans = glm::translate(glm::mat4(), glm::vec3(-1.0f, -1.0f, 0.0f))
             *glm::scale(glm::mat4(), glm::vec3(2.0f/size.x, 2.0f/size.y, 1.0f));
         _gorn.getQueue().setUniformValue(gorn::UniformKind::View, trans);

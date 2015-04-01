@@ -1,8 +1,8 @@
 #ifndef __mugato__SpineManager__
 #define __mugato__SpineManager__
 
-#include <spine/SkeletonData.h>
-#include <spine/Atlas.h>
+#include <mugato/spine/SpineSkeletonData.hpp>
+#include <mugato/spine/SpineAtlas.hpp>
 #include <mugato/spine/SpineSkeletonDefinition.hpp>
 #include <gorn/base/DefinitionManager.hpp>
 #include <map>
@@ -24,17 +24,18 @@ namespace mugato {
     public:
         typedef SpineSkeletonDefinition Definition;
         typedef gorn::DefinitionManager<Definition> Definitions;
+        typedef SpineAtlas Atlas;
+        typedef SpineSkeletonData SkeletonData;
     private:
-        typedef std::map<std::string, std::shared_ptr<spSkeletonData>> DataMap;
-        typedef std::map<std::string, std::shared_ptr<spAtlas>> AtlasMap;
+        typedef std::map<std::string, std::shared_ptr<SkeletonData>> DataMap;
+        typedef std::map<std::string, std::shared_ptr<Atlas>> AtlasMap;
         Definitions _definitions;
         gorn::MaterialManager& _materials;
         gorn::FileManager& _files;
         DataMap _datas;
         AtlasMap _atlases;
 
-        static void deleteSkeletonData(spSkeletonData* data);
-        spSkeletonData* loadData(const Definition& def);
+        std::shared_ptr<SkeletonData> loadData(const Definition& def);
     public:
         SpineManager(gorn::MaterialManager& materials, gorn::FileManager& files);
         ~SpineManager();

@@ -4,6 +4,7 @@
 #include <glm/gtc/constants.hpp>
 #include <functional>
 #include <random>
+#include <iostream>
 
 class SpineApplication : public mugato::Application
 {
@@ -51,7 +52,7 @@ void SpineApplication::load()
     info.getTransform().setPosition(glm::vec3(0.0f, 60.f, 1.0f));
 
     auto spineboy = scene->addChild();
-    spineboy->addComponent<mugato::SpineSkeletonComponent>("spineboy.json");
+    auto& skel = spineboy->addComponent<mugato::SpineSkeletonComponent>("spineboy");
     spineboy->getTransform().setPosition(glm::vec2(50.0f));
-
+    skel.getSkeleton().setAnimation("walk");
 }

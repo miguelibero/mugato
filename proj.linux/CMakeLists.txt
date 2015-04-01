@@ -28,4 +28,4 @@ file(GLOB MUGATO_SOURCES
 	"${MUGATO_SOURCE_DIR}/scene/*.cpp"
 )
 add_library(mugato ${MUGATO_SOURCES})
-target_link_libraries(mugato spine gorn)
+target_link_libraries(mugato gorn spine)

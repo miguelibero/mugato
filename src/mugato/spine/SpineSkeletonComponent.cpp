@@ -23,12 +23,6 @@ namespace mugato
         return _skeleton;
     }
 
-    void SpineSkeletonComponent::setAnimation(const std::string& name)
-    {
-        _skeleton.play(_animation);
-        _animation = name;
-    }
-
     void SpineSkeletonComponent::setEntityPivotPercent(const glm::vec2& val)
     {
         _pivotPercent = val;
@@ -52,7 +46,6 @@ namespace mugato
         _entity = entity.getSharedPtr();
         setEntityPivotPercent(_pivotPercent);
         setEntitySize();
-        _skeleton.play(_animation);
     }
 
     void SpineSkeletonComponent::update(double dt)
