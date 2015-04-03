@@ -3,18 +3,18 @@
 
 #include <memory>
 #include <glm/glm.hpp>
+#include <gorn/render/Material.hpp>
 #include <mugato/spine/SpineSkeletonData.hpp>
 
 namespace gorn {
     class RenderQueue;
+    class Rect;
 }
 
 struct spSkeleton;
 struct spAnimationState;
 
 namespace mugato {
-
-    class Rectangle;
 
     class SpineSkeleton
     {
@@ -24,12 +24,20 @@ namespace mugato {
         std::shared_ptr<Data> _data;
 	    spSkeleton* _skeleton;
         spAnimationState* _anim;
-        
+        std::shared_ptr<gorn::Material> _slotsMaterial;
+        std::shared_ptr<gorn::Material> _bonesMaterial;
         void cleanup();
+
+        void renderSkeleton(gorn::RenderQueue& queue) const;
+        void renderSlots(gorn::RenderQueue& queue) const;
+        void renderBones(gorn::RenderQueue& queue) const;
     public:
         SpineSkeleton();
         SpineSkeleton(const std::shared_ptr<Data>& data);
         ~SpineSkeleton();
+
+        void setSlotsMaterial(const std::shared_ptr<gorn::Material>& mat);
+        void setBonesMaterial(const std::shared_ptr<gorn::Material>& mat);
 
         SpineSkeleton(const SpineSkeleton& other);
         SpineSkeleton& operator=(const SpineSkeleton& other);
@@ -44,7 +52,7 @@ namespace mugato {
         void update(double dt);
         void render(gorn::RenderQueue& queue) const;
 
-        Rectangle getBoundingBox() const;
+        gorn::Rect getBoundingBox() const;
         glm::vec2 getSize() const;
     };
 }

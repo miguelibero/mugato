@@ -27,8 +27,6 @@ namespace gorn
 
 void SpriteApplication::load()
 {
-    _ctx.setApplication(*this);
-
 #ifdef GORN_PLATFORM_LINUX
 	_ctx.getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");

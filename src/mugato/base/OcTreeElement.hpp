@@ -1,7 +1,7 @@
 #ifndef __mugato__OcTreeElement__
 #define __mugato__OcTreeElement__
 
-#include <mugato/base/Rectangle.hpp>
+#include <gorn/base/Rect.hpp>
 
 namespace mugato
 {
@@ -9,11 +9,11 @@ namespace mugato
     class OcTreeElement
     {
     private:
-        Rectangle _area;
+        gorn::Rect _area;
         T _content;
     public:
-        OcTreeElement(const Rectangle& area, const T& content);
-        OcTreeElement(const Rectangle& area, T&& content);
+        OcTreeElement(const gorn::Rect& area, const T& content);
+        OcTreeElement(const gorn::Rect& area, T&& content);
 
         bool operator==(const OcTreeElement<T>& other) const;
         bool operator!=(const OcTreeElement<T>& other) const;
@@ -21,16 +21,16 @@ namespace mugato
         const T& getContent() const;
         T& getContent();
 
-        const Rectangle& getArea() const;
+        const gorn::Rect& getArea() const;
     };
 
     template<>
     class OcTreeElement<void>
     {
     private:
-        Rectangle _area;
+        gorn::Rect _area;
     public:
-        OcTreeElement(const Rectangle& area):
+        OcTreeElement(const gorn::Rect& area):
         _area(area)
         {
         }
@@ -45,20 +45,20 @@ namespace mugato
             return true;
         }
 
-        const Rectangle& getArea() const
+        const gorn::Rect& getArea() const
         {
             return _area;
         }
     };
 
     template<typename T>
-    OcTreeElement<T>::OcTreeElement(const Rectangle& area, const T& content):
+    OcTreeElement<T>::OcTreeElement(const gorn::Rect& area, const T& content):
     _area(area), _content(content)
     {
     }
 
     template<typename T>
-    OcTreeElement<T>::OcTreeElement(const Rectangle& area, T&& content):
+    OcTreeElement<T>::OcTreeElement(const gorn::Rect& area, T&& content):
     _area(area), _content(std::move(content))
     {
     }
@@ -88,7 +88,7 @@ namespace mugato
     }
 
     template<typename T>
-    const Rectangle& OcTreeElement<T>::getArea() const
+    const gorn::Rect& OcTreeElement<T>::getArea() const
     {
         return _area;
     }

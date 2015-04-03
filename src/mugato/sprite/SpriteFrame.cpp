@@ -110,7 +110,7 @@ namespace mugato {
         {
             std::swap(rsize.x, rsize.y);
         }
-        if(origin == Region::Origin::TopLeft || origin == Region::Origin::TopRight)
+        if(origin == Region::Origin::BottomLeft || origin == Region::Origin::BottomRight)
         {
             bl.y = msize.y - rsize.y - bl.y;
         }
@@ -125,19 +125,19 @@ namespace mugato {
         if(rotate)
         {
             _texVerts = {
-                bl.x, bl.y,
                 bl.x, tr.y,
-                tr.x, tr.y,
-                tr.x, bl.y
+                bl.x, bl.y,
+                tr.x, bl.y,
+                tr.x, tr.y
             };
         }
         else
         {
             _texVerts = {
-                bl.x, tr.y,
-                tr.x, tr.y,
+                bl.x, bl.y,
                 tr.x, bl.y,
-                bl.x, bl.y
+                tr.x, tr.y,
+                bl.x, tr.y
             };
         }
         _dirtyTexVerts = false;

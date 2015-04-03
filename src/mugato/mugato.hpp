@@ -7,7 +7,6 @@
 #include <mugato/base/OcTree.hpp>
 #include <mugato/base/OcTreeElement.hpp>
 #include <mugato/base/OcTreeNode.hpp>
-#include <mugato/base/Rectangle.hpp>
 #include <mugato/base/Application.hpp>
 
 #include <mugato/label/FntFontAtlasLoader.hpp>

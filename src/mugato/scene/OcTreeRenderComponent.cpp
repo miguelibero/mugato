@@ -1,6 +1,5 @@
 #include <mugato/scene/OcTreeRenderComponent.hpp>
 #include <mugato/scene/Entity.hpp>
-#include <mugato/base/Rectangle.hpp>
 #include <gorn/render/RenderQueue.hpp>
 #include <gorn/render/RenderCommand.hpp>
 #include <gorn/render/Kinds.hpp>

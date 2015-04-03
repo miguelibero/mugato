@@ -1,8 +1,6 @@
 #ifndef __mugato__OcTree__
 #define __mugato__OcTree__
 
-#include <memory>
-#include <mugato/base/Rectangle.hpp>
 #include <mugato/base/OcTreeNode.hpp>
 
 namespace mugato
@@ -11,12 +9,12 @@ namespace mugato
     class OcTree : public OcTreeNode<T>
     {
     public:
-        OcTree(const Rectangle& area=Rectangle(), size_t max=1,
+        OcTree(const gorn::Rect& area=gorn::Rect(), size_t max=1,
             const glm::vec3& divs=glm::vec3(2.0f));
     };
 
     template<typename T>
-    OcTree<T>::OcTree(const Rectangle& area, size_t max, const glm::vec3& divs):
+    OcTree<T>::OcTree(const gorn::Rect& area, size_t max, const glm::vec3& divs):
     OcTreeNode<T>(area, nullptr, max, divs)
     {
     }

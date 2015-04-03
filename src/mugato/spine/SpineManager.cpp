@@ -37,7 +37,7 @@ extern "C" {
             throw mugato::Exception("No mugato::SpineManager found.");
         }
         auto buffer = s_current->getFiles().load(path).get();
-        *length = buffer.size()/sizeof(char);
+        *length = buffer.size()/sizeof(char);        
         return reinterpret_cast<char*>(buffer.detach());
     }
 

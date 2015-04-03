@@ -1,5 +1,5 @@
 #include <mugato/spine/SpineSkeleton.hpp>
-#include <mugato/base/Rectangle.hpp>
+#include <gorn/base/Rect.hpp>
 #include <mugato/base/Exception.hpp>
 #include <gorn/render/RenderCommand.hpp>
 #include <gorn/render/RenderQueue.hpp>
@@ -11,7 +11,7 @@
 namespace mugato {
 
     SpineSkeleton::SpineSkeleton():
-    _skeleton(nullptr)
+    _skeleton(nullptr), _anim(nullptr)
     {
     }
 
@@ -24,6 +24,18 @@ namespace mugato {
     SpineSkeleton::~SpineSkeleton()
     {
         cleanup();
+    }
+
+    void SpineSkeleton::setSlotsMaterial(
+        const std::shared_ptr<gorn::Material>& mat)
+    {
+        _slotsMaterial = mat;
+    }
+
+    void SpineSkeleton::setBonesMaterial(
+        const std::shared_ptr<gorn::Material>& mat)
+    {
+        _bonesMaterial = mat;
     }
 
     void SpineSkeleton::cleanup()
@@ -42,7 +54,9 @@ namespace mugato {
 
     SpineSkeleton::SpineSkeleton(const SpineSkeleton& other):
     _data(other._data), _skeleton(_data->createSkeleton()),
-    _anim(_data->createAnimationState())
+    _anim(_data->createAnimationState()),
+    _slotsMaterial(other._slotsMaterial),
+    _bonesMaterial(other._bonesMaterial)
     {
     }
 
@@ -54,6 +68,8 @@ namespace mugato {
             _data = other._data;
             _skeleton = _data->createSkeleton();
             _anim = _data->createAnimationState();
+            _slotsMaterial = other._slotsMaterial;
+            _bonesMaterial = other._bonesMaterial;
         }
         return *this;
     }
@@ -61,6 +77,9 @@ namespace mugato {
     void SpineSkeleton::update(double dt)
     {
         spSkeleton_update(_skeleton, dt);
+	    spAnimationState_update(_anim, dt);
+	    spAnimationState_apply(_anim, _skeleton);
+        spSkeleton_updateWorldTransform(_skeleton);
     }
 
     void SpineSkeleton::setAnimation(const std::string& name,
@@ -118,11 +137,9 @@ namespace mugato {
             (spAtlasRegion*)attach->rendererObject)->page->rendererObject;
     }
 
-    void SpineSkeleton::render(gorn::RenderQueue& queue) const
+    void SpineSkeleton::renderSkeleton(gorn::RenderQueue& queue) const
     {
-	    //int additive = -1;
-
-	    for (int i = 0, n = _skeleton->slotsCount; i < n; i++)
+        for (int i = 0, n = _skeleton->slotsCount; i < n; i++)
         {
 		    spSlot* slot = _skeleton->drawOrder[i];
 		    if (!slot->attachment)
@@ -188,69 +205,68 @@ namespace mugato {
                     .withAttribute(gorn::AttributeKind::Color,
                         std::move(colors), 4, gorn::BasicType::Byte)
                     .withElements(elements);
-
-                /*
-			    if (slot->data->additiveBlending != additive) {
-				    _batch->flush();
-				    GL::blendFunc(_blendFunc.src, slot->data->additiveBlending ? GL_ONE : _blendFunc.dst);
-				    additive = slot->data->additiveBlending;
-			    }
-			    color.a = _skeleton->a * slot->a * a * 255;
-			    color.r = _skeleton->r * slot->r * r * 255;
-			    color.g = _skeleton->g * slot->g * g * 255;
-			    color.b = _skeleton->b * slot->b * b * 255;
-                */
-
 		    }
 	    }
-
-        /*
-	    if (_debugSlots || _debugBones)
-        {
-
-		    if (_debugSlots) {
-			    // Slots.
-			    DrawPrimitives::setDrawColor4B(0, 0, 255, 255);
-			    glLineWidth(1);
-			    Vec2 points[4];
-			    V3F_C4B_T2F_Quad quad;
-			    for (int i = 0, n = _skeleton->slotsCount; i < n; i++) {
-				    spSlot* slot = _skeleton->drawOrder[i];
-				    if (!slot->attachment || slot->attachment->type != SP_ATTACHMENT_REGION) continue;
-				    spRegionAttachment* attachment = (spRegionAttachment*)slot->attachment;
-				    spRegionAttachment_computeWorldVertices(attachment, slot->bone, _worldVertices);
-				    points[0] = Vec2(_worldVertices[0], _worldVertices[1]);
-				    points[1] = Vec2(_worldVertices[2], _worldVertices[3]);
-				    points[2] = Vec2(_worldVertices[4], _worldVertices[5]);
-				    points[3] = Vec2(_worldVertices[6], _worldVertices[7]);
-				    DrawPrimitives::drawPoly(points, 4, true);
-			    }
-		    }
-		    if (_debugBones) {
-			    // Bone lengths.
-			    glLineWidth(2);
-			    DrawPrimitives::setDrawColor4B(255, 0, 0, 255);
-			    for (int i = 0, n = _skeleton->bonesCount; i < n; i++) {
-				    spBone *bone = _skeleton->bones[i];
-				    float x = bone->data->length * bone->m00 + bone->worldX;
-				    float y = bone->data->length * bone->m10 + bone->worldY;
-				    DrawPrimitives::drawLine(Vec2(bone->worldX, bone->worldY), Vec2(x, y));
-			    }
-			    // Bone origins.
-			    DrawPrimitives::setPointSize(4);
-			    DrawPrimitives::setDrawColor4B(0, 0, 255, 255); // Root bone is blue.
-			    for (int i = 0, n = _skeleton->bonesCount; i < n; i++) {
-				    spBone *bone = _skeleton->bones[i];
-				    DrawPrimitives::drawPoint(Vec2(bone->worldX, bone->worldY));
-				    if (i == 0) DrawPrimitives::setDrawColor4B(0, 255, 0, 255);
-			    }
-		    }
-		    director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
-	    }
-        */
     }
 
-    Rectangle SpineSkeleton::getBoundingBox() const
+    void SpineSkeleton::renderSlots(gorn::RenderQueue& queue) const
+    {
+        if (!_slotsMaterial)
+        {
+            return;
+        }
+        gorn::RenderCommand::Elements elements = {0, 1, 1, 2, 2, 3, 3, 0};
+	    for (int i = 0, n = _skeleton->slotsCount; i < n; i++)
+        {
+		    spSlot* slot = _skeleton->drawOrder[i];
+		    if (!slot->attachment ||
+                slot->attachment->type != SP_ATTACHMENT_REGION)
+            {
+                continue;
+            }
+		    spRegionAttachment* attach =
+                (spRegionAttachment*)slot->attachment;
+            buffer positions(2*sizeof(float)*4);
+		    spRegionAttachment_computeWorldVertices(
+                attach, slot->bone,
+                reinterpret_cast<float*>(positions.data()));
+            queue.addCommand()
+                .withMaterial(_slotsMaterial)
+                .withAttribute(gorn::AttributeKind::Position,
+                    std::move(positions), 2, gorn::BasicType::Float)
+                .withDrawMode(gorn::DrawMode::Lines)
+                .withElements(elements);
+	    }
+    }
+
+    void SpineSkeleton::renderBones(gorn::RenderQueue& queue) const
+    {
+        if (!_bonesMaterial)
+        {
+            return;
+        }
+	    for (int i = 0, n = _skeleton->bonesCount; i < n; i++)
+        {
+		    spBone *bone = _skeleton->bones[i];
+		    float x = bone->data->length * bone->m00 + bone->worldX;
+		    float y = bone->data->length * bone->m10 + bone->worldY;
+            buffer positions{bone->worldX, bone->worldY, x, y};
+            queue.addCommand()
+                .withMaterial(_bonesMaterial)
+                .withAttribute(gorn::AttributeKind::Position,
+                    std::move(positions), 2, gorn::BasicType::Float)
+                .withDrawMode(gorn::DrawMode::Lines);
+	    }
+    }
+
+    void SpineSkeleton::render(gorn::RenderQueue& queue) const
+    {
+	    renderSkeleton(queue);
+        renderSlots(queue);
+        renderBones(queue);
+    }
+
+    gorn::Rect SpineSkeleton::getBoundingBox() const
     {
         float worldVertices[1000];
         float minX = FLT_MAX, minY = FLT_MAX, maxX = FLT_MIN, maxY = FLT_MIN;
@@ -291,7 +307,7 @@ namespace mugato {
 		        maxY = std::max(maxY, y);
 	        }
         }
-        return Rectangle(glm::vec2(minX, minY), glm::vec2(maxX - minX, maxY - minY));
+        return gorn::Rect(glm::vec2(minX, minY), glm::vec2(maxX - minX, maxY - minY));
     }
 
     glm::vec2 SpineSkeleton::getSize() const
