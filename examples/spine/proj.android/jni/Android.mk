@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := mugato_scene
+LOCAL_MODULE := mugato_spine
 
 BASE_PATH := $(LOCAL_PATH)/../..
 SRC_PATH := $(BASE_PATH)/src

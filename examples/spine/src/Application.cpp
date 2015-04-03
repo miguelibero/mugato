@@ -66,7 +66,7 @@ void SpineApplication::load()
         auto spineboy = scene->addChild();
         auto& skel = spineboy->addComponent<mugato::SpineSkeletonComponent>("spineboy");
         spineboy->getTransform().setScale(0.3f);
-        spineboy->getTransform().setPosition(glm::vec2(140.0f, 10.0f));
+        spineboy->getTransform().setPosition(glm::vec2(250.0f, 10.0f));
         skel.getSkeleton().setSlotsMaterial(
             getGorn().getMaterials().load("spine_slots")
         );
@@ -80,7 +80,7 @@ void SpineApplication::load()
         auto spineboy = scene->addChild();
         auto& skel = spineboy->addComponent<mugato::SpineSkeletonComponent>("spineboy");
         spineboy->getTransform().setScale(0.3f);
-        spineboy->getTransform().setPosition(glm::vec2(300.0f, 10.0f));
+        spineboy->getTransform().setPosition(glm::vec2(400.0f, 10.0f));
         skel.getSkeleton().setSlotsMaterial(
             getGorn().getMaterials().load("spine_slots")
         );

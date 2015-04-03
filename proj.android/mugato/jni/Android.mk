@@ -10,9 +10,12 @@ PLATFORM_DIR_FILTER := ! \( -path \*/platform/\* ! -regex .\*/platform/android/\
 #Recursive include all .cpp files in the SRC directory
 FILE_LIST := $(shell find $(BASE_PATH)/src -type f -iname \*.cpp $(PLATFORM_DIR_FILTER) )
 LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
+FILE_LIST := $(shell find $(BASE_PATH)/lib/spine-c/src -type f -iname \*.c )
+LOCAL_SRC_FILES += $(FILE_LIST:$(LOCAL_PATH)/%=%)
 
 INCLUDES += $(BASE_PATH)/src
 INCLUDES += $(BASE_PATH)/lib
+INCLUDES += $(BASE_PATH)/lib/spine-c/include
 
 LOCAL_C_INCLUDES += $(INCLUDES)
 LOCAL_EXPORT_C_INCLUDES += $(INCLUDES)
