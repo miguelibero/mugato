@@ -51,7 +51,7 @@ namespace mugato
     {
         if(_transform.update())
         {
-            _children.setArea(Rectangle(
+            _children.setArea(gorn::Rect(
                 glm::vec3(0.0f), _transform.getSize()));
             if(auto parent = _parent.lock())
             {
@@ -98,6 +98,8 @@ namespace mugato
     void Entity::render(gorn::RenderQueue& queue)
     {
         queue.addCommand()
+            .withBounding(_transform.getArea(),
+                gorn::RenderCommand::BoundingMode::Start)
             .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
         queue.addCommand()
             .withTransform(_transform.getMatrix())
@@ -113,6 +115,8 @@ namespace mugato
             elm.getContent()->render(queue);
         }
         queue.addCommand()
+            .withBoundingMode(
+                gorn::RenderCommand::BoundingMode::End)
             .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
     }
 

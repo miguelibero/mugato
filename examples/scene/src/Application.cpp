@@ -5,11 +5,10 @@
 #include <functional>
 #include <random>
 
-class SceneApplication : public gorn::Application
+class SceneApplication : public mugato::Application
 {
     typedef std::uniform_real_distribution<float> RandomDistri;
     typedef std::mt19937 RandomAlgo;
-	mugato::Context _ctx;
     RandomAlgo _randomAlgo;
     RandomDistri _posXDistri;
     RandomDistri _posYDistri;
@@ -24,8 +23,6 @@ public:
     SceneApplication();
 
     void load() override;
-    void update(double dt) override;
-    void draw() override;
 
 };
 
@@ -43,27 +40,23 @@ SceneApplication::SceneApplication()
 
 void SceneApplication::load()
 {
+    mugato::Application::load();
+
 #ifdef GORN_PLATFORM_LINUX
-	_ctx.getGorn().getFiles()
+	getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
-	_ctx.getGorn().getImages()
+	getGorn().getImages()
         .makeDefaultDataLoader<gorn::PngImageLoader>();
 #elif GORN_PLATFORM_ANDROID
-	_ctx.getGorn().getFiles()
+	getGorn().getFiles()
         .makeDefaultLoader<gorn::AssetFileLoader>("%s");
-	_ctx.getGorn().getImages()
+	getGorn().getImages()
         .makeDefaultDataLoader<gorn::GraphicsImageLoader>();
 #endif
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    getMugato().setScreenSize(glm::vec2(480.0f, 320.0f));
 
-    //glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    _ctx.setScreenSize(glm::vec2(480.0f, 320.0f));
-
-    auto& matdefs = _ctx.getGorn().getMaterials().getDefinitions();
+    auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("octree_elements", gorn::MaterialDefinition()
         .withUniformValue(gorn::UniformKind::Color,
             glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
@@ -74,16 +67,16 @@ void SceneApplication::load()
             glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
         .withProgram(mugato::ProgramKind::Color));
 
-    auto scene = _ctx.getScenes().push();
+    auto scene = getMugato().getScenes().push();
     auto& bg = scene->addComponent<mugato::SpriteComponent>("background.png");
     bg.setEntityPivotPercent(glm::vec2(0.0f));
     auto bgsize = bg.getSprite().getSize();
-    scene->getTransform().setScale(_ctx.getScreenSize()/bgsize);
+    scene->getTransform().setScale(getMugato().getScreenSize()/bgsize);
 
     auto& debugInfo = scene->addComponent<mugato::RenderInfoComponent>();
     debugInfo.getTransform().setPosition(glm::vec3(0.0f, 60.f, 1.0f));
 
-    auto& materials = _ctx.getGorn().getMaterials();
+    auto& materials = getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
     octree.setElementsMaterial(materials.load("octree_elements"));
     octree.setElementsDrawMode(gorn::DrawMode::Lines);
@@ -122,17 +115,4 @@ void SceneApplication::moveGuy(
         .withComplete(std::bind(
             &SceneApplication::moveGuy, this, guy, duration));
 }
-
-void SceneApplication::update(double dt)
-{
-    _ctx.update(dt);
-}
-
-void SceneApplication::draw()
-{
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   _ctx.draw();
-}
-
 

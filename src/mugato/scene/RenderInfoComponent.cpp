@@ -36,7 +36,8 @@ namespace mugato {
             std::stringstream ss;
             ss << "fps: " << info.framesPerSecond << std::endl;
             ss << "draws: " << info.drawCalls << "/";
-            ss << info.drawCallsBatched << std::endl;
+            ss << info.drawCallsBatched << "/";
+            ss << info.drawCallsCulled << std::endl;
             ss << "verts: " << info.vertexCount;
             _label.setText(ss.str());
         }

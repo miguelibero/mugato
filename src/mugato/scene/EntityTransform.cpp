@@ -38,7 +38,7 @@ namespace mugato
         return _size;
     }
 
-    const Rectangle& EntityTransform::getArea() const
+    const gorn::Rect& EntityTransform::getArea() const
     {
         return _area;
     }
@@ -137,7 +137,7 @@ namespace mugato
                 * glm::orientate4(_rotation)
                 * glm::translate(glm::mat4(), -_pivot)
                 ;
-            _area = Rectangle(glm::vec3(0.0f), _size)*_matrix;
+            _area = gorn::Rect(glm::vec3(0.0f), _size)*_matrix;
             _dirty = false;
             return true;
         }

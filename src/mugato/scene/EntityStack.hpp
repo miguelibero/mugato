@@ -2,6 +2,7 @@
 #define __mugato__EntityStack__
 
 #include <mugato/scene/Component.hpp>
+#include <mugato/scene/EntityTransform.hpp>
 #include <deque>
 #include <memory>
 
@@ -17,12 +18,17 @@ namespace mugato
     private:
         Stack _stack;
         Context* _ctx;
+        EntityTransform _transform;
     public:
 
         EntityStack();
 
         void setContext(Context& ctx);
 
+        const EntityTransform& getTransform() const;
+        EntityTransform& getTransform();
+
+        void onAddedToEntity(Entity& entity) override;
         void update(double dt) override;
         void fixedUpdate(double dt) override;
         void render(gorn::RenderQueue& queue) override;

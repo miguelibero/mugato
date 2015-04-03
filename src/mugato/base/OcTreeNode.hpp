@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <algorithm>
-#include <mugato/base/Rectangle.hpp>
+#include <gorn/base/Rect.hpp>
 #include <mugato/base/OcTreeElement.hpp>
 #include <buffer.hpp>
 #include <buffer_writer.hpp>
@@ -18,10 +18,10 @@ namespace mugato
         typedef std::vector<Element> Elements;
         typedef OcTreeNode<T> Node;
         typedef std::vector<std::unique_ptr<Node>> Branches;
-        typedef Rectangle::DrawMode DrawMode;
-        typedef Rectangle::MatchType MatchType;
+        typedef gorn::Rect::DrawMode DrawMode;
+        typedef gorn::Rect::MatchType MatchType;
     private:
-        Rectangle _area;
+        gorn::Rect _area;
         Elements _elements;
         Node* _parent;
         Branches _branches;
@@ -33,11 +33,11 @@ namespace mugato
         bool join();
 
     public:
-        OcTreeNode(const Rectangle& area, Node* parent,
+        OcTreeNode(const gorn::Rect& area, Node* parent,
             size_t max, const glm::vec3& divs);
 
-        const Rectangle& getArea() const;
-        void setArea(const Rectangle& area);
+        const gorn::Rect& getArea() const;
+        void setArea(const gorn::Rect& area);
 
         bool insert(const Element& elm);
         bool remove(const Element& elm);
@@ -48,10 +48,10 @@ namespace mugato
         bool empty() const;
         size_t size() const;
 
-        bool clear(const RectangleMatch& match);
-        void find(Elements& elms, const RectangleMatch& match) const;
-        bool empty(const RectangleMatch& match) const;
-        size_t size(const RectangleMatch& match) const;
+        bool clear(const gorn::RectMatch& match);
+        void find(Elements& elms, const gorn::RectMatch& match) const;
+        bool empty(const gorn::RectMatch& match) const;
+        size_t size(const gorn::RectMatch& match) const;
 
         template<typename Filter>
         bool clear(Filter f);
@@ -69,14 +69,14 @@ namespace mugato
 
         buffer getElementsVertices(DrawMode mode=DrawMode::Triangles) const;
         buffer getNodesVertices(DrawMode mode=DrawMode::Triangles) const;
-        buffer getElementsVertices(const RectangleMatch& match,
+        buffer getElementsVertices(const gorn::RectMatch& match,
             DrawMode mode=DrawMode::Triangles) const;
-        buffer getNodesVertices(const RectangleMatch& match,
+        buffer getNodesVertices(const gorn::RectMatch& match,
             DrawMode mode=DrawMode::Triangles) const;
     };
 
     template<typename T>
-    OcTreeNode<T>::OcTreeNode(const Rectangle& area, Node* parent,
+    OcTreeNode<T>::OcTreeNode(const gorn::Rect& area, Node* parent,
             size_t max, const glm::vec3& divs):
         _area(area), _parent(parent),
         _maxElements(max), _divisions(divs),
@@ -85,13 +85,13 @@ namespace mugato
     }
 
     template<typename T>
-    const Rectangle& OcTreeNode<T>::getArea() const
+    const gorn::Rect& OcTreeNode<T>::getArea() const
     {
         return _area;
     }
 
     template<typename T>
-    void OcTreeNode<T>::setArea(const Rectangle& area)
+    void OcTreeNode<T>::setArea(const gorn::Rect& area)
     {
         _area = area;
     }
@@ -218,7 +218,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool OcTreeNode<T>::clear(const RectangleMatch& match)
+    bool OcTreeNode<T>::clear(const gorn::RectMatch& match)
     {
         bool changed = false;
         if(!match.matches(_area))
@@ -245,7 +245,7 @@ namespace mugato
     }
 
     template<typename T>
-    void OcTreeNode<T>::find(Elements& elms, const RectangleMatch& match) const
+    void OcTreeNode<T>::find(Elements& elms, const gorn::RectMatch& match) const
     {
         if(!match.matches(_area))
         {
@@ -265,7 +265,7 @@ namespace mugato
     }
 
     template<typename T>
-    bool OcTreeNode<T>::empty(const RectangleMatch& match) const
+    bool OcTreeNode<T>::empty(const gorn::RectMatch& match) const
     {
         if(!match.matches(_area))
         {
@@ -289,7 +289,7 @@ namespace mugato
     }
 
     template<typename T>
-    size_t OcTreeNode<T>::size(const RectangleMatch& match) const
+    size_t OcTreeNode<T>::size(const gorn::RectMatch& match) const
     {
         if(!match.matches(_area))
         {
@@ -530,7 +530,7 @@ namespace mugato
     }
 
     template<typename T>
-    buffer OcTreeNode<T>::getElementsVertices(const RectangleMatch& match,
+    buffer OcTreeNode<T>::getElementsVertices(const gorn::RectMatch& match,
         DrawMode mode) const
     {
         buffer data;
@@ -555,7 +555,7 @@ namespace mugato
     }
 
     template<typename T>
-    buffer OcTreeNode<T>::getNodesVertices(const RectangleMatch& match,
+    buffer OcTreeNode<T>::getNodesVertices(const gorn::RectMatch& match,
         DrawMode mode) const
     {
         buffer data;

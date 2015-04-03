@@ -14,6 +14,21 @@ namespace mugato
         _ctx = &ctx;
     }
 
+    const EntityTransform& EntityStack::getTransform() const
+    {
+        return _transform;
+    }
+
+    EntityTransform& EntityStack::getTransform()
+    {
+        return _transform;
+    }
+
+    void EntityStack::onAddedToEntity(Entity& entity)
+    {
+        _transform = entity.getTransform();
+    }
+
     void EntityStack::update(double dt)
     {
         if(!_stack.empty())
@@ -44,6 +59,7 @@ namespace mugato
         if(entity == nullptr)
         {
             entity = std::make_shared<Entity>();
+            entity->getTransform() = _transform;
         }
         if(_ctx != nullptr)
         {

@@ -2,7 +2,7 @@
 #define __mugato__EntityTransform__
 
 #include <glm/glm.hpp>
-#include <mugato/base/Rectangle.hpp>
+#include <gorn/base/Rect.hpp>
 
 namespace mugato
 {
@@ -20,7 +20,7 @@ namespace mugato
         Vector _scale;
         Vector _pivot;
         Vector _size;
-        Rectangle _area;
+        gorn::Rect _area;
 
     public:
         EntityTransform();
@@ -31,7 +31,7 @@ namespace mugato
         const Vector& getPivot() const;
         const Vector& getSize() const;
 
-        const Rectangle& getArea() const;
+        const gorn::Rect& getArea() const;
         const Matrix& getMatrix() const;
 
         void setPosition(const Vector& val);

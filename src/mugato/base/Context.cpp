@@ -18,6 +18,7 @@ namespace mugato
     Context::Context():
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
+    _skeletons(_gorn.getMaterials(), _gorn.getFiles()),
     _screenSize(2.0f), _fixedUpdateInterval(0.0),
     _fixedUpdatesPerSecond(10.0)
     {
@@ -115,14 +116,16 @@ void main()
         DebugFontAtlasConfigurator().setup(*this);
 
         _scenes.setContext(*this);
+        _scenes.getTransform().setSize(_screenSize);
     }
 
     void Context::setScreenSize(const glm::vec2& size)
     {
         _screenSize = size;
+        _scenes.getTransform().setSize(size);
         auto trans = glm::translate(glm::mat4(), glm::vec3(-1.0f, -1.0f, 0.0f))
             *glm::scale(glm::mat4(), glm::vec3(2.0f/size.x, 2.0f/size.y, 1.0f));
-        _gorn.getQueue().setUniformValue(gorn::UniformKind::View, trans);
+        _gorn.getQueue().setViewTransform(trans);
     }
 
     const glm::vec2& Context::getScreenSize()
@@ -158,6 +161,16 @@ void main()
     LabelManager& Context::getLabels()
     {
         return _labels;
+    }
+
+    const SpineManager& Context::getSkeletons() const
+    {
+        return _skeletons;
+    }
+
+    SpineManager& Context::getSkeletons()
+    {
+        return _skeletons;
     }
 
     const EntityStack& Context::getScenes() const

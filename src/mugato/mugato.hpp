@@ -7,7 +7,7 @@
 #include <mugato/base/OcTree.hpp>
 #include <mugato/base/OcTreeElement.hpp>
 #include <mugato/base/OcTreeNode.hpp>
-#include <mugato/base/Rectangle.hpp>
+#include <mugato/base/Application.hpp>
 
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/GridFontAtlasLoader.hpp>
@@ -42,6 +42,11 @@
 #include <mugato/scene/Action.hpp>
 #include <mugato/scene/EmptyAction.hpp>
 #include <mugato/scene/TweenAction.hpp>
+
+#include <mugato/spine/SpineManager.hpp>
+#include <mugato/spine/SpineSkeleton.hpp>
+#include <mugato/spine/SpineSkeletonComponent.hpp>
+#include <mugato/spine/SpineSkeletonDefinition.hpp>
 
 
 #endif
