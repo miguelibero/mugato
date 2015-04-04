@@ -170,7 +170,7 @@ namespace mugato {
 			    auto attach = reinterpret_cast<spMeshAttachment*>(slot->attachment);
 			    material = getAttachmentMaterial(attach);
                 size_t size = 2*sizeof(float)*attach->verticesCount;
-                positions.size();
+                positions.size(size);
 			    spMeshAttachment_computeWorldVertices(
                     attach, slot, reinterpret_cast<float*>(positions.data()));
 			    texcoords.assign(attach->uvs, size);
@@ -192,7 +192,8 @@ namespace mugato {
                 colors = { attach->r, attach->g, attach->b, attach->a };
 			    break;
 		    }
-		    default: ;
+		    default:
+                break;
 		    } 
 		    if (material)
             {
@@ -215,27 +216,68 @@ namespace mugato {
         {
             return;
         }
-        gorn::RenderCommand::Elements elements = {0, 1, 1, 2, 2, 3, 3, 0};
 	    for (int i = 0, n = _skeleton->slotsCount; i < n; i++)
         {
 		    spSlot* slot = _skeleton->drawOrder[i];
-		    if (!slot->attachment ||
-                slot->attachment->type != SP_ATTACHMENT_REGION)
+		    if (!slot->attachment)
             {
                 continue;
             }
-		    spRegionAttachment* attach =
-                (spRegionAttachment*)slot->attachment;
-            buffer positions(2*sizeof(float)*4);
-		    spRegionAttachment_computeWorldVertices(
-                attach, slot->bone,
-                reinterpret_cast<float*>(positions.data()));
+            gorn::RenderCommand::Elements elements;
+            gorn::RenderCommand::Elements linelms;
+            buffer positions;
+		    switch (slot->attachment->type)
+            {
+		    case SP_ATTACHMENT_REGION: {
+			    auto attach = reinterpret_cast<spRegionAttachment*>(slot->attachment);
+                size_t size = 2*sizeof(float)*4;
+                positions.size(size);
+			    spRegionAttachment_computeWorldVertices(
+                    attach, slot->bone, reinterpret_cast<float*>(positions.data()));
+			    linelms = {0, 1, 1, 2, 2, 3, 3, 0};
+                break;
+		    }
+		    case SP_ATTACHMENT_MESH: {
+			    auto attach = reinterpret_cast<spMeshAttachment*>(slot->attachment);
+                size_t size = 2*sizeof(float)*attach->verticesCount;
+                positions.size(size);
+			    spMeshAttachment_computeWorldVertices(
+                    attach, slot, reinterpret_cast<float*>(positions.data()));
+			    elements.assign(attach->triangles,
+                    attach->triangles + attach->trianglesCount);
+			    break;
+		    }
+		    case SP_ATTACHMENT_SKINNED_MESH: {
+			    auto attach = (spSkinnedMeshAttachment*)slot->attachment;
+                size_t size = 2*sizeof(float)*attach->uvsCount;
+                positions.size(size);
+			    spSkinnedMeshAttachment_computeWorldVertices(
+                    attach, slot, reinterpret_cast<float*>(positions.data()));
+			    elements.assign(attach->triangles,
+                    attach->triangles + attach->trianglesCount);
+			    break;
+		    }
+		    default:
+                break;
+		    }
+
+            if(linelms.empty() && !elements.empty())
+            {
+                linelms.reserve(elements.size()*2);
+                for(auto itr = elements.begin(); itr != elements.end(); itr+=3)
+                {
+                    auto a = *itr;
+                    auto b = *(itr+1);
+                    auto c = *(itr+2);
+                    linelms.insert(linelms.end(), {a, b, b, c, c, a});
+                }
+            }
             queue.addCommand()
                 .withMaterial(_slotsMaterial)
                 .withAttribute(gorn::AttributeKind::Position,
                     std::move(positions), 2, gorn::BasicType::Float)
                 .withDrawMode(gorn::DrawMode::Lines)
-                .withElements(elements);
+                .withElements(linelms);
 	    }
     }
 
