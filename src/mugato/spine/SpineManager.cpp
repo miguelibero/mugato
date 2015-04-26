@@ -2,8 +2,8 @@
 #include <mugato/spine/SpineManager.hpp>
 #include <mugato/spine/SpineSkeleton.hpp>
 #include <mugato/base/Exception.hpp>
-#include <gorn/render/MaterialManager.hpp>
-#include <gorn/render/Material.hpp>
+#include <gorn/gl/MaterialManager.hpp>
+#include <gorn/gl/Material.hpp>
 #include <gorn/asset/FileManager.hpp>
 #include <spine/spine.h>
 #include <buffer.hpp>

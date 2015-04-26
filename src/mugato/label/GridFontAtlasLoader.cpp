@@ -1,8 +1,8 @@
 
 #include <mugato/label/GridFontAtlasLoader.hpp>
 #include <mugato/label/FontAtlas.hpp>
-#include <gorn/render/MaterialManager.hpp>
-#include <gorn/render/Material.hpp>
+#include <gorn/gl/MaterialManager.hpp>
+#include <gorn/gl/Material.hpp>
 #include <gorn/base/Exception.hpp>
 
 namespace mugato {

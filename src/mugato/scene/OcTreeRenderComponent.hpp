@@ -3,8 +3,9 @@
 
 #include <mugato/scene/Component.hpp>
 #include <mugato/sprite/Sprite.hpp>
-#include <gorn/render/Enums.hpp>
-#include <gorn/render/Material.hpp>
+#include <gorn/render/RenderEnums.hpp>
+#include <gorn/gl/Material.hpp>
+#include <gorn/asset/Mesh.hpp>
 #include <string>
 #include <memory>
 
@@ -19,8 +20,9 @@ namespace mugato
         std::shared_ptr<gorn::Material> _elementsMaterial;
         std::shared_ptr<gorn::Material> _nodesMaterial;
         gorn::DrawMode _elementsDrawMode;
-        gorn::DrawMode _nodesDrawMode;        
-
+        gorn::DrawMode _nodesDrawMode;
+        gorn::Mesh _elementsMesh;
+        gorn::Mesh _nodesMesh;
     public:
         OcTreeRenderComponent();
 
@@ -30,6 +32,8 @@ namespace mugato
         void setNodesDrawMode(DrawMode mode);
 
         void onAddedToEntity(Entity& entity) override;
+
+        void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };
 }

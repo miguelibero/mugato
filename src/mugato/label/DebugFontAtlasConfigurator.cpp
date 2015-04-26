@@ -8,7 +8,7 @@
 #include <gorn/base/DefinitionManager.hpp>
 #include <gorn/base/String.hpp>
 #include <gorn/asset/AssetManager.hpp>
-#include <gorn/render/Material.hpp>
+#include <gorn/gl/Material.hpp>
 #include <stdio.h>
 
 namespace mugato {

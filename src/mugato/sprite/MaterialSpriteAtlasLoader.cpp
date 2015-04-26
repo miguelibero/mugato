@@ -3,8 +3,8 @@
 #include <mugato/sprite/SpriteAtlas.hpp>
 #include <mugato/sprite/SpriteAtlasRegion.hpp>
 #include <mugato/sprite/Sprite.hpp>
-#include <gorn/render/MaterialManager.hpp>
-#include <gorn/render/Material.hpp>
+#include <gorn/gl/MaterialManager.hpp>
+#include <gorn/gl/Material.hpp>
 
 namespace mugato {
 

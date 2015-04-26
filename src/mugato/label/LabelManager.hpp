@@ -6,7 +6,7 @@
 #include <mugato/label/LabelDefinition.hpp>
 #include <mugato/label/LabelFont.hpp>
 #include <gorn/asset/AssetManager.hpp>
-#include <gorn/render/MaterialManager.hpp>
+#include <gorn/gl/MaterialManager.hpp>
 #include <gorn/base/DefinitionManager.hpp>
 #include <map>
 

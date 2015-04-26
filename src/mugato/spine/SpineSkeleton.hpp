@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <glm/glm.hpp>
-#include <gorn/render/Material.hpp>
+#include <gorn/gl/Material.hpp>
 #include <mugato/spine/SpineSkeletonData.hpp>
 
 namespace gorn {

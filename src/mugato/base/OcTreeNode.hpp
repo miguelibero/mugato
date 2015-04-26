@@ -3,10 +3,9 @@
 
 #include <memory>
 #include <algorithm>
+#include <vector>
 #include <gorn/base/Rect.hpp>
 #include <mugato/base/OcTreeElement.hpp>
-#include <buffer.hpp>
-#include <buffer_writer.hpp>
 
 namespace mugato
 {
@@ -18,7 +17,6 @@ namespace mugato
         typedef std::vector<Element> Elements;
         typedef OcTreeNode<T> Node;
         typedef std::vector<std::unique_ptr<Node>> Branches;
-        typedef gorn::Rect::DrawMode DrawMode;
         typedef gorn::Rect::MatchType MatchType;
     private:
         gorn::Rect _area;
@@ -67,12 +65,8 @@ namespace mugato
 
         size_t sizeNodes() const;
 
-        buffer getElementsVertices(DrawMode mode=DrawMode::Triangles) const;
-        buffer getNodesVertices(DrawMode mode=DrawMode::Triangles) const;
-        buffer getElementsVertices(const gorn::RectMatch& match,
-            DrawMode mode=DrawMode::Triangles) const;
-        buffer getNodesVertices(const gorn::RectMatch& match,
-            DrawMode mode=DrawMode::Triangles) const;
+        std::vector<gorn::Rect> getElementsRects() const;
+        std::vector<gorn::Rect> getNodesRects() const;
     };
 
     template<typename T>
@@ -498,79 +492,37 @@ namespace mugato
     }
 
     template<typename T>
-    buffer OcTreeNode<T>::getElementsVertices(DrawMode mode) const
+    std::vector<gorn::Rect> OcTreeNode<T>::getElementsRects() const
     {
-        buffer data;
-        buffer_writer out(data);
-        
-        for(auto& branch : _branches)
-        {
-            out.write(branch->getElementsVertices(mode));
-        }
+        std::vector<gorn::Rect> rects;
+        rects.reserve(_elements.size());
         for(auto& elm : _elements)
         {
-            out.write(elm.getArea().getVertices(mode));
+            rects.push_back(elm.getArea());
         }
-        return data;
-    }
 
-    template<typename T>
-    buffer OcTreeNode<T>::getNodesVertices(DrawMode mode) const
-    {
-        buffer data;
-        buffer_writer out(data);
-        
         for(auto& branch : _branches)
         {
-            out.write(branch->getNodesVertices(mode));
+            auto brects = branch->getElementsRects();
+            rects.insert(rects.end(), brects.begin(), brects.end());
         }
-        out.write(_area.getVertices(mode));
-
-        return data;
+        return rects;
     }
 
     template<typename T>
-    buffer OcTreeNode<T>::getElementsVertices(const gorn::RectMatch& match,
-        DrawMode mode) const
+    std::vector<gorn::Rect> OcTreeNode<T>::getNodesRects() const
     {
-        buffer data;
-        buffer_writer out(data);
-        
-        if(match.matches(_area))
+        std::vector<gorn::Rect> rects;
+        rects.push_back(_area);
+
+        for(auto& branch : _branches)
         {
-            for(auto& branch : _branches)
-            {
-                out.write(branch->getElementsVertices(match, mode));
-            }
-            for(auto& elm : _elements)
-            {
-                const auto& earea = elm.getArea();
-                if(match.matches(earea))
-                {
-                    out.write(earea.getVertices(mode));
-                }
-            }
+            auto brects = branch->getNodesRects();
+            rects.insert(rects.end(), brects.begin(), brects.end());
         }
-        return data;
+        return rects;
     }
 
-    template<typename T>
-    buffer OcTreeNode<T>::getNodesVertices(const gorn::RectMatch& match,
-        DrawMode mode) const
-    {
-        buffer data;
-        if(match.matches(_area))
-        {
-            buffer_writer out(data);
-            for(auto& branch : _branches)
-            {
-                out.write(branch->getNodesVertices(match, mode));
-            }
-            out.write(_area.getVertices(mode));
-        }
-
-        return data;
-    }
 }
 
 #endif

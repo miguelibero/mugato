@@ -2,7 +2,7 @@
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/SpriteAtlas.hpp>
 #include <gorn/base/String.hpp>
-#include <gorn/render/MaterialManager.hpp>
+#include <gorn/gl/MaterialManager.hpp>
 #include <rapidxml/rapidxml.hpp>
 #include <buffer.hpp>
 #include <buffer_writer.hpp>

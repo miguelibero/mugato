@@ -1,6 +1,6 @@
 
 #include <mugato/sprite/SpriteAnimation.hpp>
-#include <gorn/render/Material.hpp>
+#include <gorn/gl/Material.hpp>
 
 namespace mugato {
 

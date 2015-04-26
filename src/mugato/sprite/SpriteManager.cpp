@@ -4,7 +4,7 @@
 #include <mugato/sprite/SpriteAtlas.hpp>
 #include <mugato/sprite/Sprite.hpp>
 #include <gorn/asset/FileManager.hpp>
-#include <gorn/render/MaterialManager.hpp>
+#include <gorn/gl/MaterialManager.hpp>
 
 namespace mugato {
 

@@ -6,8 +6,8 @@
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/DebugFontAtlasConfigurator.hpp>
-#include <gorn/render/ProgramManager.hpp>
-#include <gorn/render/Kinds.hpp>
+#include <gorn/gl/ProgramManager.hpp>
+#include <gorn/render/RenderKinds.hpp>
 #include <gorn/asset/FileManager.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

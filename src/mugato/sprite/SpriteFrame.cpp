@@ -2,8 +2,8 @@
 #include <mugato/sprite/SpriteFrame.hpp>
 #include <mugato/sprite/SpriteAtlasRegion.hpp>
 #include <gorn/render/RenderQueue.hpp>
-#include <gorn/render/Material.hpp>
-#include <gorn/render/Kinds.hpp>
+#include <gorn/render/RenderKinds.hpp>
+#include <gorn/gl/Material.hpp>
 
 namespace mugato {
 
@@ -110,7 +110,7 @@ namespace mugato {
         {
             std::swap(rsize.x, rsize.y);
         }
-        if(origin == Region::Origin::BottomLeft || origin == Region::Origin::BottomRight)
+        if(origin == Region::Origin::TopLeft || origin == Region::Origin::TopRight)
         {
             bl.y = msize.y - rsize.y - bl.y;
         }
@@ -125,19 +125,19 @@ namespace mugato {
         if(rotate)
         {
             _texVerts = {
-                bl.x, tr.y,
                 bl.x, bl.y,
-                tr.x, bl.y,
-                tr.x, tr.y
+                bl.x, tr.y,
+                tr.x, tr.y,
+                tr.x, bl.y
             };
         }
         else
         {
             _texVerts = {
-                bl.x, bl.y,
-                tr.x, bl.y,
+                bl.x, tr.y,
                 tr.x, tr.y,
-                bl.x, tr.y
+                tr.x, bl.y,
+                bl.x, bl.y
             };
         }
         _dirtyTexVerts = false;

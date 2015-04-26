@@ -13,11 +13,8 @@ class QuadTreeApplication : public gorn::Application
     std::uniform_real_distribution<float> _randomPosDistri;
     std::uniform_real_distribution<float> _randomSizeDistri;
 
-    gorn::VertexArray _vaoElms;
-    std::shared_ptr<gorn::VertexBuffer> _vboElms;
-
-    gorn::VertexArray _vaoNodes;
-    std::shared_ptr<gorn::VertexBuffer> _vboNodes;
+    gorn::Mesh _elmsMesh;
+    gorn::Mesh _nodesMesh;
 
     double _deltaTime;
 
@@ -43,7 +40,7 @@ namespace gorn
 }
 
 QuadTreeApplication::QuadTreeApplication():
-_quadtree(mugato::Rectangle(glm::vec2(-1.0f), glm::vec2(2.0f)), 2),
+_quadtree(gorn::Rect(glm::vec2(-1.0f), glm::vec2(2.0f)), 2),
 _randomPosDistri(-1.0f, 1.0f),
 _randomSizeDistri(0.0f, 0.1f),
 _deltaTime(0.0f)
@@ -63,19 +60,17 @@ void QuadTreeApplication::load()
     std::random_device rd;
     _randomAlgo = decltype(_randomAlgo)(rd());
 
-    _vboElms = std::make_shared<gorn::VertexBuffer>();
-    _vaoElms.setProgram(_ctx.getGorn().getPrograms().load("shader"));
-    _vaoElms.setAttribute(_vboElms, gorn::AttributeDefinition("position")
-        .withType(gorn::BasicType::Float)
-        .withCount(2)
-        .withStride(2, gorn::BasicType::Float));
+    auto& matdefs = _ctx.getGorn().getMaterials().getDefinitions();
 
-    _vboNodes = std::make_shared<gorn::VertexBuffer>();
-    _vaoNodes.setProgram(_ctx.getGorn().getPrograms().load("shader"));
-    _vaoNodes.setAttribute(_vboNodes, gorn::AttributeDefinition("position")
-        .withType(gorn::BasicType::Float)
-        .withCount(2)
-        .withStride(2, gorn::BasicType::Float));
+    matdefs.set("octree_elements", gorn::MaterialDefinition()
+        .withUniformValue(gorn::UniformKind::Color,
+            glm::vec3(1.0f, 0.0f, 0.0f))
+        .withProgram("shader"));
+
+    matdefs.set("octree_nodes", gorn::MaterialDefinition()
+        .withUniformValue(gorn::UniformKind::Color,
+            glm::vec3(0.0f, 0.0f, 1.0f))
+        .withProgram("shader"));
 }
 
 
@@ -94,9 +89,9 @@ void QuadTreeApplication::update(double dt)
     if(_deltaTime == 0.0f)
     {
         _quadtree.clear();
-        for(size_t i=0; i<1000; i++)
+        for(size_t i=0; i<100; i++)
         {            
-            mugato::Rectangle rect(
+            gorn::Rect rect(
                 glm::vec2(randomPos(), randomPos()),
                 glm::vec2(randomSize(), randomSize())
             );
@@ -104,13 +99,11 @@ void QuadTreeApplication::update(double dt)
         }
         _quadtree.adjust();
 
-        _vboElms->setData(
-            _quadtree.getElementsVertices(gorn::DrawMode::Lines),
-            gorn::VertexBufferUsage::DynamicDraw);
-
-        _vboNodes->setData(
-            _quadtree.getNodesVertices(gorn::DrawMode::Lines),
-            gorn::VertexBufferUsage::DynamicDraw);
+        _elmsMesh = gorn::ShapeMeshFactory::create(
+            _quadtree.getElementsRects(), gorn::DrawMode::Lines);
+        
+        _nodesMesh = gorn::ShapeMeshFactory::create(
+            _quadtree.getNodesRects(), gorn::DrawMode::Lines);
 
         std::cout << _quadtree.size() << " elements" << std::endl;
         std::cout << _quadtree.sizeNodes() << " nodes" << std::endl;
@@ -129,10 +122,14 @@ void QuadTreeApplication::draw()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    size_t c = mugato::Rectangle::getVertexCount(gorn::DrawMode::Lines);
-    _vaoElms.setUniformValue("color", glm::vec3(1.0f, 0.0f, 0.0f));
-    _vaoElms.draw(_quadtree.size()*c, gorn::DrawMode::Lines);
-    _vaoNodes.setUniformValue("color", glm::vec3(0.0f, 1.0f, 0.0f));
-    _vaoNodes.draw(_quadtree.sizeNodes()*c, gorn::DrawMode::Lines);
+    auto& queue = _ctx.getGorn().getQueue();
+    auto& mats = _ctx.getGorn().getMaterials();
+
+    queue.addCommand(_elmsMesh.render())
+        .withMaterial(mats.load("octree_elements"));
+    queue.addCommand(_nodesMesh.render())
+        .withMaterial(mats.load("octree_nodes"));
+
+    queue.draw();
 }
 

@@ -3,7 +3,7 @@
 #include <mugato/label/LabelFont.hpp>
 #include <mugato/base/Exception.hpp>
 #include <gorn/base/String.hpp>
-#include <gorn/render/MaterialManager.hpp>
+#include <gorn/gl/MaterialManager.hpp>
 
 namespace mugato {
 

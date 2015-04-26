@@ -3,7 +3,7 @@
 #include <mugato/base/Exception.hpp>
 #include <gorn/render/RenderCommand.hpp>
 #include <gorn/render/RenderQueue.hpp>
-#include <gorn/render/Kinds.hpp>
+#include <gorn/render/RenderKinds.hpp>
 #include <spine/spine.h>
 #include <buffer.hpp>
 #include <algorithm>
