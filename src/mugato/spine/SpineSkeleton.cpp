@@ -197,6 +197,13 @@ namespace mugato {
 		    } 
 		    if (material)
             {
+                // flip y coordinates
+                auto coords = reinterpret_cast<float*>(texcoords.data());
+                for(size_t i=1; i<texcoords.size()/sizeof(float); i+=2)
+                {
+                    coords[i] = 1.0f - coords[i];
+                }
+
                 queue.addCommand()
                     .withMaterial(material)
                     .withAttribute(gorn::AttributeKind::Position,

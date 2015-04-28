@@ -45,14 +45,13 @@ void SceneApplication::load()
 #ifdef GORN_PLATFORM_LINUX
 	getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
-	getGorn().getImages()
-        .makeDefaultDataLoader<gorn::PngImageLoader>();
 #elif GORN_PLATFORM_ANDROID
 	getGorn().getFiles()
         .makeDefaultLoader<gorn::AssetFileLoader>("%s");
-	getGorn().getImages()
-        .makeDefaultDataLoader<gorn::GraphicsImageLoader>();
 #endif
+
+	getGorn().getImages()
+        .makeDefaultDataLoader<gorn::StbImageLoader>();
 
     getMugato().setScreenSize(glm::vec2(480.0f, 320.0f));
 

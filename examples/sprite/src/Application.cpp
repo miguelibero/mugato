@@ -30,14 +30,12 @@ void SpriteApplication::load()
 #ifdef GORN_PLATFORM_LINUX
 	_ctx.getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
-	_ctx.getGorn().getImages()
-        .makeDefaultDataLoader<gorn::PngImageLoader>();
 #elif GORN_PLATFORM_ANDROID
 	_ctx.getGorn().getFiles()
         .makeDefaultLoader<gorn::AssetFileLoader>("%s");
-	_ctx.getGorn().getImages()
-        .makeDefaultDataLoader<gorn::GraphicsImageLoader>();
 #endif
+	_ctx.getGorn().getImages()
+        .makeDefaultDataLoader<gorn::StbImageLoader>();
 
     _ctx.getGorn().getTextures().getDefinitions().get("guybrush.png")
         .withParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST)
