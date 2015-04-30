@@ -30,12 +30,14 @@
 #include <mugato/sprite/SpriteDefinition.hpp>
 #include <mugato/sprite/SpriteFrame.hpp>
 #include <mugato/sprite/SpriteManager.hpp>
+#include <mugato/sprite/SpriteEnums.hpp>
 
 #include <mugato/scene/Component.hpp>
 #include <mugato/scene/Entity.hpp>
 #include <mugato/scene/EntityTransform.hpp>
 #include <mugato/scene/EntityStack.hpp>
 #include <mugato/scene/SpriteComponent.hpp>
+#include <mugato/scene/LabelComponent.hpp>
 #include <mugato/scene/OcTreeRenderComponent.hpp>
 #include <mugato/scene/RenderInfoComponent.hpp>
 #include <mugato/scene/ActionComponent.hpp>

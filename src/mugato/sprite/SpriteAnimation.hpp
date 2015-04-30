@@ -4,6 +4,7 @@
 #define __mugato__SpriteAnimation__
 
 #include <mugato/sprite/SpriteFrame.hpp>
+#include <mugato/sprite/SpriteEnums.hpp>
 #include <memory>
 
 namespace gorn {
@@ -17,6 +18,7 @@ namespace mugato {
     class SpriteAnimation
     {
     public:
+        typedef SpriteResizeMode ResizeMode;
         typedef SpriteFrame Frame;
         typedef SpriteAtlasRegion Region;
     private:
@@ -24,7 +26,11 @@ namespace mugato {
         double _frameDuration;
         double _time;
 
+        mutable glm::vec2 _size;
+        ResizeMode _resizeMode;
+
         void init();
+        void updateSize();
     public:
         SpriteAnimation();
         SpriteAnimation(const std::shared_ptr<gorn::Material>& material);
@@ -46,7 +52,10 @@ namespace mugato {
         double getCurrentTime() const;
         double getDuration() const;
 
-        glm::vec2 getSize() const;
+        const glm::vec2& getSize() const;
+        glm::vec2 getOriginalSize() const;
+        void setSize(const glm::vec2& size);
+        void setResizeMode(ResizeMode mode);
 
         void update(double dt);
         void render(gorn::RenderQueue& queue) const;

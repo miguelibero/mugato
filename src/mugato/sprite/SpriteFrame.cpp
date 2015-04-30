@@ -29,6 +29,8 @@ namespace mugato {
 
     void SpriteFrame::init()
     {
+        _resizeMode = ResizeMode::Original;
+        _dirtySize = true;
         _dirtyTexVerts = true;
         _dirtyPosVerts = true;
     }
@@ -63,13 +65,71 @@ namespace mugato {
         return _region;
     }
 
-    const glm::vec2 SpriteFrame::getSize() const
+    const glm::vec2& SpriteFrame::getSize() const
     {
-        return _region.getOriginalSize();
+        updateSize();
+        return _size;
+    }
+
+    void SpriteFrame::updateSize() const
+    {
+        if(_dirtySize)
+        {
+            auto& s = _region.getOriginalSize();
+            switch(_resizeMode)
+            {
+            case ResizeMode::Original:
+                _size = s;
+                break;
+            case ResizeMode::Inside:
+                {
+                    if(s.x < s.y)
+                    {
+                        _size.x = s.x*_size.y/s.y;
+                    }
+                    else
+                    {
+                        _size.y = s.y*_size.x/s.x;
+                    }
+                }
+                break;
+            case ResizeMode::Outside:
+                {
+                    auto& s = _region.getOriginalSize();
+                    if(s.x > s.y)
+                    {
+                        _size.x = s.x*_size.y/s.y;
+                    }
+                    else
+                    {
+                        _size.y = s.y*_size.x/s.x;
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+            _dirtySize = false;
+        }
+    }
+
+    void SpriteFrame::setSize(const glm::vec2& size)
+    {
+        if(_size != size)
+        {
+            _size = size;
+            _dirtySize = true;
+        }
+    }
+
+    void SpriteFrame::setResizeMode(ResizeMode mode)
+    {
+        _resizeMode = mode;
     }
 
     void SpriteFrame::update()
     {
+        updateSize();
         updatePositionData();
         updateTextureData();
     }
@@ -80,8 +140,8 @@ namespace mugato {
         {
             return;
         }
-        auto osize = _region.getOriginalSize();
-        auto rsize = _region.getSize();
+        auto osize = _size;
+        auto rsize = osize/_region.getOriginalSize()*_region.getSize();
         auto bl = (osize-rsize)*0.5f+_region.getOffset();
         auto tr = bl + rsize;
 

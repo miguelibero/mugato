@@ -5,7 +5,8 @@
 
 namespace mugato {
 
-    Label::Label()
+    Label::Label(const std::string& text):
+    _text(text)
     {
         init();
     }

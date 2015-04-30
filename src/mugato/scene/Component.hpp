@@ -15,6 +15,7 @@ namespace mugato
     public:
         virtual ~Component(){};
         virtual void onAddedToEntity(Entity& entity){};
+        virtual void onEntityTransformChanged(Entity& entity){};
         virtual bool hasFinished() const { return false; };        
         virtual void update(double dt){};
         virtual void fixedUpdate(double dt){};

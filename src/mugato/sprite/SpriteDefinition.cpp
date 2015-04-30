@@ -3,13 +3,19 @@
 
 namespace mugato {
 
-    SpriteDefinition::SpriteDefinition()    
+    SpriteDefinition::SpriteDefinition()   
     {
     }
 
-    SpriteDefinition& SpriteDefinition::withAtlas(const std::string& atlas)
+    SpriteDefinition& SpriteDefinition::withAtlas(const std::string& name)
     {
-        _atlas = atlas;
+        _atlas = name;
+        return *this;
+    }
+
+    SpriteDefinition& SpriteDefinition::withMaterial(const std::string& name)
+    {
+        _material = name;
         return *this;
     }
 
@@ -34,6 +40,11 @@ namespace mugato {
     const std::string& SpriteDefinition::getAtlas() const
     {
         return _atlas;
+    }
+
+    const std::string& SpriteDefinition::getMaterial() const
+    {
+        return _material;
     }
 
     const SpriteDefinition::Animation& SpriteDefinition::getAnimation(

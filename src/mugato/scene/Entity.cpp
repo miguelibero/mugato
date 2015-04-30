@@ -57,6 +57,10 @@ namespace mugato
             {
                 parent->addChild(getSharedPtr());
             }
+            for(auto& comp : _components)
+            {
+                comp->onEntityTransformChanged(*this);
+            }
         }
     }
 

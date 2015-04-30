@@ -61,6 +61,9 @@ namespace mugato
         template<typename C, typename... Args>
         C& addComponent(Args&&... args);
 
+        template<typename C, typename... Args>
+        std::shared_ptr<Entity> addChildWithComponent(Args&&... args);
+
         bool hasParent() const;
         Entity& getParent();
         const Entity& getParent() const;
@@ -72,6 +75,14 @@ namespace mugato
         auto ptr = new C(std::forward<Args>(args)...);
         addComponent(std::unique_ptr<Component>(ptr));
         return *ptr;
+    }
+
+    template<typename C, typename... Args>
+    std::shared_ptr<Entity> Entity::addChildWithComponent(Args&&... args)
+    {
+        auto child = addChild();
+        child->addComponent<C>(std::forward<Args>(args)...);
+        return child;
     }
 }
 

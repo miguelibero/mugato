@@ -29,7 +29,7 @@ namespace mugato {
         void init();
 
     public:
-        Label();
+        Label(const std::string& text="");
         Label(const std::shared_ptr<Font>& font);
         Label(const std::shared_ptr<Font>& font, const std::string& text);
 
