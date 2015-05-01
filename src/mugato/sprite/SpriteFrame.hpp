@@ -35,6 +35,8 @@ namespace mugato {
         ResizeMode _resizeMode;
         mutable bool _dirtySize;
 
+        glm::vec4 _stretchBorders;
+
         void updatePositionData();
         void updateTextureData();
         void updateSize() const;
@@ -55,6 +57,9 @@ namespace mugato {
         const glm::vec2& getSize() const;
         void setSize(const glm::vec2& size);
         void setResizeMode(ResizeMode mode);
+
+        bool hasStretchBorders() const;
+        void setStretchBorders(const glm::vec4& borders);
 
         void update();
         void render(gorn::RenderQueue& queue) const;

@@ -77,6 +77,11 @@ namespace mugato {
         _resizeMode = mode;
     }
 
+    void Sprite::setStretchBorders(const glm::vec4& borders)
+    {
+        _stretchBorders = borders;
+    }
+
     void Sprite::setAnimation(const std::string& name, const Animation& anim)
     {
         _anims[name] = anim;
@@ -105,6 +110,7 @@ namespace mugato {
             auto& anim = itr->second;
             anim.setSize(_size);
             anim.setResizeMode(_resizeMode);
+            anim.setStretchBorders(_stretchBorders);
             anim.update(dt);
         }
     }

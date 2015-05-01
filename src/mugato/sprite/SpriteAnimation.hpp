@@ -25,7 +25,7 @@ namespace mugato {
         std::vector<std::shared_ptr<Frame>> _frames;
         double _frameDuration;
         double _time;
-
+        glm::vec4 _stretchBorders;
         mutable glm::vec2 _size;
         ResizeMode _resizeMode;
 
@@ -56,6 +56,7 @@ namespace mugato {
         glm::vec2 getOriginalSize() const;
         void setSize(const glm::vec2& size);
         void setResizeMode(ResizeMode mode);
+        void setStretchBorders(const glm::vec4& borders);
 
         void update(double dt);
         void render(gorn::RenderQueue& queue) const;

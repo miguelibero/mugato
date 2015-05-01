@@ -33,7 +33,8 @@ void GuiApplication::load()
     getMugato().setScreenSize(glm::vec2(480.0f, 320.0f));
 
     getMugato().getSprites().getDefinitions().get("button1")
-        .withMaterial("button1.png");
+        .withMaterial("button1.png")
+        .withStretchBorders(glm::vec4(4, 5, 9, 5));
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("octree_elements", gorn::MaterialDefinition()
@@ -55,7 +56,6 @@ void GuiApplication::load()
     octree.setNodesMaterial(materials.load("octree_nodes"));
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
-    /*
     auto& debugInfo = scene->addComponent<mugato::RenderInfoComponent>();
     debugInfo.getTransform().setPosition(glm::vec3(0.0f, 60.f, 1.0f));
 
@@ -63,15 +63,13 @@ void GuiApplication::load()
         <mugato::LabelComponent>("Label!", "font.fnt");
 
     label->getTransform().setPosition(glm::vec2(240, 300));
-    */
 
     auto button = scene->addChildWithComponent
         <mugato::SpriteComponent>("button1",
-            mugato::SpriteResizeMode::Inside);
+            mugato::SpriteResizeMode::Exact);
 
     button->getTransform().setPosition(glm::vec2(240, 100));
-    button->getTransform().setSize(glm::vec2(50, 50));
-    button->getTransform().setScale(glm::vec2(1.5, 2.0));
+    button->getTransform().setSize(glm::vec2(200, 50));
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

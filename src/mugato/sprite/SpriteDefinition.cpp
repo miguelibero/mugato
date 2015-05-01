@@ -19,6 +19,12 @@ namespace mugato {
         return *this;
     }
 
+    SpriteDefinition& SpriteDefinition::withStretchBorders(const glm::vec4& borders)
+    {
+        _stretchBorders = borders;
+        return *this;
+    }
+
     SpriteDefinition& SpriteDefinition::withAnimation(const std::string& name,
         const SpriteDefinition::Animation& anim)
     {
@@ -61,6 +67,11 @@ namespace mugato {
     const SpriteDefinition::AnimationMap& SpriteDefinition::getAnimations() const
     {
         return _anims;
+    }
+
+    const glm::vec4& SpriteDefinition::getStretchBorders() const
+    {
+        return _stretchBorders;
     }
 
 }

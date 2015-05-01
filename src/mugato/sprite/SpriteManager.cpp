@@ -89,6 +89,7 @@ namespace mugato {
     {
         Sprite sprite;
         auto& def = getDefinitions().get(dname);
+        sprite.setStretchBorders(def.getStretchBorders());
         auto& mname = def.getMaterial();
         if(!mname.empty())
         {

@@ -27,6 +27,7 @@ namespace mugato {
         std::string _currentAnim;
         mutable glm::vec2 _size;
         ResizeMode _resizeMode;
+        glm::vec4 _stretchBorders;
 
         void init();
     public:
@@ -45,6 +46,7 @@ namespace mugato {
         glm::vec2 getOriginalSize() const;
         void setSize(const glm::vec2& size);
         void setResizeMode(ResizeMode mode);
+        void setStretchBorders(const glm::vec4& borders);
 
         void play(const std::string& name);
 
