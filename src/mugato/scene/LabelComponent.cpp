@@ -4,12 +4,13 @@
 #include <mugato/scene/EntityTransform.hpp>
 #include <mugato/base/Context.hpp>
 #include <mugato/sprite/SpriteManager.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace mugato
 {
     LabelComponent::LabelComponent(const std::string& text,
     const std::string& font):
-    _label(text), _font(font), _pivotPercent(0.0f)
+    _label(text), _font(font)
     {
     }
 
@@ -28,29 +29,17 @@ namespace mugato
         _label.setText(text);
     }
 
-    void LabelComponent::setEntityPivotPercent(const glm::vec2& val)
-    {
-        _pivotPercent = val;
-        if(auto ptr = _entity.lock())
-        {
-            ptr->getTransform().setPivot(_pivotPercent*_label.getSize());
-        }
-    }
-
-    void LabelComponent::setEntitySize()
-    {
-        if(auto ptr = _entity.lock())
-        {
-            ptr->getTransform().setSize(_label.getSize());
-        }
-    }
-
     void LabelComponent::onAddedToEntity(Entity& entity)
     {
         _label.setFont(entity.getContext().getLabels().loadFont(_font));
         _entity = entity.getSharedPtr();
-        setEntityPivotPercent(_pivotPercent);
-        setEntitySize();
+        onEntityTransformChanged(entity);
+    }
+
+    void LabelComponent::onEntityTransformChanged(Entity& entity)
+    {
+        auto center = entity.getTransform().getSize()*0.5f;
+        _transform = glm::translate(glm::mat4(), center);
     }
 
     void LabelComponent::update(double dt)
@@ -60,7 +49,15 @@ namespace mugato
 
     void LabelComponent::render(gorn::RenderQueue& queue)
     {
+        queue.addCommand().withTransformMode(
+            gorn::RenderCommand::TransformMode::PushCheckpoint);
+        queue.addCommand()
+          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransform(_transform);
         _label.render(queue);
+        queue.addCommand().withTransformMode(
+            gorn::RenderCommand::TransformMode::PopCheckpoint);
+
     }
 
 }

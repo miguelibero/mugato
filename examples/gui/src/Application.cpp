@@ -59,14 +59,11 @@ void GuiApplication::load()
     auto& debugInfo = scene->addComponent<mugato::RenderInfoComponent>();
     debugInfo.getTransform().setPosition(glm::vec3(0.0f, 60.f, 1.0f));
 
-    auto label = scene->addChildWithComponent
-        <mugato::LabelComponent>("Label!", "font.fnt");
-
-    label->getTransform().setPosition(glm::vec2(240, 300));
-
     auto button = scene->addChildWithComponent
         <mugato::SpriteComponent>("button1",
             mugato::SpriteResizeMode::Exact);
+
+    button->addComponent<mugato::LabelComponent>("Label!", "font.fnt");
 
     button->getTransform().setPosition(glm::vec2(240, 100));
     button->getTransform().setSize(glm::vec2(200, 50));
