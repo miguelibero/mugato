@@ -727,6 +727,7 @@
 					../lib/gorn/src/,
 					../lib/gorn/lib/,
 					../lib/gorn/lib/buffer/src/,
+					../lib/gorn/lib/stb/,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = ../lib/;
@@ -778,6 +779,7 @@
 					../lib/gorn/src/,
 					../lib/gorn/lib/,
 					../lib/gorn/lib/buffer/src/,
+					../lib/gorn/lib/stb/,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = ../lib/;
