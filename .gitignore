@@ -11,7 +11,7 @@ proj.linux/bin/
 .gradle
 .DS_Store
 build/
-<<<<<<< HEAD
 *.obj
 *.tlog/
 xcuserdata/
+.xcworkspace/
