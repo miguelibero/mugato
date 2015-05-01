@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>96600A5E-5CD4-48D6-8648-C3850CF94EB9</string>
+	<key>IDESourceControlProjectName</key>
+	<string>mugato</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>0859B7651548761E8CD7AB9C8CED404441DC5FA4</key>
+		<string>github.com:miguelibero/gorn.git</string>
+		<key>4A131C6D61F940DE5452CB4F908FD849CEE0D370</key>
+		<string>github.com:miguelibero/buffer.git</string>
+		<key>FCD88AD8A5C592ACDC32BD0D59FFDE05C39B91F7</key>
+		<string>github.com:miguelibero/mugato.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>proj.ios/mugato.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>0859B7651548761E8CD7AB9C8CED404441DC5FA4</key>
+		<string>../../..lib/gorn/</string>
+		<key>4A131C6D61F940DE5452CB4F908FD849CEE0D370</key>
+		<string>../../..lib/gorn/lib/buffer/</string>
+		<key>FCD88AD8A5C592ACDC32BD0D59FFDE05C39B91F7</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:miguelibero/mugato.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>FCD88AD8A5C592ACDC32BD0D59FFDE05C39B91F7</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>4A131C6D61F940DE5452CB4F908FD849CEE0D370</string>
+			<key>IDESourceControlWCCName</key>
+			<string>buffer</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>0859B7651548761E8CD7AB9C8CED404441DC5FA4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>gorn</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FCD88AD8A5C592ACDC32BD0D59FFDE05C39B91F7</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mugato</string>
+		</dict>
+	</array>
+</dict>
+</plist>
