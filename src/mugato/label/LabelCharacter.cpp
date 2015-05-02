@@ -11,7 +11,7 @@ namespace mugato {
     {
     }
 
-    LabelCharacter::LabelCharacter(const glm::vec3& base, Mode mode):
+    LabelCharacter::LabelCharacter(const glm::vec2& base, Mode mode):
     _base(base), _mode(mode), _dirty(true)
     {
     }
@@ -38,6 +38,16 @@ namespace mugato {
         }
     }
 
+    LabelCharacter::Mode LabelCharacter::getMode() const
+    {
+        return _mode;
+    }
+
+    const glm::vec2& LabelCharacter::getBase() const
+    {
+        return _base;
+    }
+
     const LabelCharacter::Region& LabelCharacter::getRegion() const
     {
         return _region;
@@ -47,7 +57,7 @@ namespace mugato {
     {
         if(_dirty)
         {
-            glm::vec3 pos(_base);
+            glm::vec3 pos(_base, 0.0f);
             pos.x += _region.getAdvance();
             _transform = glm::translate(glm::mat4(), pos);
             _dirty = false;

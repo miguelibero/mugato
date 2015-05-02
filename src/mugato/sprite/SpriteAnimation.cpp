@@ -130,9 +130,19 @@ namespace mugato {
         _resizeMode = mode;
     }
 
+    SpriteAnimation::ResizeMode SpriteAnimation::getResizeMode() const
+    {
+        return _resizeMode;
+    }
+
     void SpriteAnimation::setStretchBorders(const glm::vec4& borders)
     {
         _stretchBorders = borders;
+    }
+
+    const glm::vec4& SpriteAnimation::getStretchBorders() const
+    {
+        return _stretchBorders;
     }
 
     void SpriteAnimation::update(double dt)

@@ -56,14 +56,14 @@ void GuiApplication::load()
     octree.setNodesMaterial(materials.load("octree_nodes"));
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
-    auto& debugInfo = scene->addComponent<mugato::RenderInfoComponent>();
-    debugInfo.getTransform().setPosition(glm::vec3(0.0f, 60.f, 1.0f));
+    scene->addComponent<mugato::RenderInfoComponent>();
 
     auto button = scene->addChildWithComponent
         <mugato::SpriteComponent>("button1",
             mugato::SpriteResizeMode::Exact);
 
-    button->addComponent<mugato::LabelComponent>("Label!", "font.fnt");
+    auto& label = button->addComponent<mugato::LabelComponent>("Label!", "font.fnt");
+    label.getLabel().setAlignment(mugato::LabelAlignment::Center);
 
     button->getTransform().setPosition(glm::vec2(240, 100));
     button->getTransform().setSize(glm::vec2(200, 50));

@@ -38,8 +38,7 @@ namespace mugato
 
     void LabelComponent::onEntityTransformChanged(Entity& entity)
     {
-        auto center = entity.getTransform().getSize()*0.5f;
-        _transform = glm::translate(glm::mat4(), center);
+        _label.setSize(glm::vec2(entity.getTransform().getSize()));
     }
 
     void LabelComponent::update(double dt)
@@ -49,15 +48,7 @@ namespace mugato
 
     void LabelComponent::render(gorn::RenderQueue& queue)
     {
-        queue.addCommand().withTransformMode(
-            gorn::RenderCommand::TransformMode::PushCheckpoint);
-        queue.addCommand()
-          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
-          .withTransform(_transform);
         _label.render(queue);
-        queue.addCommand().withTransformMode(
-            gorn::RenderCommand::TransformMode::PopCheckpoint);
-
     }
 
 }

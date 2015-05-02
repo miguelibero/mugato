@@ -24,18 +24,21 @@ namespace mugato {
         SpriteFrame _frame;
         Region _region;
         glm::mat4 _transform;
-        glm::vec3 _base;
+        glm::vec2 _base;
         Mode _mode;
         bool _dirty;
 
     public:
         LabelCharacter();
-        LabelCharacter(const glm::vec3& base,
+        LabelCharacter(const glm::vec2& base,
             Mode mode=Mode::Character);
         explicit LabelCharacter(
             const std::shared_ptr<gorn::Material>& material);
         LabelCharacter(const std::shared_ptr<gorn::Material>& material,
             const Region& region);
+
+        Mode getMode() const;
+        const glm::vec2& getBase() const;
 
         void setRegion(const Region& region);
         const Region& getRegion() const;

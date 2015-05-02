@@ -94,7 +94,7 @@ namespace mugato {
         if(!font.hasCharacter("\n"))
         {
             LabelFont::Character chr(
-                glm::vec3(0.0f, -1.0f*getLineHeight(), 0.0f),
+                glm::vec2(0.0f, -1.0f*getLineHeight()),
                 LabelFont::Character::Mode::Line);
             font.setCharacter("\n", chr);
         }
