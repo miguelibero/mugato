@@ -26,7 +26,25 @@ namespace mugato
 
     void EntityStack::onAddedToEntity(Entity& entity)
     {
+        onEntityTransformChanged(entity);
+    }
+
+    void EntityStack::onEntityTransformChanged(Entity& entity)
+    {
         _transform = entity.getTransform();
+    }
+
+    void EntityStack::onEntityTouched(Entity& entity, const glm::vec2& p)
+    {
+        touch(p);
+    }
+
+    void EntityStack::touch(const glm::vec2& p)
+    {
+        if(!_stack.empty())
+        {
+            _stack.back()->touch(p);
+        }
     }
 
     void EntityStack::update(double dt)

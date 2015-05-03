@@ -53,7 +53,7 @@ namespace mugato {
         double getDuration() const;
 
         const glm::vec2& getSize() const;
-        glm::vec2 getOriginalSize() const;
+        glm::vec2 getContentSize() const;
         void setSize(const glm::vec2& size);
         ResizeMode getResizeMode() const;
         void setResizeMode(ResizeMode mode);

@@ -1,6 +1,7 @@
 #include <mugato/scene/EntityTransform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp> 
+#include <glm/gtc/matrix_inverse.hpp>
 
 namespace mugato
 {
@@ -46,6 +47,11 @@ namespace mugato
     const EntityTransform::Matrix& EntityTransform::getMatrix() const
     {
         return _matrix;
+    }
+
+    const EntityTransform::Matrix& EntityTransform::getInverseMatrix() const
+    {
+        return _inverseMatrix;
     }
 
     void EntityTransform::setPosition(const Vector2& val)
@@ -137,6 +143,7 @@ namespace mugato
                 * glm::orientate4(_rotation)
                 * glm::translate(glm::mat4(), -_pivot)
                 ;
+            _inverseMatrix = glm::affineInverse(_matrix);
             _area = gorn::Rect(glm::vec3(0.0f), _size)*_matrix;
             _dirty = false;
             return true;

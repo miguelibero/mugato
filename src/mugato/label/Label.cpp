@@ -2,8 +2,11 @@
 #include <mugato/label/Label.hpp>
 #include <gorn/render/RenderQueue.hpp>
 #include <glm/gtx/transform.hpp>
+#include <algorithm>
 
 namespace mugato {
+
+    const char* Label::kLineBreak = "\n";
 
     Label::Label(const std::string& text):
     _text(text)
@@ -72,26 +75,14 @@ namespace mugato {
         return _size;
     }
 
-    glm::vec2 Label::getOriginalSize() const
+    glm::vec2 Label::getContentSize() const
     {
-        glm::vec2 size;
-        glm::vec2 line;
-        for(auto& name : _characters)
-        {
-            auto& chr = _font->getCharacter(name);
-            line += chr.getBase();
-            line.x += chr.getRegion().getAdvance();
-            if(chr.getMode() == LabelCharacter::Mode::Line)
-            {
-                size.y -= line.y;
-                if(size.x < line.x)
-                {
-                    size.x = line.x;
-                }
-                line = glm::vec2();
-            }
-        }
-        return size;
+        return _contentSize;
+    }
+
+    std::vector<float> Label::getLineWidths() const
+    {
+        return _lineWidths;
     }
 
 
@@ -131,26 +122,36 @@ namespace mugato {
             return;
         }
         _characters.clear();
-        
+
         std::string name;
-        bool multiline = false;
         for(auto itr=_text.begin(); itr!=_text.end(); ++itr)
         {
             name += *itr;
-            if(_font->hasCharacter(name))
+            if(name == kLineBreak || _font->hasCharacter(name))
             {
-                if(name == "\n")
-                {
-                    multiline = true;
-                }
                 _characters.push_back(name);
                 name.clear();
             }
         }
-        if(!multiline)
+        float w = 0.0f;
+        _lineWidths.clear();
+        for(auto& name : _characters)
         {
-            _characters.push_back("\n");
+            if(name == kLineBreak)
+            {
+                _lineWidths.push_back(w);
+                w = 0.0f;
+            }
+            else if(_font->hasCharacter(name))
+            {
+                auto& chr = _font->getCharacter(name);
+                w += chr.getRegion().getAdvance();
+            }
         }
+        _lineWidths.push_back(w);
+        _contentSize = glm::vec2(
+            *std::max_element(_lineWidths.begin(), _lineWidths.end()),
+            _font->getLineHeight()*_lineWidths.size());
         _dirtyChars = false;
     }
 
@@ -160,7 +161,7 @@ namespace mugato {
         {
             return;
         }
-        auto osize = getOriginalSize();
+        auto osize = getContentSize();
         auto& size = getSize();
         glm::vec3 t;
         switch(_alignment)
@@ -174,13 +175,13 @@ namespace mugato {
         case Alignment::TopRight:
             t = glm::vec3(size.x-osize.x, size.y, 0.0f);
             break;
-        case Alignment::CenterLeft:
+        case Alignment::Left:
             t = glm::vec3(0.0f, (size.y+osize.y)*0.5f, 0.0f);
             break;
         case Alignment::Center:
             t = glm::vec3((size.x-osize.x)*0.5f, (size.y+osize.y)*0.5f, 0.0f);
             break;
-        case Alignment::CenterRight:
+        case Alignment::Right:
             t = glm::vec3(size.x-osize.x, (size.y+osize.y)*0.5f, 0.0f);
             break;
         case Alignment::BottomLeft:
@@ -213,9 +214,32 @@ namespace mugato {
         updateAlignmentTransform();
         for(auto& name : _characters)
         {
-            _font->getCharacter(name).update();
+            if(_font->hasCharacter(name))
+            {
+                _font->getCharacter(name).update();
+            }
         }
     }
+
+    glm::vec3 Label::getLineBreakTranslation(float cw, float lw)
+    {
+        if(_alignment == Alignment::TopCenter ||
+          _alignment == Alignment::BottomCenter ||
+            _alignment == Alignment::Center)
+        {
+            return glm::vec3((cw-lw)*0.5f, 0.0f, 0.0f);
+        }
+        else if(_alignment == Alignment::TopRight ||
+          _alignment == Alignment::Right ||
+            _alignment == Alignment::BottomRight)
+        {
+            return glm::vec3((cw-lw), 0.0f, 0.0f);
+        }
+        else
+        {
+            return glm::vec3(0.0f, 0.0f, 0.0f);
+        }
+    } 
     
     void Label::render(gorn::RenderQueue& queue)
     {
@@ -224,15 +248,40 @@ namespace mugato {
         queue.addCommand()
           .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
           .withTransform(_transform);
-        // additional push checkpoint for linebreaks
         queue.addCommand().withTransformMode(
                 gorn::RenderCommand::TransformMode::PushCheckpoint);
+
+        auto line = _lineWidths.begin();
+        queue.addCommand()
+          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransform(glm::translate(glm::mat4(),
+                getLineBreakTranslation(_contentSize.x, *line)));
+        line++;
         for(auto& name : _characters)
         {
-            auto& chr = _font->getCharacter(name);
-            chr.render(queue);
-
+            if(name == kLineBreak && line != _lineWidths.end())
+            {
+                queue.addCommand()
+                  .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
+                queue.addCommand()
+                  .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+                  .withTransform(glm::translate(glm::mat4(),
+                        glm::vec3(0.0f, -_font->getLineHeight(), 0.0f)));
+                queue.addCommand()
+                  .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
+                queue.addCommand()
+                  .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+                  .withTransform(glm::translate(glm::mat4(),
+                        getLineBreakTranslation(_contentSize.x, *line)));
+                line++;
+            }
+            else if(_font->hasCharacter(name))
+            {
+                auto& chr = _font->getCharacter(name);
+                chr.render(queue);
+            }
         }
+
         queue.addCommand().withTransformMode(
                 gorn::RenderCommand::TransformMode::PopCheckpoint);
         queue.addCommand().withTransformMode(

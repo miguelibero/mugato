@@ -215,5 +215,10 @@ void main()
         _gorn.getQueue().draw();
     }
 
+    void Context::touch(const glm::vec2& p)
+    {
+        _scenes.touch(p);
+    }
+
 }
 

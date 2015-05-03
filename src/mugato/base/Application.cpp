@@ -71,6 +71,7 @@ namespace mugato
 
     void Application::touch(const glm::vec2& p)
     {
+        getMugato().touch(p);
     }
 
 }

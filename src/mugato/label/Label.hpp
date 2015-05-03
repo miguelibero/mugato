@@ -18,6 +18,7 @@ namespace mugato {
     class Label
     {
     public:
+        static const char* kLineBreak;
         typedef LabelFont Font;
         typedef LabelAlignment Alignment;
         typedef LabelResizeMode ResizeMode;
@@ -33,11 +34,14 @@ namespace mugato {
         Alignment _alignment;
         ResizeMode _resizeMode;
         glm::mat4 _transform;
+        glm::vec2 _contentSize;
+        std::vector<float> _lineWidths;
 
         void init();
         void updateChars();
         void updateSize();
         void updateAlignmentTransform();
+        glm::vec3 getLineBreakTranslation(float contentWidth, float lineWidth);
     public:
         Label(const std::string& text="");
         Label(const std::shared_ptr<Font>& font);
@@ -49,7 +53,9 @@ namespace mugato {
         const std::string& getText() const;
         void setText(const std::string& text);
 
-        glm::vec2 getOriginalSize() const;
+        glm::vec2 getContentSize() const;
+        std::vector<float> getLineWidths() const;
+
         const glm::vec2& getSize() const;
         void setSize(const glm::vec2& size);
 

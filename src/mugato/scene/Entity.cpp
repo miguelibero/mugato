@@ -64,6 +64,26 @@ namespace mugato
         }
     }
 
+    void Entity::touch(const glm::vec2& p)
+    {
+        for(auto& comp : _components)
+        {
+            comp->onEntityTouched(*this, p);
+        }
+        Children::Elements elements;
+        _children.find(elements);
+        for(auto& elm : elements)
+        {
+            if(elm.getArea().contains(p))
+            {
+                auto child = elm.getContent();
+                auto ep = child->getTransform().getInverseMatrix()
+                    *glm::vec4(p, 0.0, 1.0);
+                child->touch(glm::vec2(ep));
+            }
+        }
+    }
+
     void Entity::update(double dt)
     {
         updateTransform();

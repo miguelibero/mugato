@@ -32,6 +32,7 @@ namespace mugato
 
         void update(double dt);
         void draw();
+        void touch(const glm::vec2& p);
 
         void setScreenSize(const glm::vec2& size);
         const glm::vec2& getScreenSize();

@@ -46,6 +46,7 @@ namespace mugato
         Transform& getTransform();
         const Transform& getTransform() const;
 
+        void touch(const glm::vec2& p);
         void update(double dt);
         void fixedUpdate(double dt);
         void render(gorn::RenderQueue& queue);

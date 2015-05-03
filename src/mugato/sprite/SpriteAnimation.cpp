@@ -102,7 +102,7 @@ namespace mugato {
         return _size;
     }
 
-    glm::vec2 SpriteAnimation::getOriginalSize() const
+    glm::vec2 SpriteAnimation::getContentSize() const
     {
         glm::vec2 size;
         for(auto& frame : _frames)

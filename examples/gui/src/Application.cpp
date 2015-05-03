@@ -3,9 +3,13 @@
 #include <mugato/mugato.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/constants.hpp>
+#include <functional>
+#include <iostream>
 
 class GuiApplication : public mugato::Application
 {
+private:
+    void onButtonTouched(const glm::vec2& p);
 public:
     void load() override;
 };
@@ -58,11 +62,17 @@ void GuiApplication::load()
 
     scene->addComponent<mugato::RenderInfoComponent>();
 
-    auto button = scene->addChildWithComponent
-        <mugato::SpriteComponent>("button1",
-            mugato::SpriteResizeMode::Exact);
+    auto button = scene->addChild();
 
-    auto& label = button->addComponent<mugato::LabelComponent>("Label!", "font.fnt");
+    button->addComponent<mugato::TouchComponent>(
+        std::bind(&GuiApplication::onButtonTouched,
+            this, std::placeholders::_2));
+
+    button->addComponent<mugato::SpriteComponent>("button1",
+        mugato::SpriteResizeMode::Exact);
+
+    auto& label = button->addComponent<mugato::LabelComponent>(
+        "This is\na button", "font.fnt");
     label.getLabel().setAlignment(mugato::LabelAlignment::Center);
 
     button->getTransform().setPosition(glm::vec2(240, 100));
@@ -70,6 +80,11 @@ void GuiApplication::load()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void GuiApplication::onButtonTouched(const glm::vec2& p)
+{
+    std::cout << "button touched " << p.x << "," << p.y << std::endl; 
 }
 
 
