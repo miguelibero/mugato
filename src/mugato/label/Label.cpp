@@ -29,7 +29,6 @@ namespace mugato {
     void Label::init()
     {
         _dirtyChars = true;
-        _dirtySize = true;
         _dirtyAlignment = true;
         _alignment = Alignment::BottomLeft;
         _resizeMode = ResizeMode::Original;
@@ -65,7 +64,6 @@ namespace mugato {
         if(_size != size)
         {
             _size = size;
-            _dirtySize = true;
             _dirtyAlignment = true;
         }
     }
@@ -110,7 +108,6 @@ namespace mugato {
         if(_resizeMode != mode)
         {
             _resizeMode = mode;
-            _dirtySize = true;
             _dirtyAlignment = true;
         }
     }
@@ -198,14 +195,6 @@ namespace mugato {
         }
         _transform = glm::translate(glm::mat4(), t);
         _dirtyAlignment = false;
-    }
-
-    void Label::updateSize()
-    {
-        if(_dirtySize)
-        {
-            _dirtySize = false;
-        }
     }
 
     void Label::update(double dt)

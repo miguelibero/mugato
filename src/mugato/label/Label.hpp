@@ -28,7 +28,6 @@ namespace mugato {
         std::string _text;
         glm::vec2 _size;
         bool _dirtyChars;
-        bool _dirtySize;
         bool _dirtyAlignment;
         std::vector<std::string> _characters;
         Alignment _alignment;
@@ -39,7 +38,6 @@ namespace mugato {
 
         void init();
         void updateChars();
-        void updateSize();
         void updateAlignmentTransform();
         glm::vec3 getLineBreakTranslation(float contentWidth, float lineWidth);
     public:

@@ -49,6 +49,7 @@ attribute vec2 texCoords;
 
 uniform mat4 model;
 uniform mat4 view;
+uniform vec4 color;
 
 varying vec2 TexCoords;
 
@@ -66,16 +67,20 @@ precision highp float;
 varying vec2 TexCoords;
 
 uniform sampler2D texture;
+uniform vec4 color;
 
 void main()
 {
-    gl_FragColor = texture2D(texture, TexCoords);
+    gl_FragColor = color*texture2D(texture, TexCoords);
 }
 
 )")
             .withUniform(gorn::UniformKind::Model, "model")
             .withUniform(gorn::UniformKind::View, "view")
             .withUniform(gorn::UniformKind::Texture0, "texture")
+            .withUniform(gorn::UniformKind::Color,
+                gorn::ProgramUniformDefinition("color")
+                .withValue(glm::vec4(1.0f)))
             .withAttribute(gorn::AttributeKind::Position, "position")
             .withAttribute(gorn::AttributeKind::TexCoords, "texCoords");
 
