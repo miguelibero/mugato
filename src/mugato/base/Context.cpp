@@ -6,6 +6,7 @@
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/DebugFontAtlasConfigurator.hpp>
+#include <mugato/scene/EntityStack.hpp>
 #include <gorn/gl/ProgramManager.hpp>
 #include <gorn/render/RenderKinds.hpp>
 #include <gorn/asset/FileManager.hpp>
@@ -19,7 +20,7 @@ namespace mugato
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
     _skeletons(_gorn.getMaterials(), _gorn.getFiles()),
-    _screenSize(2.0f), _fixedUpdateInterval(0.0),
+    _fixedUpdateInterval(0.0),
     _fixedUpdatesPerSecond(10.0)
     {
         _sprites.getAtlases().makeDefaultDataLoader
@@ -115,22 +116,18 @@ void main()
 
         DebugFontAtlasConfigurator().setup(*this);
 
-        _scenes.setContext(*this);
-        _scenes.getTransform().setSize(_screenSize);
+        _root = std::make_shared<Entity>();
+        _root->setContext(*this);
+        _root->getTransform().setSize(glm::vec2(2.0f));
+        _root->getTransform().setPosition(glm::vec2(-1.0f));
+        _scenes = &_root->addComponent<EntityStack>();
+        setScreenSize(glm::vec2(2.0f));
     }
 
     void Context::setScreenSize(const glm::vec2& size)
     {
-        _screenSize = size;
-        _scenes.getTransform().setSize(size);
-        auto trans = glm::translate(glm::mat4(), glm::vec3(-1.0f, -1.0f, 0.0f))
-            *glm::scale(glm::mat4(), glm::vec3(2.0f/size.x, 2.0f/size.y, 1.0f));
-        _gorn.getQueue().setViewTransform(trans);
-    }
-
-    const glm::vec2& Context::getScreenSize()
-    {
-        return _screenSize;
+        _root->getTransform().setScale(glm::vec2(2.0f/size.x, 2.0f/size.y));
+        _scenes->getTransform().setSize(size);
     }
 
     const gorn::Context& Context::getGorn() const
@@ -175,12 +172,12 @@ void main()
 
     const EntityStack& Context::getScenes() const
     {
-        return _scenes;
+        return *_scenes;
     }
 
     EntityStack& Context::getScenes()
     {
-        return _scenes;
+        return *_scenes;
     }
 
     void Context::setFixedUpdatesPerSecond(double fps)
@@ -200,24 +197,24 @@ void main()
                 _fixedUpdateInterval -= fixedUpdateDuration;
             }
         }
-        _scenes.update(dt);
+        _root->update(dt);
         _gorn.getQueue().update(dt);
     }
 
     void Context::fixedUpdate(double dt)
     {
-        _scenes.fixedUpdate(dt);
+        _root->fixedUpdate(dt);
     }
 
     void Context::draw()
     {
-        _scenes.render(_gorn.getQueue());
+        _root->render(_gorn.getQueue());
         _gorn.getQueue().draw();
     }
 
     void Context::touch(const glm::vec2& p)
     {
-        _scenes.touch(p);
+        _root->touch(p);
     }
 
 }

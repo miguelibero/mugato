@@ -19,6 +19,7 @@ namespace mugato
         Stack _stack;
         Context* _ctx;
         EntityTransform _transform;
+        std::weak_ptr<Entity> _entity;
     public:
 
         EntityStack();

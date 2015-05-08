@@ -5,11 +5,13 @@
 #include <mugato/sprite/SpriteManager.hpp>
 #include <mugato/spine/SpineManager.hpp>
 #include <mugato/label/LabelManager.hpp>
-#include <mugato/scene/EntityStack.hpp>
+#include <mugato/scene/Entity.hpp>
 #include <glm/glm.hpp>
 
 namespace mugato
 {
+    class EntityStack;
+
     class Context
     {
     private:
@@ -17,8 +19,8 @@ namespace mugato
         SpriteManager _sprites;
         LabelManager _labels;
         SpineManager _skeletons;
-        EntityStack _scenes;
-        glm::vec2 _screenSize;
+        EntityStack* _scenes;
+        std::shared_ptr<Entity> _root;
 
         double _fixedUpdateInterval;
         double _fixedUpdatesPerSecond;
@@ -35,7 +37,6 @@ namespace mugato
         void touch(const glm::vec2& p);
 
         void setScreenSize(const glm::vec2& size);
-        const glm::vec2& getScreenSize();
 
         const gorn::Context& getGorn() const;
         gorn::Context& getGorn();

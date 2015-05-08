@@ -77,9 +77,8 @@ namespace mugato
             if(elm.getArea().contains(p))
             {
                 auto child = elm.getContent();
-                auto ep = child->getTransform().getInverseMatrix()
-                    *glm::vec4(p, 0.0, 1.0);
-                child->touch(glm::vec2(ep));
+                child->touch(child->getTransform()
+                    .getParentToLocalPoint(p));
             }
         }
     }

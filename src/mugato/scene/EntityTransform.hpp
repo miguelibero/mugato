@@ -53,6 +53,11 @@ namespace mugato
 
         bool update();
 
+        Vector2 getLocalToParentPoint(const Vector2& val) const;
+        Vector2 getParentToLocalPoint(const Vector2& val) const;
+        Vector getLocalToParentPoint(const Vector& val) const;
+        Vector getParentToLocalPoint(const Vector& val) const;
+
     };
 }
 
