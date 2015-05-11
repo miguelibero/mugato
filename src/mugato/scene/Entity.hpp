@@ -7,6 +7,7 @@
 #include <mugato/base/OcTree.hpp>
 #include <mugato/scene/Component.hpp>
 #include <mugato/scene/EntityTransform.hpp>
+#include <mugato/scene/EntityEnums.hpp>
 
 namespace gorn
 {
@@ -18,11 +19,13 @@ namespace mugato
     class Context;
     class Component;
 
-    class Entity : public std::enable_shared_from_this<Entity>
+    class Entity final : public std::enable_shared_from_this<Entity>
     {
     public:
+        typedef EntityTouchPhase TouchPhase;
         typedef EntityTransform Transform;
         typedef OcTree<std::shared_ptr<Entity>> Children;
+        typedef std::vector<std::weak_ptr<Entity>> TouchedChildren;
         typedef std::weak_ptr<Entity> Parent;
         typedef std::vector<std::unique_ptr<Component>> Components;
     private:
@@ -32,8 +35,11 @@ namespace mugato
         Transform _transform;
         bool _transformDirty;
         Context* _ctx;
+        TouchedChildren _touchedChildren;
         
         void updateTransform();
+        TouchPhase touchChild(const glm::vec2& p, TouchPhase phase,
+            const Children::Element& elm);
     public:
 
         Entity();
@@ -46,7 +52,7 @@ namespace mugato
         Transform& getTransform();
         const Transform& getTransform() const;
 
-        void touch(const glm::vec2& p);
+        bool touch(const glm::vec2& p, TouchPhase phase=TouchPhase::None);
         void update(double dt);
         void fixedUpdate(double dt);
         void render(gorn::RenderQueue& queue);

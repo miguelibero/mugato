@@ -53,7 +53,8 @@ void SceneApplication::load()
 	getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
-    getMugato().setScreenSize(glm::vec2(480.0f, 320.0f));
+    glm::vec2 screenSize(480.0f, 320.0f);
+    getMugato().setScreenSize(screenSize);
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("octree_elements", gorn::MaterialDefinition()
@@ -68,12 +69,10 @@ void SceneApplication::load()
 
     auto scene = getMugato().getScenes().push();
     auto& bg = scene->addComponent<mugato::SpriteComponent>("background.png");
-    bg.setEntityPivotPercent(glm::vec2(0.0f));
     auto bgsize = bg.getSprite().getSize();
-    scene->getTransform().setScale(getMugato().getScreenSize()/bgsize);
+    scene->getTransform().setScale(screenSize/bgsize);
 
-    auto& debugInfo = scene->addComponent<mugato::RenderInfoComponent>();
-    debugInfo.getTransform().setPosition(glm::vec3(0.0f, 60.f, 1.0f));
+    scene->addComponent<mugato::RenderInfoComponent>();
 
     auto& materials = getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
@@ -90,13 +89,14 @@ void SceneApplication::load()
     for(int i=0; i<100; ++i)
     {
         auto guy = scene->addChild();
-        guy->addComponent<mugato::SpriteComponent>("character.png");
-        guy->getTransform().setScale(0.5f);
+        auto& sprite = guy->addComponent<mugato::SpriteComponent>(
+            "character.png").getSprite();
+        guy->getTransform().setScale(0.25f);
+        guy->getTransform().setSize(sprite.getContentSize());
         guy->getTransform().setRotation(_rotDistri(_randomAlgo));
         guy->getTransform().setPosition(glm::vec2(
             _posXDistri(_randomAlgo),
             _posYDistri(_randomAlgo)));
-
         moveGuy(guy, 4.0f);
     }
 }

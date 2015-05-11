@@ -9,7 +9,8 @@
 class GuiApplication : public mugato::Application
 {
 private:
-    void onButtonTouched(const glm::vec2& p);
+    bool onButtonTouched(mugato::Sprite& sprite,
+        const glm::vec2& p, mugato::EntityTouchPhase phase);
 public:
     void load() override;
 };
@@ -36,8 +37,15 @@ void GuiApplication::load()
 
     getMugato().setScreenSize(glm::vec2(480.0f, 320.0f));
 
-    getMugato().getSprites().getDefinitions().get("button1")
-        .withMaterial("button1.png")
+    getGorn().getMaterials().getDefinitions().get("button")
+        .withTexture(gorn::UniformKind::Texture0, "button1.png");
+
+    getGorn().getMaterials().getDefinitions().get("button_pressed")
+        .withTexture(gorn::UniformKind::Texture0, "button1.png")
+        .withUniformValue(gorn::UniformKind::Color, glm::vec4(100.f/255.f));
+
+    getMugato().getSprites().getDefinitions().get("button")
+        .withMaterial("button")
         .withStretchBorders(glm::vec4(4, 5, 9, 5));
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
@@ -64,16 +72,18 @@ void GuiApplication::load()
 
     auto button = scene->addChild();
 
-    button->addComponent<mugato::TouchComponent>(
-        std::bind(&GuiApplication::onButtonTouched,
-            this, std::placeholders::_2));
-
-    button->addComponent<mugato::SpriteComponent>("button1",
-        mugato::SpriteResizeMode::Exact);
+    auto& sprite = button->addComponent<mugato::SpriteComponent>("button",
+        mugato::SpriteResizeMode::Exact).getSprite();
 
     auto& label = button->addComponent<mugato::LabelComponent>(
         "This is\na button", "font.fnt");
     label.getLabel().setAlignment(mugato::LabelAlignment::Center);
+
+    button->addComponent<mugato::TouchComponent>(
+        std::bind(&GuiApplication::onButtonTouched,
+            this, std::ref(sprite),
+            std::placeholders::_2,
+            std::placeholders::_3));
 
     button->getTransform().setPosition(glm::vec2(240, 100));
     button->getTransform().setSize(glm::vec2(200, 50));
@@ -82,9 +92,21 @@ void GuiApplication::load()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void GuiApplication::onButtonTouched(const glm::vec2& p)
+bool GuiApplication::onButtonTouched(mugato::Sprite& sprite,
+    const glm::vec2& p, mugato::EntityTouchPhase phase)
 {
-    std::cout << "button touched " << p.x << "," << p.y << std::endl; 
+    std::string mat = "button_pressed";
+    if(phase == mugato::EntityTouchPhase::End)
+    {
+        mat = "button";
+    }
+    else
+    {
+        std::cout << "button touched " << p.x << "," << p.y << std::endl;
+    }
+    sprite.setMaterial(getGorn().getMaterials().load(mat));
+
+    return true;
 }
 
 

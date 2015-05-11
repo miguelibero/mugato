@@ -7,11 +7,13 @@ namespace mugato
     {
     }
 
-    void TouchComponent::onEntityTouched(Entity& entity, const glm::vec2& p)
+    bool TouchComponent::onEntityTouched(Entity& entity,
+        const glm::vec2& p, TouchPhase phase)
     {
         if(_callback)
         {
-            _callback(entity, p);
+            return _callback(entity, p, phase);
         }
+        return false;
     }
 }

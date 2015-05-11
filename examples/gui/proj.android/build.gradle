@@ -17,7 +17,7 @@ android {
     defaultConfig {
         minSdkVersion 12
         ndk {
-            moduleName "mugato_label"
+            moduleName "mugato_gui"
             stl "c++_shared"
         }
     }
@@ -53,7 +53,6 @@ task ndkBuild(type: Exec) {
     } else {
         cmd += 'ndk-build'
     }
-    environment env
     commandLine cmd + params
 }
 

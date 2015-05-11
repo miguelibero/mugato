@@ -49,7 +49,8 @@ namespace mugato
 
     void SpriteComponent::onEntityTransformChanged(Entity& entity)
     {
-        _sprite.setSize(glm::vec2(entity.getTransform().getSize()));
+        auto& size = entity.getTransform().getSize();
+        _sprite.setSize(glm::vec2(size));
     }
 
     void SpriteComponent::update(double dt)
