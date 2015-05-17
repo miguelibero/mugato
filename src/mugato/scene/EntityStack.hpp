@@ -19,6 +19,7 @@ namespace mugato
         Stack _stack;
         Context* _ctx;
         EntityTransform _transform;
+        std::weak_ptr<Entity> _entity;
     public:
 
         EntityStack();
@@ -28,17 +29,19 @@ namespace mugato
         const EntityTransform& getTransform() const;
         EntityTransform& getTransform();
 
+        bool touch(const glm::vec2& p, TouchPhase phase=TouchPhase::Begin);
+
+        void onEntityTransformChanged(Entity& entity) override;
+        bool onEntityTouched(Entity& entity, const glm::vec2& p, 
+            TouchPhase phase) override;
         void onAddedToEntity(Entity& entity) override;
         void update(double dt) override;
         void fixedUpdate(double dt) override;
         void render(gorn::RenderQueue& queue) override;
         
         std::shared_ptr<Entity> push(std::shared_ptr<Entity> entity=nullptr);
-
         std::shared_ptr<Entity> get();
-
         void pop();
-
         std::shared_ptr<Entity> set(std::shared_ptr<Entity> entity=nullptr);
     };
 }

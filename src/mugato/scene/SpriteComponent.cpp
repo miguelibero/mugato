@@ -8,9 +8,14 @@
 namespace mugato
 {
     SpriteComponent::SpriteComponent(const std::string& name):
-    _name(name), _animation(Sprite::kDefaultAnimation),
-    _pivotPercent(0.0f)
+    _name(name)
     {
+    }
+
+    SpriteComponent::SpriteComponent(const std::string& name, ResizeMode mode):
+    _name(name)
+    {
+        _sprite.setResizeMode(mode);
     }
 
     Sprite& SpriteComponent::getSprite()
@@ -25,34 +30,29 @@ namespace mugato
 
     void SpriteComponent::setAnimation(const std::string& name)
     {
-        _sprite.play(_animation);
-        _animation = name;
-    }
-
-    void SpriteComponent::setEntityPivotPercent(const glm::vec2& val)
-    {
-        _pivotPercent = val;
-        if(auto ptr = _entity.lock())
+        _anim = name;
+        if(!_anim.empty())
         {
-            ptr->getTransform().setPivot(_pivotPercent*_sprite.getSize());
-        }
-    }
-
-    void SpriteComponent::setEntitySize()
-    {
-        if(auto ptr = _entity.lock())
-        {
-            ptr->getTransform().setSize(_sprite.getSize());
+            _sprite.play(_anim);
         }
     }
 
     void SpriteComponent::onAddedToEntity(Entity& entity)
     {
+        auto resizeMode = _sprite.getResizeMode();
         _sprite = entity.getContext().getSprites().load(_name);
-        _entity = entity.getSharedPtr();
-        setEntityPivotPercent(_pivotPercent);
-        setEntitySize();
-        _sprite.play(_animation);
+        _sprite.setResizeMode(resizeMode);
+        if(!_anim.empty())
+        {
+            _sprite.play(_anim);
+        }
+        onEntityTransformChanged(entity);
+    }
+
+    void SpriteComponent::onEntityTransformChanged(Entity& entity)
+    {
+        auto& size = entity.getTransform().getSize();
+        _sprite.setSize(glm::vec2(size));
     }
 
     void SpriteComponent::update(double dt)

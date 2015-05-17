@@ -4,6 +4,7 @@
 #define __mugato__Label__
 
 #include <mugato/label/LabelFont.hpp>
+#include <mugato/label/LabelEnums.hpp>
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
@@ -17,19 +18,30 @@ namespace mugato {
     class Label
     {
     public:
+        static const char* kLineBreak;
         typedef LabelFont Font;
+        typedef LabelAlignment Alignment;
+        typedef LabelResizeMode ResizeMode;
     private:
 
         std::shared_ptr<Font> _font;
         std::string _text;
         glm::vec2 _size;
-        bool _dirty;
+        bool _dirtyChars;
+        bool _dirtyAlignment;
         std::vector<std::string> _characters;
+        Alignment _alignment;
+        ResizeMode _resizeMode;
+        glm::mat4 _transform;
+        glm::vec2 _contentSize;
+        std::vector<float> _lineWidths;
 
         void init();
-
+        void updateChars();
+        void updateAlignmentTransform();
+        glm::vec3 getLineBreakTranslation(float contentWidth, float lineWidth);
     public:
-        Label();
+        Label(const std::string& text="");
         Label(const std::shared_ptr<Font>& font);
         Label(const std::shared_ptr<Font>& font, const std::string& text);
 
@@ -39,8 +51,17 @@ namespace mugato {
         const std::string& getText() const;
         void setText(const std::string& text);
 
-        const glm::vec2& getSize();
+        glm::vec2 getContentSize() const;
+        std::vector<float> getLineWidths() const;
+
+        const glm::vec2& getSize() const;
         void setSize(const glm::vec2& size);
+
+        Alignment getAlignment() const;
+        void setAlignment(Alignment value);
+
+        ResizeMode getResizeMode() const;
+        void setResizeMode(ResizeMode mode);
         
         void update(double dt);
         void render(gorn::RenderQueue& queue);

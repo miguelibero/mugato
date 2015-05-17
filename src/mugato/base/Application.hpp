@@ -20,6 +20,7 @@ namespace mugato
 	    virtual void update(double dt) override;
 	    virtual void draw() override;
         virtual void touch(const glm::vec2& p) override;
+        virtual void touchEnd(const glm::vec2& p) override;
 
         gorn::Context& getGorn();
         const gorn::Context& getGorn() const;

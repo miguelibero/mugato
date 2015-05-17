@@ -6,6 +6,7 @@
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/DebugFontAtlasConfigurator.hpp>
+#include <mugato/scene/EntityStack.hpp>
 #include <gorn/gl/ProgramManager.hpp>
 #include <gorn/render/RenderKinds.hpp>
 #include <gorn/asset/FileManager.hpp>
@@ -19,7 +20,7 @@ namespace mugato
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
     _skeletons(_gorn.getMaterials(), _gorn.getFiles()),
-    _screenSize(2.0f), _fixedUpdateInterval(0.0),
+    _fixedUpdateInterval(0.0),
     _fixedUpdatesPerSecond(10.0)
     {
         _sprites.getAtlases().makeDefaultDataLoader
@@ -34,7 +35,7 @@ namespace mugato
         _gorn.getMaterials().getDefinitions().set(
             [](const std::string& name){
                 return gorn::MaterialDefinition()
-                    .withTexture(name)
+                    .withTexture(gorn::UniformKind::Texture0, name)
                     .withProgram(ProgramKind::Sprite);
             });
 
@@ -48,6 +49,7 @@ attribute vec2 texCoords;
 
 uniform mat4 model;
 uniform mat4 view;
+uniform vec4 color;
 
 varying vec2 TexCoords;
 
@@ -65,16 +67,20 @@ precision highp float;
 varying vec2 TexCoords;
 
 uniform sampler2D texture;
+uniform vec4 color;
 
 void main()
 {
-    gl_FragColor = texture2D(texture, TexCoords);
+    gl_FragColor = color*texture2D(texture, TexCoords);
 }
 
 )")
             .withUniform(gorn::UniformKind::Model, "model")
             .withUniform(gorn::UniformKind::View, "view")
             .withUniform(gorn::UniformKind::Texture0, "texture")
+            .withUniform(gorn::UniformKind::Color,
+                gorn::ProgramUniformDefinition("color")
+                .withValue(glm::vec4(1.0f)))
             .withAttribute(gorn::AttributeKind::Position, "position")
             .withAttribute(gorn::AttributeKind::TexCoords, "texCoords");
 
@@ -115,22 +121,24 @@ void main()
 
         DebugFontAtlasConfigurator().setup(*this);
 
-        _scenes.setContext(*this);
-        _scenes.getTransform().setSize(_screenSize);
+        _root = std::make_shared<Entity>();
+        _root->setContext(*this);
+        _root->getTransform().setPosition(glm::vec2(-1.0f));
+        _scenes = &_root->addComponent<EntityStack>();
+        setScreenSize(glm::vec2(2.0f));
     }
 
     void Context::setScreenSize(const glm::vec2& size)
     {
-        _screenSize = size;
-        _scenes.getTransform().setSize(size);
-        auto trans = glm::translate(glm::mat4(), glm::vec3(-1.0f, -1.0f, 0.0f))
-            *glm::scale(glm::mat4(), glm::vec3(2.0f/size.x, 2.0f/size.y, 1.0f));
-        _gorn.getQueue().setViewTransform(trans);
-    }
+        _root->getTransform().setScale(
+            glm::vec2(2.0f/size.x, 2.0f/size.y));
+        _root->getTransform().setSize(size);
+        _scenes->getTransform().setSize(size);
 
-    const glm::vec2& Context::getScreenSize()
-    {
-        return _screenSize;
+        // set model for rendering without entities
+        _root->getTransform().update();
+        getGorn().getQueue().setModelTransform(
+            _root->getTransform().getMatrix());
     }
 
     const gorn::Context& Context::getGorn() const
@@ -175,12 +183,22 @@ void main()
 
     const EntityStack& Context::getScenes() const
     {
-        return _scenes;
+        return *_scenes;
     }
 
     EntityStack& Context::getScenes()
     {
-        return _scenes;
+        return *_scenes;
+    }
+
+    const Entity& Context::getRoot() const
+    {
+        return *_root;
+    }
+
+    Entity& Context::getRoot()
+    {
+        return *_root;
     }
 
     void Context::setFixedUpdatesPerSecond(double fps)
@@ -200,19 +218,33 @@ void main()
                 _fixedUpdateInterval -= fixedUpdateDuration;
             }
         }
-        _scenes.update(dt);
+        _root->update(dt);
         _gorn.getQueue().update(dt);
     }
 
     void Context::fixedUpdate(double dt)
     {
-        _scenes.fixedUpdate(dt);
+        _root->fixedUpdate(dt);
     }
 
     void Context::draw()
     {
-        _scenes.render(_gorn.getQueue());
+        // reset model transform
+        _gorn.getQueue().addCommand()
+            .withTransform(glm::mat4(),
+                gorn::RenderCommandTransformMode::SetGlobal);
+        _root->render(_gorn.getQueue());
         _gorn.getQueue().draw();
+    }
+
+    void Context::touch(const glm::vec2& p)
+    {
+        _root->touch(p);
+    }
+
+    void Context::touchEnd(const glm::vec2& p)
+    {
+        _root->touch(p, EntityTouchPhase::End);
     }
 
 }
