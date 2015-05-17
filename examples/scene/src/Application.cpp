@@ -48,6 +48,9 @@ void SceneApplication::load()
 #elif GORN_PLATFORM_ANDROID
 	getGorn().getFiles()
         .makeDefaultLoader<gorn::AssetFileLoader>("%s");
+#elif GORN_PLATFORM_IOS
+    getGorn().getFiles()
+    .makeDefaultLoader<gorn::BundleFileLoader>("%s");
 #endif
 
 	getGorn().getImages()

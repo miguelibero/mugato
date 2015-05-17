@@ -46,20 +46,10 @@ namespace mugato
         if(auto ptr = _entity.lock())
         {
             auto& children = ptr->getChildren();
-            _elementsMesh.clear();
-            auto rects = children.getElementsRects();
-            for(auto& rect : rects)
-            {
-                _elementsMesh += gorn::ShapeMeshFactory::create(
-                    rect, _elementsDrawMode);
-            }
-            _nodesMesh.clear();
-            rects = children.getNodesRects();
-            for(auto& rect : rects)
-            {
-                _nodesMesh += gorn::ShapeMeshFactory::create(
-                    rect, _nodesDrawMode);
-            }
+            _elementsMesh = gorn::ShapeMeshFactory::create(
+                    children.getElementsRects(), _elementsDrawMode);
+            _nodesMesh = gorn::ShapeMeshFactory::create(
+                   children.getNodesRects(), _nodesDrawMode);
         }
     }
 
