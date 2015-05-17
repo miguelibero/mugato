@@ -34,6 +34,7 @@ namespace mugato {
     {
         _time = 0.0;
         _frameDuration = 1.0/30.0;
+        _resizeMode = ResizeMode::Original;
     }
 
     SpriteAnimation& SpriteAnimation::withFrameDuration(double duration)
@@ -96,7 +97,12 @@ namespace mugato {
         return _frames.size()*_frameDuration;
     }
 
-    glm::vec2 SpriteAnimation::getSize() const
+    const glm::vec2& SpriteAnimation::getSize() const
+    {
+        return _size;
+    }
+
+    glm::vec2 SpriteAnimation::getContentSize() const
     {
         glm::vec2 size;
         for(auto& frame : _frames)
@@ -114,6 +120,31 @@ namespace mugato {
         return size;
     }
 
+    void SpriteAnimation::setSize(const glm::vec2& size)
+    {
+        _size = size;
+    }
+
+    void SpriteAnimation::setResizeMode(ResizeMode mode)
+    {
+        _resizeMode = mode;
+    }
+
+    SpriteAnimation::ResizeMode SpriteAnimation::getResizeMode() const
+    {
+        return _resizeMode;
+    }
+
+    void SpriteAnimation::setStretchBorders(const glm::vec4& borders)
+    {
+        _stretchBorders = borders;
+    }
+
+    const glm::vec4& SpriteAnimation::getStretchBorders() const
+    {
+        return _stretchBorders;
+    }
+
     void SpriteAnimation::update(double dt)
     {
         _time += dt;
@@ -125,7 +156,11 @@ namespace mugato {
                 _time -= duration;
             }
         }
-        getCurrentFrame().update();
+        auto& frame = getCurrentFrame();
+        frame.setSize(_size);
+        frame.setResizeMode(_resizeMode);
+        frame.setStretchBorders(_stretchBorders);
+        frame.update();
     }
 
     void SpriteAnimation::render(gorn::RenderQueue& queue) const

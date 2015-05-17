@@ -15,7 +15,8 @@ namespace mugato {
         typedef LabelCharacter Character;
         typedef std::map<std::string, Character> CharacterMap;
     private:
-        CharacterMap _chars;      
+        CharacterMap _chars;
+        float _lineHeight;
     public:
         LabelFont();
 
@@ -23,6 +24,9 @@ namespace mugato {
         bool hasCharacter(const std::string& name) const;
         const Character& getCharacter(const std::string& name) const;
         Character& getCharacter(const std::string& name);
+
+        void setLineHeight(float val);
+        float getLineHeight() const;
     };
 
 }

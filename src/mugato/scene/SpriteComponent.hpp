@@ -3,29 +3,30 @@
 
 #include <mugato/scene/Component.hpp>
 #include <mugato/sprite/Sprite.hpp>
+#include <mugato/sprite/SpriteEnums.hpp>
 #include <string>
 
 namespace mugato
 {
     class SpriteComponent : public Component
     {
+    public:
+        typedef SpriteResizeMode ResizeMode;
     private:
         std::string _name;
-        std::string _animation;
+        std::string _anim;
+        ResizeMode _resizeMode;
         Sprite _sprite;
-        std::weak_ptr<Entity> _entity;
-        glm::vec2 _pivotPercent;
     public:
         SpriteComponent(const std::string& name);
+        SpriteComponent(const std::string& name, ResizeMode mode);
 
         void setAnimation(const std::string& name);
         Sprite& getSprite();
         const Sprite& getSprite() const;
 
-        void setEntityPivotPercent(const glm::vec2& val);
-        void setEntitySize();
-
         void onAddedToEntity(Entity& entity) override;
+        void onEntityTransformChanged(Entity& entity) override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };

@@ -57,6 +57,29 @@ namespace mugato
             {
                 parent->addChild(getSharedPtr());
             }
+            for(auto& comp : _components)
+            {
+                comp->onEntityTransformChanged(*this);
+            }
+        }
+    }
+
+    void Entity::touch(const glm::vec2& p)
+    {
+        for(auto& comp : _components)
+        {
+            comp->onEntityTouched(*this, p);
+        }
+        Children::Elements elements;
+        _children.find(elements);
+        for(auto& elm : elements)
+        {
+            if(elm.getArea().contains(p))
+            {
+                auto child = elm.getContent();
+                child->touch(child->getTransform()
+                    .getParentToLocalPoint(p));
+            }
         }
     }
 

@@ -4,7 +4,8 @@
 
 namespace mugato {
 
-    LabelFont::LabelFont()
+    LabelFont::LabelFont():
+    _lineHeight(0.0f)
     {
     }
 
@@ -29,6 +30,16 @@ namespace mugato {
         const std::string& name)
     {
         return _chars.at(name);
+    }
+
+    void LabelFont::setLineHeight(float val)
+    {
+        _lineHeight = val;
+    }
+
+    float LabelFont::getLineHeight() const
+    {
+        return _lineHeight;
     }
 }
 

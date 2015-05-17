@@ -82,6 +82,7 @@ namespace mugato {
     LabelFont FontAtlas::createFont(gorn::MaterialManager& materials) const
     {
         LabelFont font;
+        font.setLineHeight(getLineHeight());
         for(auto itr=_regions.begin(); itr!=_regions.end(); ++itr)
         {
             auto& region = itr->second;
@@ -89,14 +90,6 @@ namespace mugato {
             auto material = materials.load(mname);
             LabelFont::Character chr(material, region);
             font.setCharacter(itr->first, chr);
-        }
-
-        if(!font.hasCharacter("\n"))
-        {
-            LabelFont::Character chr(
-                glm::vec3(0.0f, -1.0f*getLineHeight(), 0.0f),
-                LabelFont::Character::Mode::Line);
-            font.setCharacter("\n", chr);
         }
         return font;
     }

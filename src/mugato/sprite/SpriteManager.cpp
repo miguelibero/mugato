@@ -87,20 +87,26 @@ namespace mugato {
 
     Sprite SpriteManager::load(const std::string& dname)
     {
+        Sprite sprite;
         auto& def = getDefinitions().get(dname);
-        if(def.getAnimations().empty())
+        sprite.setStretchBorders(def.getStretchBorders());
+        auto& mname = def.getMaterial();
+        if(!mname.empty())
+        {
+            sprite.setMaterial(_materials.load(mname));
+        }
+        else if(def.getAnimations().empty())
         {
             def.setAnimation(Sprite::kDefaultAnimation)
                 .withAtlas(dname)
                 .withFrame(Sprite::kDefaultFrame);
         }
-        Sprite sprite;
         for(auto itr = def.getAnimations().begin();
             itr != def.getAnimations().end(); ++itr)
         {
             auto& anim = sprite.setAnimation(itr->first);
             anim.withFrameDuration(itr->second.getFrameDuration());
-            std::string aname = itr->second.getAtlas();
+            auto aname = itr->second.getAtlas();
             if(aname.empty())
             {
                 aname = def.getAtlas();

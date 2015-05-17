@@ -1,6 +1,7 @@
 #include <mugato/scene/EntityTransform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp> 
+#include <glm/gtc/matrix_inverse.hpp>
 
 namespace mugato
 {
@@ -46,6 +47,11 @@ namespace mugato
     const EntityTransform::Matrix& EntityTransform::getMatrix() const
     {
         return _matrix;
+    }
+
+    const EntityTransform::Matrix& EntityTransform::getInverseMatrix() const
+    {
+        return _inverseMatrix;
     }
 
     void EntityTransform::setPosition(const Vector2& val)
@@ -123,9 +129,35 @@ namespace mugato
     {
         if(_size != val)
         {
+            _dirty = true;
             _size = val;
         }
     }
+
+    EntityTransform::Vector2
+        EntityTransform::getLocalToParentPoint(const Vector2& p) const
+    {
+        return Vector2(_matrix*glm::vec4(p, 0.0, 1.0));    
+    }
+
+    EntityTransform::Vector2
+        EntityTransform::getParentToLocalPoint(const Vector2& p) const
+    {
+        return Vector2(_inverseMatrix*glm::vec4(p, 0.0, 1.0));
+    }
+
+    EntityTransform::Vector
+        EntityTransform::getLocalToParentPoint(const Vector& p) const
+    {
+        return Vector(_matrix*glm::vec4(p, 1.0));
+    }
+
+    EntityTransform::Vector
+        EntityTransform::getParentToLocalPoint(const Vector& p) const
+    {
+        return Vector(_inverseMatrix*glm::vec4(p, 1.0));
+    }
+
 
     bool EntityTransform::update()
     {
@@ -137,6 +169,7 @@ namespace mugato
                 * glm::orientate4(_rotation)
                 * glm::translate(glm::mat4(), -_pivot)
                 ;
+            _inverseMatrix = glm::inverse(_matrix);
             _area = gorn::Rect(glm::vec3(0.0f), _size)*_matrix;
             _dirty = false;
             return true;

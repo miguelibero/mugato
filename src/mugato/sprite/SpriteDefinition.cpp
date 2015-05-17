@@ -3,13 +3,25 @@
 
 namespace mugato {
 
-    SpriteDefinition::SpriteDefinition()    
+    SpriteDefinition::SpriteDefinition()   
     {
     }
 
-    SpriteDefinition& SpriteDefinition::withAtlas(const std::string& atlas)
+    SpriteDefinition& SpriteDefinition::withAtlas(const std::string& name)
     {
-        _atlas = atlas;
+        _atlas = name;
+        return *this;
+    }
+
+    SpriteDefinition& SpriteDefinition::withMaterial(const std::string& name)
+    {
+        _material = name;
+        return *this;
+    }
+
+    SpriteDefinition& SpriteDefinition::withStretchBorders(const glm::vec4& borders)
+    {
+        _stretchBorders = borders;
         return *this;
     }
 
@@ -36,6 +48,11 @@ namespace mugato {
         return _atlas;
     }
 
+    const std::string& SpriteDefinition::getMaterial() const
+    {
+        return _material;
+    }
+
     const SpriteDefinition::Animation& SpriteDefinition::getAnimation(
         const std::string& name) const
     {
@@ -50,6 +67,11 @@ namespace mugato {
     const SpriteDefinition::AnimationMap& SpriteDefinition::getAnimations() const
     {
         return _anims;
+    }
+
+    const glm::vec4& SpriteDefinition::getStretchBorders() const
+    {
+        return _stretchBorders;
     }
 
 }

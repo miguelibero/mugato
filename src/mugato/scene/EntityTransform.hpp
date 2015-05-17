@@ -14,6 +14,7 @@ namespace mugato
         typedef glm::mat4 Matrix;
     private:
         Matrix _matrix;
+        Matrix _inverseMatrix;
         bool _dirty;
         Vector _position;
         Vector _rotation;
@@ -33,6 +34,7 @@ namespace mugato
 
         const gorn::Rect& getArea() const;
         const Matrix& getMatrix() const;
+        const Matrix& getInverseMatrix() const;
 
         void setPosition(const Vector& val);
         void setRotation(const Vector& val);
@@ -50,6 +52,11 @@ namespace mugato
         void setScale(float val);
 
         bool update();
+
+        Vector2 getLocalToParentPoint(const Vector2& val) const;
+        Vector2 getParentToLocalPoint(const Vector2& val) const;
+        Vector getLocalToParentPoint(const Vector& val) const;
+        Vector getParentToLocalPoint(const Vector& val) const;
 
     };
 }
