@@ -8,10 +8,22 @@
 
 namespace mugato
 {
+    std::string LabelComponent::_defaultName = "default";
+
     LabelComponent::LabelComponent(const std::string& text,
-    const std::string& font):
-    _label(text), _font(font)
+    const std::string& name):
+    _label(text), _name(name)
     {
+    }
+
+    LabelComponent::LabelComponent(const std::string& text):
+    _label(text), _name(_defaultName)
+    {
+    }
+
+    void LabelComponent::setDefaultName(const std::string& name)
+    {
+        _defaultName = name;
     }
 
     Label& LabelComponent::getLabel()
@@ -31,7 +43,8 @@ namespace mugato
 
     void LabelComponent::onAddedToEntity(Entity& entity)
     {
-        _label.setFont(entity.getContext().getLabels().loadFont(_font));
+        auto font = entity.getContext().getLabels().loadLabelFont(_name);
+        _label.setFont(font);
         _entity = entity.getSharedPtr();
         onEntityTransformChanged(entity);
     }

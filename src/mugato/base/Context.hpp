@@ -54,6 +54,9 @@ namespace mugato
         const EntityStack& getScenes() const;
         EntityStack& getScenes();
 
+        const Entity& getRoot() const;
+        Entity& getRoot();
+
     };
 }
 

@@ -130,9 +130,15 @@ void main()
 
     void Context::setScreenSize(const glm::vec2& size)
     {
-        _root->getTransform().setScale(glm::vec2(2.0f/size.x, 2.0f/size.y));
+        _root->getTransform().setScale(
+            glm::vec2(2.0f/size.x, 2.0f/size.y));
         _root->getTransform().setSize(size);
         _scenes->getTransform().setSize(size);
+
+        // set model for rendering without entities
+        _root->getTransform().update();
+        getGorn().getQueue().setModelTransform(
+            _root->getTransform().getMatrix());
     }
 
     const gorn::Context& Context::getGorn() const
@@ -185,6 +191,16 @@ void main()
         return *_scenes;
     }
 
+    const Entity& Context::getRoot() const
+    {
+        return *_root;
+    }
+
+    Entity& Context::getRoot()
+    {
+        return *_root;
+    }
+
     void Context::setFixedUpdatesPerSecond(double fps)
     {
         _fixedUpdatesPerSecond = fps;
@@ -213,6 +229,10 @@ void main()
 
     void Context::draw()
     {
+        // reset model transform
+        _gorn.getQueue().addCommand()
+            .withTransform(glm::mat4(),
+                gorn::RenderCommandTransformMode::SetGlobal);
         _root->render(_gorn.getQueue());
         _gorn.getQueue().draw();
     }

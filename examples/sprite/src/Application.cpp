@@ -58,6 +58,7 @@ void SpriteApplication::load()
 
 void SpriteApplication::update(double dt)
 {
+    _ctx.update(dt);
     _sprite1.update(dt);
     _sprite2.update(dt);
 }

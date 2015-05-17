@@ -45,6 +45,7 @@ namespace mugato {
         Definitions& getDefinitions();
 
         std::shared_ptr<Font> loadFont(const std::string& name);
+        std::shared_ptr<Font> loadLabelFont(const std::string& name);
         Label load(const std::string& name);
     };
 

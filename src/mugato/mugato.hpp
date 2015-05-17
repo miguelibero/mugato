@@ -42,6 +42,7 @@
 #include <mugato/scene/RenderInfoComponent.hpp>
 #include <mugato/scene/ActionComponent.hpp>
 #include <mugato/scene/TouchComponent.hpp>
+#include <mugato/scene/ButtonComponent.hpp>
 #include <mugato/scene/Action.hpp>
 #include <mugato/scene/EmptyAction.hpp>
 #include <mugato/scene/TweenAction.hpp>

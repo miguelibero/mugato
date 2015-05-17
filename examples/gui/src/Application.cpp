@@ -69,24 +69,22 @@ void GuiApplication::load()
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
     scene->addComponent<mugato::RenderInfoComponent>();
-
-    auto button = scene->addChild();
-
-    auto& sprite = button->addComponent<mugato::SpriteComponent>("button",
-        mugato::SpriteResizeMode::Exact).getSprite();
-
-    auto& label = button->addComponent<mugato::LabelComponent>(
-        "This is\na button", "font.fnt");
-    label.getLabel().setAlignment(mugato::LabelAlignment::Center);
-
-    button->addComponent<mugato::TouchComponent>(
+  
+    std::unique_ptr<mugato::ButtonComponent> button(
+        new mugato::ButtonComponent());
+    button->setBackground("button");
+    button->setLabel("font.fnt");
+    button->setText("This is\na button");
+    button->setCallback(
         std::bind(&GuiApplication::onButtonTouched,
-            this, std::ref(sprite),
+            this, std::ref(button->getBackground()),
             std::placeholders::_2,
             std::placeholders::_3));
 
-    button->getTransform().setPosition(glm::vec2(240, 100));
-    button->getTransform().setSize(glm::vec2(200, 50));
+    auto buttonEntity = scene->addChild();
+    buttonEntity->addComponent(std::move(button));
+    buttonEntity->getTransform().setPosition(glm::vec2(240, 100));
+    buttonEntity->getTransform().setSize(glm::vec2(200, 50));
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

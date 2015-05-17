@@ -19,6 +19,7 @@ namespace mugato {
         glm::vec2 _regionSize;
         char _initialCharacter;
         float _advanceDifference;
+        float _lineHeight;
     public:
         GridFontAtlasLoader(gorn::MaterialManager& materials,
             const glm::vec2& regionSize, char initialChar=0);
@@ -26,6 +27,7 @@ namespace mugato {
         FontAtlas load(const std::string& name) const;
         void setInitialCharacter(char chr) NOEXCEPT;
         void setAdvanceDifference(float val) NOEXCEPT;
+        void setLineHeight(float val) NOEXCEPT;
     };
 }
 

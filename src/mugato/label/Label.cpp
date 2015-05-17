@@ -146,9 +146,9 @@ namespace mugato {
             }
         }
         _lineWidths.push_back(w);
-        _contentSize = glm::vec2(
-            *std::max_element(_lineWidths.begin(), _lineWidths.end()),
-            _font->getLineHeight()*_lineWidths.size());
+        _contentSize.x = *std::max_element(
+            _lineWidths.begin(), _lineWidths.end());
+        _contentSize.y = _font->getLineHeight()*_lineWidths.size();
         _dirtyChars = false;
     }
 

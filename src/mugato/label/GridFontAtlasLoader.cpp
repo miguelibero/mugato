@@ -12,7 +12,8 @@ namespace mugato {
         const glm::vec2& regionSize,
         char initialChar):
         _materials(materials), _regionSize(regionSize),
-        _initialCharacter(initialChar), _advanceDifference(0.0f)
+        _initialCharacter(initialChar), _advanceDifference(0.0f),
+        _lineHeight(0.0f)
     {
     }
 
@@ -26,6 +27,11 @@ namespace mugato {
         _advanceDifference = val;
     }
 
+    void GridFontAtlasLoader::setLineHeight(float val) NOEXCEPT
+    {
+        _lineHeight = val;
+    }
+
     bool GridFontAtlasLoader::validate(const std::string& name) const NOEXCEPT
     {
         return _materials.validate(name);
@@ -35,6 +41,7 @@ namespace mugato {
     {
         FontAtlas atlas;
         atlas.setMaterial(name);
+        atlas.setLineHeight(_lineHeight);
         auto msize = _materials.loadSize(name);
 
         char chr = _initialCharacter;
@@ -46,6 +53,7 @@ namespace mugato {
                 r.setSize(_regionSize);
                 r.setPosition(glm::vec2(x, y));
                 r.setAdvance(_regionSize.x+_advanceDifference);
+                r.setOffset(glm::vec2(0.0f, -_regionSize.y));
                 atlas.setRegion(std::string()+chr, r);
                 chr++;
             }
