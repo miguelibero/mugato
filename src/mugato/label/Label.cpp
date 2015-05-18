@@ -73,7 +73,7 @@ namespace mugato {
         return _size;
     }
 
-    glm::vec2 Label::getContentSize() const
+    const glm::vec2& Label::getContentSize() const
     {
         return _contentSize;
     }
@@ -84,7 +84,7 @@ namespace mugato {
     }
 
 
-    Label::Alignment Label::getAlignment() const
+    Alignment Label::getAlignment() const
     {
         return _alignment;
     }
@@ -158,42 +158,10 @@ namespace mugato {
         {
             return;
         }
-        auto osize = getContentSize();
-        auto& size = getSize();
-        glm::vec3 t;
-        switch(_alignment)
-        {
-        case Alignment::TopLeft:
-            t = glm::vec3(0.0f, size.y, 0.0f);
-            break;
-        case Alignment::TopCenter:
-            t = glm::vec3((size.x-osize.x)*0.5f, size.y, 0.0f);
-            break;
-        case Alignment::TopRight:
-            t = glm::vec3(size.x-osize.x, size.y, 0.0f);
-            break;
-        case Alignment::Left:
-            t = glm::vec3(0.0f, (size.y+osize.y)*0.5f, 0.0f);
-            break;
-        case Alignment::Center:
-            t = glm::vec3((size.x-osize.x)*0.5f, (size.y+osize.y)*0.5f, 0.0f);
-            break;
-        case Alignment::Right:
-            t = glm::vec3(size.x-osize.x, (size.y+osize.y)*0.5f, 0.0f);
-            break;
-        case Alignment::BottomLeft:
-            t = glm::vec3(0.0f, osize.y, 0.0f);
-            break;
-        case Alignment::BottomCenter:
-            t = glm::vec3((size.x-osize.x)*0.5f, osize.y, 0.0f);
-            break;
-        case Alignment::BottomRight:
-            t = glm::vec3((size.x-osize.x), osize.y, 0.0f);
-            break;
-        default:
-            break;
-        }
-        _transform = glm::translate(glm::mat4(), t);
+        auto& c = getContentSize();
+        _transform = glm::translate(glm::mat4(),
+            alignPosition(_alignment, getSize(), c)
+                +glm::vec3(0.0f, c.y, 0.0f));
         _dirtyAlignment = false;
     }
 
@@ -212,8 +180,8 @@ namespace mugato {
 
     glm::vec3 Label::getLineBreakTranslation(float cw, float lw)
     {
-        if(_alignment == Alignment::TopCenter ||
-          _alignment == Alignment::BottomCenter ||
+        if(_alignment == Alignment::Top ||
+          _alignment == Alignment::Bottom ||
             _alignment == Alignment::Center)
         {
             return glm::vec3((cw-lw)*0.5f, 0.0f, 0.0f);

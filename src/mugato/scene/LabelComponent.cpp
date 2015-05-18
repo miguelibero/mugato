@@ -45,7 +45,6 @@ namespace mugato
     {
         auto font = entity.getContext().getLabels().loadLabelFont(_name);
         _label.setFont(font);
-        _entity = entity.getSharedPtr();
         onEntityTransformChanged(entity);
     }
 

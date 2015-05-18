@@ -5,19 +5,6 @@
 
 namespace mugato
 {   
-    enum class LabelAlignment
-    {
-        TopLeft,
-        TopCenter,
-        TopRight,
-        Left,
-        Center,
-        Right,
-        BottomLeft,
-        BottomCenter,
-        BottomRight   
-    };
-
     enum class LabelResizeMode
     {
         Original,
