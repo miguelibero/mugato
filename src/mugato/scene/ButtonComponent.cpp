@@ -53,12 +53,17 @@ namespace mugato
 
     void ButtonComponent::onAddedToEntity(Entity& entity)
     {
-        _bg = entity.getContext().getSprites().load(_bgName);
-        _bg.setResizeMode(SpriteResizeMode::Exact);
+        if(!_bgName.empty())
+        {
+            _bg = entity.getContext().getSprites().load(_bgName);
+            _bg.setResizeMode(SpriteResizeMode::Exact);
+        }
+
         auto text = _label.getText();
         _label = entity.getContext().getLabels().load(_labelName);
         _label.setText(text);
         _label.setAlignment(Alignment::Center);
+
         onEntityTransformChanged(entity);
     }
 
@@ -74,7 +79,7 @@ namespace mugato
     {
         if(_callback)
         {
-            return _callback(entity, p, phase);
+            return _callback(phase, p);
         }
         return false;
     }

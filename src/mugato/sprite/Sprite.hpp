@@ -38,9 +38,12 @@ namespace mugato {
             const Region& region);
 
         void setMaterial(const std::shared_ptr<gorn::Material>& material);
+        std::shared_ptr<gorn::Material> getMaterial() const;
 
-        void setAnimation(const std::string& name, const Animation& anim);
+        Animation& setAnimation(const std::string& name, const Animation& anim);
         Animation& setAnimation(const std::string& name);
+        Animation& getCurrentAnimation();
+        const Animation& getCurrentAnimation() const;
 
         const glm::vec2& getSize() const;
         glm::vec2 getContentSize() const;

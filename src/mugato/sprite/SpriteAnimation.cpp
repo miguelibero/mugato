@@ -1,5 +1,6 @@
 
 #include <mugato/sprite/SpriteAnimation.hpp>
+#include <mugato/base/Exception.hpp>
 #include <gorn/gl/Material.hpp>
 
 namespace mugato {
@@ -72,8 +73,37 @@ namespace mugato {
         return *this;
     }
 
+    void SpriteAnimation::setMaterial(const std::shared_ptr<gorn::Material>& material)
+    {
+        for(auto& frame : _frames)
+        {
+            frame->setMaterial(material);
+        }
+    }
+
+    std::shared_ptr<gorn::Material> SpriteAnimation::getMaterial() const
+    {
+        std::shared_ptr<gorn::Material> m;
+        for(auto& frame : _frames)
+        {
+            if(m == nullptr)
+            {
+                m = frame->getMaterial();
+            }
+            else if(m != frame->getMaterial())
+            {
+                throw new Exception("SpriteFrames have different materials.");
+            }
+        }
+        return m;
+    }
+
     size_t SpriteAnimation::getCurrentFrameNumber() const
     {
+        if(_frames.size() == 0 || _frameDuration == 0.0)
+        {
+            return 0;
+        }
         return ((size_t)(_time/_frameDuration)) % _frames.size();
     }
 

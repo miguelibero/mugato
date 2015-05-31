@@ -30,7 +30,7 @@ namespace mugato {
     {
         _dirtyChars = true;
         _dirtyAlignment = true;
-        _alignment = Alignment::BottomLeft;
+        _alignment = Alignment::Center;
         _resizeMode = ResizeMode::Original;
     }
 
@@ -119,6 +119,10 @@ namespace mugato {
             return;
         }
         _characters.clear();
+        if(_font == nullptr)
+        {
+            return;
+        }
 
         std::string name;
         for(auto itr=_text.begin(); itr!=_text.end(); ++itr)
@@ -200,6 +204,10 @@ namespace mugato {
     
     void Label::render(gorn::RenderQueue& queue)
     {
+        if(_font == nullptr)
+        {
+            return;
+        }
         queue.addCommand().withTransformMode(
                 gorn::RenderCommand::TransformMode::PushCheckpoint);
         queue.addCommand()

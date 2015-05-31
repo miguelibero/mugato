@@ -11,8 +11,8 @@ namespace mugato
     class ButtonComponent : public Component
     {
     public:
-        typedef std::function<bool(Entity& entity, const glm::vec2& p,
-            TouchPhase phase)> Callback;
+        typedef std::function<bool(TouchPhase phase,
+            const glm::vec2& p)> Callback;
     private:
         Sprite _bg;
         Label _label;

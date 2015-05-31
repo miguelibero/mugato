@@ -8,8 +8,6 @@
 
 namespace mugato
 {
-    std::string LabelComponent::_defaultName = "default";
-
     LabelComponent::LabelComponent(const std::string& text,
     const std::string& name):
     _label(text), _name(name)
@@ -17,13 +15,8 @@ namespace mugato
     }
 
     LabelComponent::LabelComponent(const std::string& text):
-    _label(text), _name(_defaultName)
+    _label(text)
     {
-    }
-
-    void LabelComponent::setDefaultName(const std::string& name)
-    {
-        _defaultName = name;
     }
 
     Label& LabelComponent::getLabel()

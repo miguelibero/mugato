@@ -8,6 +8,12 @@ namespace mugato
     {
     }
 
+    AlignComponent::AlignComponent(const Alignment& align,
+        const Constraints& constraints):
+    _align(align), _dirty(false), _constraints(constraints)
+    {
+    }
+
     void AlignComponent::onAddedToEntity(Entity& entity)
     {
         _entity = entity.getSharedPtr();
@@ -26,21 +32,30 @@ namespace mugato
 
     void AlignComponent::update(double dt)
     {
-        if(_dirty)
+        if(!_dirty)
         {
-            if(auto entity = _entity.lock())
-            {
-                if(entity->hasParent())
-                {
-                    auto& pt = entity->getParent().getTransform();
-                    auto psize = pt.getSize()/pt.getScale();
-                    auto& size = entity->getTransform().getSize();
-                    auto pos = alignPosition(_align, psize, size);
-                    entity->getTransform().setPosition(pos);
-                }
-            }
-            _dirty = false;
+            return;
         }
+        auto entity = _entity.lock();
+        if(entity && entity->hasParent())
+        {
+            auto& pt = entity->getParent().getTransform();
+            auto psize = pt.getSize()/pt.getScale();
+            auto size = entity->getTransform().getSize()
+                *entity->getTransform().getScale();
+            auto apos = alignPosition(_align, psize, size);
+            glm::vec3 pos = apos;
+            if(!_constraints.empty())
+            {
+                pos = entity->getTransform().getPosition();
+                for(auto& i : _constraints)
+                {
+                    pos[i] = apos[i];
+                }
+            }                
+            entity->getTransform().setPosition(pos);
+        }
+        _dirty = false;
     }
 }
 

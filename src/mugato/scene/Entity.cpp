@@ -141,17 +141,24 @@ namespace mugato
     void Entity::update(double dt)
     {
         updateTransform();
-        for(auto& comp : _componentsToAdd)
-        {
-            comp->onAddedToEntity(*this);
-        }
-        _components.reserve(
-            _components.size() + _componentsToAdd.size());
+        Components componentsToAdd;
+        componentsToAdd.reserve(_componentsToAdd.size());
         std::move(
             _componentsToAdd.begin(),
             _componentsToAdd.end(),
-            std::back_inserter(_components));
+            std::back_inserter(componentsToAdd));
         _componentsToAdd.clear();
+        for(auto& comp : componentsToAdd)
+        {
+            comp->onAddedToEntity(*this);
+        
+        }
+        _components.reserve(
+            _components.size() + componentsToAdd.size());
+        std::move(
+            componentsToAdd.begin(),
+            componentsToAdd.end(),
+            std::back_inserter(_components));
         for(auto& comp : _components)
         {
             comp->update(dt);

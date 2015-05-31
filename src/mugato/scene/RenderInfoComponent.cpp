@@ -9,6 +9,7 @@ namespace mugato {
     RenderInfoComponent::RenderInfoComponent(const std::string& font):
     _font(font)
     {
+        _label.setAlignment(Alignment::BottomLeft);
     }
 
     RenderInfoComponent::Transform& RenderInfoComponent::getTransform()
@@ -25,7 +26,8 @@ namespace mugato {
     void RenderInfoComponent::onAddedToEntity(Entity& entity)
     {
         _entity = entity.getSharedPtr();
-        _label = entity.getContext().getLabels().load(_font);
+        auto font = entity.getContext().getLabels().loadLabelFont(_font);
+        _label.setFont(font);
     }
 
     void RenderInfoComponent::update(double dt)

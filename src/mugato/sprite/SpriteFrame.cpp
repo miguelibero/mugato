@@ -156,9 +156,13 @@ namespace mugato {
         {
             return;
         }
-        auto osize = _size;
-        auto rsize = osize/_region.getOriginalSize()*_region.getSize();
-        auto bl = (osize-rsize)*0.5f+_region.getOffset();
+        auto size = _size;
+        glm::vec2 rsize = size;
+        if(!_region.empty())
+        {
+            rsize = rsize/_region.getOriginalSize()*_region.getSize();
+        }
+        auto bl = (size-rsize)*0.5f+_region.getOffset();
         auto tr = bl + rsize;
 
         _posVerts = {

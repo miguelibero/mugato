@@ -10,7 +10,8 @@ class GuiApplication : public mugato::Application
 {
 private:
     bool onButtonTouched(mugato::Sprite& sprite,
-        const glm::vec2& p, mugato::EntityTouchPhase phase);
+        mugato::EntityTouchPhase phase,
+        const glm::vec2& p);
 
     void createButton(mugato::Entity& p, mugato::Alignment a);
 public:
@@ -48,7 +49,7 @@ void GuiApplication::load()
 
     getMugato().getSprites().getDefinitions().get("button")
         .withMaterial("button")
-        .withStretchBorders(glm::vec4(4, 5, 9, 5));
+        .withStretchBorders(glm::vec4(4.0f, 5.0f, 9.0f, 5.0f));
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("octree_elements", gorn::MaterialDefinition()
@@ -96,8 +97,8 @@ void GuiApplication::createButton(mugato::Entity& p, mugato::Alignment a)
     button.setCallback(
         std::bind(&GuiApplication::onButtonTouched,
             this, std::ref(button.getBackground()),
-            std::placeholders::_2,
-            std::placeholders::_3));
+            std::placeholders::_1,
+            std::placeholders::_2));
 
     buttonEntity->getTransform().setPosition(glm::vec2(240, 100));
     buttonEntity->getTransform().setSize(glm::vec2(200, 50));
@@ -105,7 +106,7 @@ void GuiApplication::createButton(mugato::Entity& p, mugato::Alignment a)
 }
 
 bool GuiApplication::onButtonTouched(mugato::Sprite& sprite,
-    const glm::vec2& p, mugato::EntityTouchPhase phase)
+    mugato::EntityTouchPhase phase, const glm::vec2& p)
 {
     std::string mat = "button_pressed";
     if(phase == mugato::EntityTouchPhase::End

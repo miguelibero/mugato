@@ -45,6 +45,9 @@ namespace mugato {
         SpriteAnimation& addFrame(const std::shared_ptr<gorn::Material>& material,
             const Region& region);
 
+        void setMaterial(const std::shared_ptr<gorn::Material>& material);
+        std::shared_ptr<gorn::Material> getMaterial() const;
+
         size_t getCurrentFrameNumber() const;
         const Frame& getCurrentFrame() const;
         Frame& getCurrentFrame();
