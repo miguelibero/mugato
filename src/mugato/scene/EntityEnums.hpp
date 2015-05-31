@@ -7,6 +7,7 @@ namespace mugato
     {
         Begin,
         Move,
+        Cancel,
         End,
         None
     };

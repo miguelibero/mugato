@@ -72,37 +72,37 @@ namespace mugato
             _touchedChildren.end(), [&child](std::weak_ptr<Entity>& c){
             return c.lock() == child;
         });
-        if(phase == TouchPhase::End)
-        {
-            if(itr != _touchedChildren.end())
-            {
-                _touchedChildren.erase(itr);
-            }
-            return phase;
-        }
         auto contained = elm.getArea().contains(p);
+        auto ending = phase == TouchPhase::End || phase == TouchPhase::Cancel;
         if(itr == _touchedChildren.end())
         {
-            if(contained)
+            if(!contained || ending)
+            {
+                return TouchPhase::None;
+            }
+            else
             {
                 _touchedChildren.push_back(child);
                 return TouchPhase::Begin;
             }
-            else
-            {
-                return TouchPhase::None;
-            }
         }
         else
         {
-            if(contained)
+            if(contained && !ending)
             {
                 return TouchPhase::Move;
             }
             else
             {
                 _touchedChildren.erase(itr);
-                return TouchPhase::End;
+                if(phase == TouchPhase::End)
+                {
+                    return TouchPhase::End;
+                }
+                else
+                {
+                    return TouchPhase::Cancel;
+                }
             }
         }
     }
@@ -110,33 +110,48 @@ namespace mugato
     bool Entity::touch(const glm::vec2& p, TouchPhase phase)
     {
         auto ep = _transform.getParentToLocalPoint(p);
+        bool handled = false;
         for(auto& comp : _components)
         {
             if(comp->onEntityTouched(*this, ep, phase))
             {
-                return true;
+                handled = true;
             }
         }
-        Children::Elements elements;
-        _children.find(elements);
-        for(auto& elm : elements)
+        if(!handled)
         {
-            auto cphase = touchChild(ep, phase, elm);
-            if(cphase != TouchPhase::None)
+            Children::Elements elements;
+            _children.find(elements);
+            for(auto& elm : elements)
             {
-                if(elm.getContent()->touch(ep, cphase))
+                auto cphase = touchChild(ep, phase, elm);
+                if(cphase != TouchPhase::None)
                 {
-                    return true;
+                    if(elm.getContent()->touch(ep, cphase))
+                    {
+                        handled = true;
+                        phase = TouchPhase::Cancel;
+                    }
                 }
             }
         }
-
-        return false;
+        return handled;
     }
 
     void Entity::update(double dt)
     {
         updateTransform();
+        for(auto& comp : _componentsToAdd)
+        {
+            comp->onAddedToEntity(*this);
+        }
+        _components.reserve(
+            _components.size() + _componentsToAdd.size());
+        std::move(
+            _componentsToAdd.begin(),
+            _componentsToAdd.end(),
+            std::back_inserter(_components));
+        _componentsToAdd.clear();
         for(auto& comp : _components)
         {
             comp->update(dt);
@@ -222,8 +237,7 @@ namespace mugato
     Component& Entity::addComponent(std::unique_ptr<Component> comp)
     {
         auto ptr = comp.get();
-        comp->onAddedToEntity(*this);
-        _components.push_back(std::move(comp));
+        _componentsToAdd.push_back(std::move(comp));
         return *ptr;
     }
 

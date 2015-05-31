@@ -87,22 +87,20 @@ void GuiApplication::load()
 
 void GuiApplication::createButton(mugato::Entity& p, mugato::Alignment a)
 {
-    std::unique_ptr<mugato::ButtonComponent> button(
-        new mugato::ButtonComponent());
-    button->setBackground("button");
-    button->setLabel("font.fnt");
-    button->setText("This is\na button");
-    button->setCallback(
+    auto buttonEntity = p.addChild();
+    auto& button = buttonEntity->addComponent<mugato::ButtonComponent>();
+
+    button.setBackground("button");
+    button.setLabel("font.fnt");
+    button.setText("This is\na button");
+    button.setCallback(
         std::bind(&GuiApplication::onButtonTouched,
-            this, std::ref(button->getBackground()),
+            this, std::ref(button.getBackground()),
             std::placeholders::_2,
             std::placeholders::_3));
 
-    auto buttonEntity = p.addChild();
-    buttonEntity->addComponent(std::move(button));
     buttonEntity->getTransform().setPosition(glm::vec2(240, 100));
     buttonEntity->getTransform().setSize(glm::vec2(200, 50));
-
     buttonEntity->addComponent<mugato::AlignComponent>(a);
 }
 
@@ -110,14 +108,35 @@ bool GuiApplication::onButtonTouched(mugato::Sprite& sprite,
     const glm::vec2& p, mugato::EntityTouchPhase phase)
 {
     std::string mat = "button_pressed";
-    if(phase == mugato::EntityTouchPhase::End)
+    if(phase == mugato::EntityTouchPhase::End
+        || phase == mugato::EntityTouchPhase::Cancel)
     {
         mat = "button";
     }
-    else
+
+    std::string phaseStr;
+    switch(phase)
     {
-        std::cout << "button touched " << p.x << "," << p.y << std::endl;
+        case mugato::EntityTouchPhase::Begin:
+            phaseStr = "begin";
+            break;
+        case mugato::EntityTouchPhase::Move:
+            phaseStr = "move";
+            break;
+        case mugato::EntityTouchPhase::Cancel:
+            phaseStr = "cancel";
+            break;
+        case mugato::EntityTouchPhase::End:
+            phaseStr = "end";
+            break;
+        case mugato::EntityTouchPhase::None:
+            phaseStr = "none";
+            break;
     }
+
+    std::cout << "touch " << phaseStr << " "<< &sprite
+        << " " << p.x << "," << p.y << std::endl;
+
     sprite.setMaterial(getGorn().getMaterials().load(mat));
 
     return true;
