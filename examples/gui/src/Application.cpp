@@ -11,6 +11,8 @@ class GuiApplication : public mugato::Application
 private:
     bool onButtonTouched(mugato::Sprite& sprite,
         const glm::vec2& p, mugato::EntityTouchPhase phase);
+
+    void createButton(mugato::Entity& p, mugato::Alignment a);
 public:
     void load() override;
 };
@@ -60,7 +62,8 @@ void GuiApplication::load()
         .withProgram(mugato::ProgramKind::Color));
    
     auto scene = getMugato().getScenes().push();
-
+    scene->addComponent<mugato::RenderInfoComponent>();
+  
     auto& materials = getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
     octree.setElementsMaterial(materials.load("octree_elements"));
@@ -68,40 +71,72 @@ void GuiApplication::load()
     octree.setNodesMaterial(materials.load("octree_nodes"));
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
-    scene->addComponent<mugato::RenderInfoComponent>();
-  
-    std::unique_ptr<mugato::ButtonComponent> button(
-        new mugato::ButtonComponent());
-    button->setBackground("button");
-    button->setLabel("font.fnt");
-    button->setText("This is\na button");
-    button->setCallback(
-        std::bind(&GuiApplication::onButtonTouched,
-            this, std::ref(button->getBackground()),
-            std::placeholders::_2,
-            std::placeholders::_3));
-
-    auto buttonEntity = scene->addChild();
-    buttonEntity->addComponent(std::move(button));
-    buttonEntity->getTransform().setPosition(glm::vec2(240, 100));
-    buttonEntity->getTransform().setSize(glm::vec2(200, 50));
+    createButton(*scene, mugato::Alignment::TopLeft);
+    createButton(*scene, mugato::Alignment::Top);
+    createButton(*scene, mugato::Alignment::TopRight);
+    createButton(*scene, mugato::Alignment::Left);
+    createButton(*scene, mugato::Alignment::Center);
+    createButton(*scene, mugato::Alignment::Right);
+    createButton(*scene, mugato::Alignment::BottomLeft);
+    createButton(*scene, mugato::Alignment::Bottom);
+    createButton(*scene, mugato::Alignment::BottomRight);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void GuiApplication::createButton(mugato::Entity& p, mugato::Alignment a)
+{
+    auto buttonEntity = p.addChild();
+    auto& button = buttonEntity->addComponent<mugato::ButtonComponent>();
+
+    button.setBackground("button");
+    button.setLabel("font.fnt");
+    button.setText("This is\na button");
+    button.setCallback(
+        std::bind(&GuiApplication::onButtonTouched,
+            this, std::ref(button.getBackground()),
+            std::placeholders::_2,
+            std::placeholders::_3));
+
+    buttonEntity->getTransform().setPosition(glm::vec2(240, 100));
+    buttonEntity->getTransform().setSize(glm::vec2(200, 50));
+    buttonEntity->addComponent<mugato::AlignComponent>(a);
 }
 
 bool GuiApplication::onButtonTouched(mugato::Sprite& sprite,
     const glm::vec2& p, mugato::EntityTouchPhase phase)
 {
     std::string mat = "button_pressed";
-    if(phase == mugato::EntityTouchPhase::End)
+    if(phase == mugato::EntityTouchPhase::End
+        || phase == mugato::EntityTouchPhase::Cancel)
     {
         mat = "button";
     }
-    else
+
+    std::string phaseStr;
+    switch(phase)
     {
-        std::cout << "button touched " << p.x << "," << p.y << std::endl;
+        case mugato::EntityTouchPhase::Begin:
+            phaseStr = "begin";
+            break;
+        case mugato::EntityTouchPhase::Move:
+            phaseStr = "move";
+            break;
+        case mugato::EntityTouchPhase::Cancel:
+            phaseStr = "cancel";
+            break;
+        case mugato::EntityTouchPhase::End:
+            phaseStr = "end";
+            break;
+        case mugato::EntityTouchPhase::None:
+            phaseStr = "none";
+            break;
     }
+
+    std::cout << "touch " << phaseStr << " "<< &sprite
+        << " " << p.x << "," << p.y << std::endl;
+
     sprite.setMaterial(getGorn().getMaterials().load(mat));
 
     return true;

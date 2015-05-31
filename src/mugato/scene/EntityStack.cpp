@@ -12,6 +12,10 @@ namespace mugato
     void EntityStack::setContext(Context& ctx)
     {
         _ctx = &ctx;
+        if(!_stack.empty())
+        {
+            _stack.back()->setContext(ctx);
+        }
     }
 
     const EntityTransform& EntityStack::getTransform() const

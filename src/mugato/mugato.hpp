@@ -8,6 +8,7 @@
 #include <mugato/base/OcTreeElement.hpp>
 #include <mugato/base/OcTreeNode.hpp>
 #include <mugato/base/Application.hpp>
+#include <mugato/base/Alignment.hpp>
 
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/GridFontAtlasLoader.hpp>
@@ -43,6 +44,7 @@
 #include <mugato/scene/ActionComponent.hpp>
 #include <mugato/scene/TouchComponent.hpp>
 #include <mugato/scene/ButtonComponent.hpp>
+#include <mugato/scene/AlignComponent.hpp>
 #include <mugato/scene/Action.hpp>
 #include <mugato/scene/EmptyAction.hpp>
 #include <mugato/scene/TweenAction.hpp>

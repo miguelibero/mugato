@@ -5,6 +5,7 @@
 
 #include <mugato/label/LabelFont.hpp>
 #include <mugato/label/LabelEnums.hpp>
+#include <mugato/base/Alignment.hpp>
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
@@ -20,7 +21,6 @@ namespace mugato {
     public:
         static const char* kLineBreak;
         typedef LabelFont Font;
-        typedef LabelAlignment Alignment;
         typedef LabelResizeMode ResizeMode;
     private:
 
@@ -51,7 +51,7 @@ namespace mugato {
         const std::string& getText() const;
         void setText(const std::string& text);
 
-        glm::vec2 getContentSize() const;
+        const glm::vec2& getContentSize() const;
         std::vector<float> getLineWidths() const;
 
         const glm::vec2& getSize() const;

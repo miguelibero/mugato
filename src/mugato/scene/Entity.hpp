@@ -29,6 +29,7 @@ namespace mugato
         typedef std::weak_ptr<Entity> Parent;
         typedef std::vector<std::unique_ptr<Component>> Components;
     private:
+        Components _componentsToAdd;
         Components _components;
         Children _children;
         Parent _parent;
