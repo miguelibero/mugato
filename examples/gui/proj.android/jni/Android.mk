@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := mugato_label
+LOCAL_MODULE := mugato_gui
 
 BASE_PATH := $(LOCAL_PATH)/../..
 SRC_PATH := $(BASE_PATH)/src

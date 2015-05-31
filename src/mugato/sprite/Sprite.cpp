@@ -54,7 +54,7 @@ namespace mugato {
         glm::vec2 size;
         for(auto itr = _anims.begin(); itr != _anims.end(); ++itr)
         {
-            auto asize = itr->second.getSize();
+            auto asize = itr->second.getContentSize();
             if(asize.x > size.x)
             {
                 size.x = asize.x;

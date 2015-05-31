@@ -92,6 +92,8 @@ namespace mugato {
             else if(name == "common")
             {
                 baseline = gorn::String::convertTo<float>(map["base"]);
+                atlas.setLineHeight(
+                    gorn::String::convertTo<float>(map["lineHeight"]));
             } 
             else if(name == "page")
             {
@@ -118,7 +120,7 @@ namespace mugato {
                     gorn::String::convertTo<float>(map["xoffset"]),
                     gorn::String::convertTo<float>(map["yoffset"])
                 );
-                offset.y = baseline - region.getSize().y - offset.y ;
+                offset.y = baseline - region.getSize().y - offset.y;
 
                 region.setOriginalSize(region.getSize());
                 region.setOffset(offset);

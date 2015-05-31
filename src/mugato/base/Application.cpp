@@ -66,12 +66,18 @@ namespace mugato
     {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         getMugato().draw();
     }
 
     void Application::touch(const glm::vec2& p)
     {
         getMugato().touch(p);
+    }
+
+    void Application::touchEnd(const glm::vec2& p)
+    {
+        getMugato().touchEnd(p);
     }
 
 }

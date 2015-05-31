@@ -64,23 +64,74 @@ namespace mugato
         }
     }
 
-    void Entity::touch(const glm::vec2& p)
+    Entity::TouchPhase Entity::touchChild(const glm::vec2& p,
+        TouchPhase phase, const Children::Element& elm)
     {
+        auto child(elm.getContent());
+        auto itr = std::find_if(_touchedChildren.begin(),
+            _touchedChildren.end(), [&child](std::weak_ptr<Entity>& c){
+            return c.lock() == child;
+        });
+        if(phase == TouchPhase::End)
+        {
+            if(itr != _touchedChildren.end())
+            {
+                _touchedChildren.erase(itr);
+            }
+            return phase;
+        }
+        auto contained = elm.getArea().contains(p);
+        if(itr == _touchedChildren.end())
+        {
+            if(contained)
+            {
+                _touchedChildren.push_back(child);
+                return TouchPhase::Begin;
+            }
+            else
+            {
+                return TouchPhase::None;
+            }
+        }
+        else
+        {
+            if(contained)
+            {
+                return TouchPhase::Move;
+            }
+            else
+            {
+                _touchedChildren.erase(itr);
+                return TouchPhase::End;
+            }
+        }
+    }
+
+    bool Entity::touch(const glm::vec2& p, TouchPhase phase)
+    {
+        auto ep = _transform.getParentToLocalPoint(p);
         for(auto& comp : _components)
         {
-            comp->onEntityTouched(*this, p);
+            if(comp->onEntityTouched(*this, ep, phase))
+            {
+                return true;
+            }
         }
         Children::Elements elements;
         _children.find(elements);
         for(auto& elm : elements)
         {
-            if(elm.getArea().contains(p))
+            auto cphase = touchChild(ep, phase, elm);
+            if(cphase != TouchPhase::None)
             {
-                auto child = elm.getContent();
-                child->touch(child->getTransform()
-                    .getParentToLocalPoint(p));
+                if(elm.getContent()->touch(ep, cphase))
+                {
+                    return true;
+                }
             }
         }
+
+        return false;
     }
 
     void Entity::update(double dt)

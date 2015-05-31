@@ -12,11 +12,15 @@ namespace mugato
     {
     private:
         Label _label;
-        std::string _font;
+        static std::string _defaultName;
+        std::string _name;
         std::weak_ptr<Entity> _entity;
         glm::mat4 _transform;
     public:
-        LabelComponent(const std::string& text, const std::string& font="");
+        LabelComponent(const std::string& text);
+        LabelComponent(const std::string& text, const std::string& name);
+
+        static void setDefaultName(const std::string& name);
 
         Label& getLabel();
         const Label& getLabel() const;

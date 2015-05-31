@@ -35,22 +35,19 @@ namespace mugato
     {
     }
 
-    void EntityStack::onEntityTouched(Entity& entity, const glm::vec2& p)
+    bool EntityStack::onEntityTouched(Entity& entity,
+        const glm::vec2& p, TouchPhase phase)
     {
-        touch(p);
+        return touch(p, phase);
     }
 
-    void EntityStack::touch(const glm::vec2& p)
+    bool EntityStack::touch(const glm::vec2& p, TouchPhase phase)
     {
         if(!_stack.empty())
         {
-            auto ep = p;
-            if(auto ptr = _entity.lock())
-            {
-                ep = ptr->getTransform().getParentToLocalPoint(ep);
-            }
-            _stack.back()->touch(ep);
+            return _stack.back()->touch(p, phase);
         }
+        return false;
     }
 
     void EntityStack::update(double dt)

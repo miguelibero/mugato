@@ -9,12 +9,14 @@ namespace mugato
     class TouchComponent : public Component
     {
     public:
-        typedef std::function<void(Entity& entity, const glm::vec2& p)> Callback;
+        typedef std::function<bool(Entity& entity, const glm::vec2& p,
+            TouchPhase phase)> Callback;
     private:
         Callback _callback;
     public:
         TouchComponent(const Callback& cb);
-        void onEntityTouched(Entity& entity, const glm::vec2& p) override;
+        bool onEntityTouched(Entity& entity, const glm::vec2& p,
+            TouchPhase phase) override;
     };
 }
 

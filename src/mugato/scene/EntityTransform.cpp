@@ -44,6 +44,11 @@ namespace mugato
         return _area;
     }
 
+    const gorn::Rect& EntityTransform::getLocalArea() const
+    {
+        return _localArea;
+    }
+
     const EntityTransform::Matrix& EntityTransform::getMatrix() const
     {
         return _matrix;
@@ -170,7 +175,8 @@ namespace mugato
                 * glm::translate(glm::mat4(), -_pivot)
                 ;
             _inverseMatrix = glm::inverse(_matrix);
-            _area = gorn::Rect(glm::vec3(0.0f), _size)*_matrix;
+            _localArea = gorn::Rect(glm::vec3(0.0f), _size);
+            _area = _localArea*_matrix;
             _dirty = false;
             return true;
         }

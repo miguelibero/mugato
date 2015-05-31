@@ -35,7 +35,7 @@ namespace mugato
         _gorn.getMaterials().getDefinitions().set(
             [](const std::string& name){
                 return gorn::MaterialDefinition()
-                    .withTexture(name)
+                    .withTexture(gorn::UniformKind::Texture0, name)
                     .withProgram(ProgramKind::Sprite);
             });
 
@@ -123,7 +123,6 @@ void main()
 
         _root = std::make_shared<Entity>();
         _root->setContext(*this);
-        _root->getTransform().setSize(glm::vec2(2.0f));
         _root->getTransform().setPosition(glm::vec2(-1.0f));
         _scenes = &_root->addComponent<EntityStack>();
         setScreenSize(glm::vec2(2.0f));
@@ -131,8 +130,15 @@ void main()
 
     void Context::setScreenSize(const glm::vec2& size)
     {
-        _root->getTransform().setScale(glm::vec2(2.0f/size.x, 2.0f/size.y));
+        _root->getTransform().setScale(
+            glm::vec2(2.0f/size.x, 2.0f/size.y));
+        _root->getTransform().setSize(size);
         _scenes->getTransform().setSize(size);
+
+        // set model for rendering without entities
+        _root->getTransform().update();
+        getGorn().getQueue().setModelTransform(
+            _root->getTransform().getMatrix());
     }
 
     const gorn::Context& Context::getGorn() const
@@ -185,6 +191,16 @@ void main()
         return *_scenes;
     }
 
+    const Entity& Context::getRoot() const
+    {
+        return *_root;
+    }
+
+    Entity& Context::getRoot()
+    {
+        return *_root;
+    }
+
     void Context::setFixedUpdatesPerSecond(double fps)
     {
         _fixedUpdatesPerSecond = fps;
@@ -213,6 +229,10 @@ void main()
 
     void Context::draw()
     {
+        // reset model transform
+        _gorn.getQueue().addCommand()
+            .withTransform(glm::mat4(),
+                gorn::RenderCommandTransformMode::SetGlobal);
         _root->render(_gorn.getQueue());
         _gorn.getQueue().draw();
     }
@@ -220,6 +240,11 @@ void main()
     void Context::touch(const glm::vec2& p)
     {
         _root->touch(p);
+    }
+
+    void Context::touchEnd(const glm::vec2& p)
+    {
+        _root->touch(p, EntityTouchPhase::End);
     }
 
 }

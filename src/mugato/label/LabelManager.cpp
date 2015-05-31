@@ -35,7 +35,8 @@ namespace mugato {
         return _definitions;
     }
 
-    std::shared_ptr<LabelManager::Font> LabelManager::loadFont(const std::string& name)
+    std::shared_ptr<LabelManager::Font>
+        LabelManager::loadFont(const std::string& name)
     {
         auto itr = _fonts.find(name);
         if(itr == _fonts.end())
@@ -45,6 +46,13 @@ namespace mugato {
             itr = _fonts.insert(itr, {name, font});
         }
         return itr->second;
+    }
+
+    std::shared_ptr<LabelManager::Font>
+        LabelManager::loadLabelFont(const std::string& name)
+    {
+        auto& def = getDefinitions().get(name);
+        return loadFont(def.getAtlas());
     }
 
     Label LabelManager::load(const std::string& name)

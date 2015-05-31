@@ -22,6 +22,7 @@ namespace mugato
         Vector _pivot;
         Vector _size;
         gorn::Rect _area;
+        gorn::Rect _localArea;
 
     public:
         EntityTransform();
@@ -33,6 +34,7 @@ namespace mugato
         const Vector& getSize() const;
 
         const gorn::Rect& getArea() const;
+        const gorn::Rect& getLocalArea() const;
         const Matrix& getMatrix() const;
         const Matrix& getInverseMatrix() const;
 
