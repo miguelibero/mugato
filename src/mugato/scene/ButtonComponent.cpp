@@ -26,9 +26,26 @@ namespace mugato
         _labelName = name;
     }
 
-    void ButtonComponent::setCallback(const Callback& cb)
+    void ButtonComponent::setTouchCallback(const TouchCallback& cb)
     {
-        _callback = cb;
+        _touchCallback = cb;
+    }
+
+    void ButtonComponent::setClickCallback(const ClickCallback& cb)
+    {
+        _clickCallback = cb;
+    }
+
+    void ButtonComponent::setLabelMaterial(
+        const std::shared_ptr<gorn::Material>& material, State state)
+    {
+        _labelMaterials[state] = material;
+    }
+
+    void ButtonComponent::setBackgroundMaterial(
+        const std::shared_ptr<gorn::Material>& material, State state)
+    {
+        _bgMaterials[state] = material;
     }
 
     Sprite& ButtonComponent::getBackground()
@@ -57,12 +74,24 @@ namespace mugato
         {
             _bg = entity.getContext().getSprites().load(_bgName);
             _bg.setResizeMode(SpriteResizeMode::Exact);
+            auto itr = _bgMaterials.find(State::Normal);
+            if(itr == _bgMaterials.end())
+            {
+                _bgMaterials.insert(itr,
+                    {State::Normal, _bg.getMaterial()});
+            }
         }
 
         auto text = _label.getText();
         _label = entity.getContext().getLabels().load(_labelName);
         _label.setText(text);
         _label.setAlignment(Alignment::Center);
+        auto itr = _labelMaterials.find(State::Normal);
+        if(itr == _labelMaterials.end())
+        {
+            _labelMaterials.insert(itr,
+                {State::Normal, _label.getMaterial()});
+        }
 
         onEntityTransformChanged(entity);
     }
@@ -74,14 +103,45 @@ namespace mugato
         _label.setSize(size);
     }
 
+    void ButtonComponent::setState(State state)
+    {
+        {
+            auto itr = _bgMaterials.find(state);
+            if(itr != _bgMaterials.end())
+            {
+                _bg.setMaterial(itr->second);
+            }
+        }
+        {
+            auto itr = _labelMaterials.find(state);
+            if(itr != _labelMaterials.end())
+            {
+                _label.setMaterial(itr->second);
+            }
+        }
+    }
+
     bool ButtonComponent::onEntityTouched(Entity& entity, const glm::vec2& p,
         TouchPhase phase)
     {
-        if(_callback)
+        bool block = true;
+        if(phase == TouchPhase::Begin || phase == TouchPhase::Move)
         {
-            return _callback(phase, p);
+            setState(State::Pressed);
         }
-        return false;
+        else
+        {
+            setState(State::Normal);
+        }
+        if(_touchCallback)
+        {
+            block = _touchCallback(phase, p);
+        }
+        if(phase == TouchPhase::End && _clickCallback)
+        {
+            _clickCallback();
+        }
+        return block;
     }
 
     void ButtonComponent::update(double dt)

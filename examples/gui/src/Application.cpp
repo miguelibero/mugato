@@ -88,13 +88,16 @@ void GuiApplication::load()
 
 void GuiApplication::createButton(mugato::Entity& p, mugato::Alignment a)
 {
+    auto& materials = getGorn().getMaterials();
     auto buttonEntity = p.addChild();
     auto& button = buttonEntity->addComponent<mugato::ButtonComponent>();
 
     button.setBackground("button");
     button.setLabel("font.fnt");
     button.setText("This is\na button");
-    button.setCallback(
+    button.setBackgroundMaterial(
+        materials.load("button_pressed"), mugato::ButtonState::Pressed);
+    button.setTouchCallback(
         std::bind(&GuiApplication::onButtonTouched,
             this, std::ref(button.getBackground()),
             std::placeholders::_1,
@@ -108,13 +111,6 @@ void GuiApplication::createButton(mugato::Entity& p, mugato::Alignment a)
 bool GuiApplication::onButtonTouched(mugato::Sprite& sprite,
     mugato::EntityTouchPhase phase, const glm::vec2& p)
 {
-    std::string mat = "button_pressed";
-    if(phase == mugato::EntityTouchPhase::End
-        || phase == mugato::EntityTouchPhase::Cancel)
-    {
-        mat = "button";
-    }
-
     std::string phaseStr;
     switch(phase)
     {
@@ -137,8 +133,6 @@ bool GuiApplication::onButtonTouched(mugato::Sprite& sprite,
 
     std::cout << "touch " << phaseStr << " "<< &sprite
         << " " << p.x << "," << p.y << std::endl;
-
-    sprite.setMaterial(getGorn().getMaterials().load(mat));
 
     return true;
 }

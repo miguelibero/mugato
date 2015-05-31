@@ -45,6 +45,9 @@ namespace mugato {
         Label(const std::shared_ptr<Font>& font);
         Label(const std::shared_ptr<Font>& font, const std::string& text);
 
+        std::shared_ptr<gorn::Material> getMaterial() const;
+        void setMaterial(const std::shared_ptr<gorn::Material>& material);
+
         const std::shared_ptr<Font>& getFont() const;
         void setFont(const std::shared_ptr<Font>& font);
 

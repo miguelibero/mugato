@@ -50,6 +50,7 @@ namespace mugato {
 
         void setMaterial(const std::shared_ptr<gorn::Material>& material);
         const std::shared_ptr<gorn::Material>& getMaterial() const;
+        std::shared_ptr<gorn::Material>& getMaterial();
 
         void setRegion(const Region& region);
         const Region& getRegion() const;

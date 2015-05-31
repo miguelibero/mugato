@@ -25,6 +25,9 @@ namespace mugato {
         const Character& getCharacter(const std::string& name) const;
         Character& getCharacter(const std::string& name);
 
+        std::shared_ptr<gorn::Material> getMaterial() const;
+        void setMaterial(const std::shared_ptr<gorn::Material>& material);
+
         void setLineHeight(float val);
         float getLineHeight() const;
     };

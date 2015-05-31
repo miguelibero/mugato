@@ -50,6 +50,11 @@ namespace mugato {
         return _material;
     }
 
+    std::shared_ptr<gorn::Material>& SpriteFrame::getMaterial()
+    {
+        return _material;
+    }
+
     void SpriteFrame::setRegion(const Region& region)
     {
         if(_region != region)
