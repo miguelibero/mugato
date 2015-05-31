@@ -20,6 +20,7 @@ namespace mugato
 
         virtual ~Component(){};
         virtual void onAddedToEntity(Entity& entity){};
+        virtual void onParentSizeChanged(Entity& entity){};
         virtual void onEntityTransformChanged(Entity& entity){};
         virtual bool onEntityTouched(Entity& entity,
             const glm::vec2& p, TouchPhase phase) { return false; };

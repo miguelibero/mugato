@@ -14,7 +14,6 @@ namespace mugato
         Label _label;
         static std::string _defaultName;
         std::string _name;
-        std::weak_ptr<Entity> _entity;
         glm::mat4 _transform;
     public:
         LabelComponent(const std::string& text);

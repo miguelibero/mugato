@@ -58,7 +58,7 @@ namespace mugato
         auto text = _label.getText();
         _label = entity.getContext().getLabels().load(_labelName);
         _label.setText(text);
-        _label.setAlignment(LabelAlignment::Center);
+        _label.setAlignment(Alignment::Center);
         onEntityTransformChanged(entity);
     }
 
