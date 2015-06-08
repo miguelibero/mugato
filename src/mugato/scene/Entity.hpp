@@ -29,21 +29,22 @@ namespace mugato
         typedef std::weak_ptr<Entity> Parent;
         typedef std::vector<std::unique_ptr<Component>> Components;
     private:
+        Context* _ctx;      
         Components _componentsToAdd;
         Components _components;
         Children _children;
         Parent _parent;
         Transform _transform;
-        bool _transformDirty;
-        Context* _ctx;
         TouchedChildren _touchedChildren;
         
         void updateTransform();
+        void addPendingComponents();
         TouchPhase touchChild(const glm::vec2& p, TouchPhase phase,
             const Children::Element& elm);
     public:
 
         Entity();
+        ~Entity();
 
         std::shared_ptr<Entity> getSharedPtr();
 

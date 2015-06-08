@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <mugato/scene/EntityEnums.hpp>
+#include <functional>
 
 namespace gorn
 {
@@ -20,14 +21,15 @@ namespace mugato
 
         virtual ~Component(){};
         virtual void onAddedToEntity(Entity& entity){};
-        virtual void onParentSizeChanged(Entity& entity){};
+        virtual void onParentEntitySizeChanged(Entity& entity){};
         virtual void onEntityTransformChanged(Entity& entity){};
         virtual bool onEntityTouched(Entity& entity,
             const glm::vec2& p, TouchPhase phase) { return false; };
-        virtual bool hasFinished() const { return false; };        
+        virtual void onEntityComponentsLoaded(Entity& entity){};      
         virtual void update(double dt){};
         virtual void fixedUpdate(double dt){};
         virtual void render(gorn::RenderQueue& queue){};
+
     };
 }
 

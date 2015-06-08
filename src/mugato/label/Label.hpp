@@ -20,6 +20,8 @@ namespace mugato {
     {
     public:
         static const char* kLineBreak;
+        static const char* kSpace;
+
         typedef LabelFont Font;
         typedef LabelResizeMode ResizeMode;
     private:
@@ -40,6 +42,7 @@ namespace mugato {
         void updateChars();
         void updateAlignmentTransform();
         glm::vec3 getLineBreakTranslation(float contentWidth, float lineWidth);
+        void renderLineBreak(gorn::RenderQueue& queue, float w);
     public:
         Label(const std::string& text="");
         Label(const std::shared_ptr<Font>& font);

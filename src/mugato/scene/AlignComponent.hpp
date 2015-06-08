@@ -23,7 +23,7 @@ namespace mugato
         const Constraints& constraints);
 
         void onAddedToEntity(Entity& entity) override;
-        void onParentSizeChanged(Entity& entity) override;
+        void onParentEntitySizeChanged(Entity& entity) override;
         void onEntityTransformChanged(Entity& entity) override;
         void update(double dt) override;
     };
