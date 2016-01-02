@@ -125,5 +125,13 @@ namespace mugato {
         return sprite;
     }
 
-}
+    Sprite SpriteManager::tryLoad(const std::string& name)
+    {
+        if(!getDefinitions().has(name))
+        {
+            return Sprite();
+        }
+        return load(name);
+    }
 
+}

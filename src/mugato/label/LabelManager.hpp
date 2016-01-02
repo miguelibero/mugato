@@ -16,11 +16,11 @@ namespace gorn {
 }
 
 namespace mugato {
-    
+
     class Label;
     class FontAtlas;
 
-    class LabelManager 
+    class LabelManager
     {
     public:
         typedef FontAtlas Atlas;
@@ -47,6 +47,7 @@ namespace mugato {
         std::shared_ptr<Font> loadFont(const std::string& name);
         std::shared_ptr<Font> loadLabelFont(const std::string& name);
         Label load(const std::string& name);
+        Label tryLoad(const std::string& name);
     };
 
 }
