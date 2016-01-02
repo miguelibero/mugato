@@ -182,5 +182,31 @@ namespace mugato
         }
         return false;
     }
+
+    EntityTransform& EntityTransform::operator=(const EntityTransform& other)
+    {
+        _position = other._position;
+        _rotation = other._rotation;
+        _scale = other._scale;
+        _pivot = other._pivot;
+        _size = other._size;
+        _dirty = true;
+        return *this;
+    }
+
+    bool EntityTransform::operator==(const EntityTransform& other) const
+    {
+        return _position == other._position
+         && _rotation == other._rotation
+         && _scale == other._scale
+         && _pivot == other._pivot
+         && _size == other._size;
+    }
+
+    bool EntityTransform::operator!=(const EntityTransform& other) const
+    {
+        return !(*this==other);
+    }
+
 }
 

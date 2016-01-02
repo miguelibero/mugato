@@ -171,4 +171,9 @@ namespace mugato {
         }
     }
 
+    bool SpriteAtlasRegion::empty() const
+    {
+        return _size.x == 0 || _size.y == 0;
+    }
+
 }

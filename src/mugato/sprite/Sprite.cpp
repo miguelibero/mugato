@@ -41,7 +41,20 @@ namespace mugato {
 
     void Sprite::setMaterial(const std::shared_ptr<gorn::Material>& material)
     {
-        _anims[kDefaultAnimation] = Animation(material);
+        auto itr = _anims.find(_currentAnim);
+        if(itr == _anims.end())
+        {
+            _anims.insert(itr, {_currentAnim, Animation(material)});
+        }
+        else
+        {
+            itr->second.setMaterial(material);
+        }
+    }
+
+    std::shared_ptr<gorn::Material> Sprite::getMaterial() const
+    {
+        return getCurrentAnimation().getMaterial();
     }
 
     const glm::vec2& Sprite::getSize() const
@@ -92,15 +105,25 @@ namespace mugato {
         return _stretchBorders;
     }
 
-    void Sprite::setAnimation(const std::string& name, const Animation& anim)
+    Sprite::Animation& Sprite::setAnimation(const std::string& name, const Animation& anim)
     {
         _anims[name] = anim;
+        return _anims[name];
     }
 
     Sprite::Animation& Sprite::setAnimation(const std::string& name)
     {
-        _anims[name] = Animation();
-        return _anims[name];
+        return setAnimation(name, Animation());
+    }
+
+    Sprite::Animation& Sprite::getCurrentAnimation()
+    {
+        return _anims[_currentAnim];
+    }
+
+    const Sprite::Animation& Sprite::getCurrentAnimation() const
+    {
+        return _anims.at(_currentAnim);
     }
 
     void Sprite::play(const std::string& name)

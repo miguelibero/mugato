@@ -2,13 +2,13 @@
 #include <mugato/scene/Entity.hpp>
 #include <mugato/base/Context.hpp>
 #include <gorn/base/Context.hpp>
-#include <sstream>
 
 namespace mugato {
 
     RenderInfoComponent::RenderInfoComponent(const std::string& font):
     _font(font)
     {
+        _label.setAlignment(Alignment::BottomLeft);
     }
 
     RenderInfoComponent::Transform& RenderInfoComponent::getTransform()
@@ -24,12 +24,18 @@ namespace mugato {
 
     void RenderInfoComponent::onAssignedToContext(Context& ctx)
     {
-        _label = ctx.getLabels().load(_font);
+        _label.setFont(ctx.getLabels().loadLabelFont(_font));
     }
 
     void RenderInfoComponent::onAddedToEntity(Entity& entity)
     {
         _entity = entity.getSharedPtr();
+        onEntityTransformChanged(entity);
+    }
+
+    void RenderInfoComponent::onEntityTransformChanged(Entity& entity)
+    {
+        _label.setSize(glm::vec2(entity.getTransform().getSize()));
     }
 
     void RenderInfoComponent::update(double dt)
@@ -37,13 +43,7 @@ namespace mugato {
         if(auto ptr = _entity.lock())
         {
             auto& info = ptr->getContext().getGorn().getQueue().getInfo();
-            std::stringstream ss;
-            ss << "fps: " << info.framesPerSecond << std::endl;
-            ss << "draws: " << info.drawCalls << "/";
-            ss << info.drawCallsBatched << "/";
-            ss << info.drawCallsCulled << std::endl;
-            ss << "verts: " << info.vertexCount;
-            _label.setText(ss.str());
+            _label.setText(info.str());
         }
         _label.update(dt);
         _transform.update();

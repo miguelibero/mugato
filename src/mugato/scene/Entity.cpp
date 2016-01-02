@@ -11,6 +11,11 @@ namespace mugato
     {
     }
 
+    Entity::~Entity()
+    {
+        (void)0;
+    }
+
     void Entity::setContext(Context& ctx)
     {
         _ctx = &ctx;
@@ -111,19 +116,13 @@ namespace mugato
     {
         auto ep = _transform.getParentToLocalPoint(p);
         bool handled = false;
-        for(auto& comp : _components)
-        {
-            if(comp->onEntityTouched(*this, ep, phase))
-            {
-                handled = true;
-            }
-        }
         if(!handled)
         {
             Children::Elements elements;
             _children.find(elements);
-            for(auto& elm : elements)
+            for(auto itr = elements.rbegin(); itr != elements.rend(); ++itr)
             {
+                auto& elm = *itr;
                 auto cphase = touchChild(ep, phase, elm);
                 if(cphase != TouchPhase::None)
                 {
@@ -135,23 +134,52 @@ namespace mugato
                 }
             }
         }
+        if(!handled)
+        {
+            for(auto& comp : _components)
+            {
+                if(comp->onEntityTouched(*this, ep, phase))
+                {
+                    handled = true;
+                }
+            }
+        }
         return handled;
+    }
+
+    void Entity::addPendingComponents()
+    {
+        Components componentsToAdd;
+        componentsToAdd.reserve(_componentsToAdd.size());
+        std::move(
+            _componentsToAdd.begin(),
+            _componentsToAdd.end(),
+            std::back_inserter(componentsToAdd));
+        _componentsToAdd.clear();
+        for(auto& comp : componentsToAdd)
+        {
+            comp->onAddedToEntity(*this);
+        }
+        bool wereEmpty = componentsToAdd.empty();
+        _components.reserve(
+            _components.size() + componentsToAdd.size());
+        std::move(
+            componentsToAdd.begin(),
+            componentsToAdd.end(),
+            std::back_inserter(_components));
+        if(!wereEmpty && _componentsToAdd.empty())
+        {
+            for(auto& comp : _components)
+            {
+                comp->onEntityComponentsLoaded(*this);
+            }
+        }
     }
 
     void Entity::update(double dt)
     {
         updateTransform();
-        for(auto& comp : _componentsToAdd)
-        {
-            comp->onAddedToEntity(*this);
-        }
-        _components.reserve(
-            _components.size() + _componentsToAdd.size());
-        std::move(
-            _componentsToAdd.begin(),
-            _componentsToAdd.end(),
-            std::back_inserter(_components));
-        _componentsToAdd.clear();
+        addPendingComponents();
         for(auto& comp : _components)
         {
             comp->update(dt);
@@ -178,10 +206,6 @@ namespace mugato
         }
 
         _children.adjust(false);
-        _components.erase(std::remove_if(_components.begin(),
-            _components.end(), [](const std::unique_ptr<Component>& c){
-                return c->hasFinished();
-            }), _components.end());
     }
 
     void Entity::render(gorn::RenderQueue& queue)

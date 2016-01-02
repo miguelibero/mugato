@@ -40,6 +40,11 @@ namespace mugato
         return _position >= _duration;
     }
 
+    void ActionComponent::clear()
+    {
+        _actions.clear();
+    }
+
     void ActionComponent::add(float duration,
         std::unique_ptr<Action> action)
     {
@@ -49,11 +54,6 @@ namespace mugato
     void ActionComponent::onAddedToEntity(Entity& entity)
     {
         _entity = entity.getSharedPtr();
-    }
-
-    bool ActionComponent::hasFinished() const
-    {
-        return _actions.empty();
     }
 
     void ActionComponent::update(double dt)

@@ -8,14 +8,19 @@
 namespace mugato
 {
     SpriteComponent::SpriteComponent(const std::string& name):
-    _name(name)
+    _name(name), _resizeEntity(false)
     {
     }
 
     SpriteComponent::SpriteComponent(const std::string& name, ResizeMode mode):
-    _name(name)
+    _name(name), _resizeEntity(false)
     {
         _sprite.setResizeMode(mode);
+    }
+
+    void SpriteComponent::setResizeEntity(bool enabled)
+    {
+        _resizeEntity = enabled;
     }
 
     Sprite& SpriteComponent::getSprite()
@@ -57,6 +62,10 @@ namespace mugato
     {
         auto& size = entity.getTransform().getSize();
         _sprite.setSize(glm::vec2(size));
+        if(_resizeEntity)
+        {
+            entity.getTransform().setSize(_sprite.getContentSize());
+        }
     }
 
     void SpriteComponent::update(double dt)

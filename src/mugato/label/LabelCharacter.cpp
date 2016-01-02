@@ -37,6 +37,21 @@ namespace mugato {
         return _region;
     }
 
+    const std::shared_ptr<gorn::Material>& LabelCharacter::getMaterial() const
+    {
+        return _frame.getMaterial();
+    }
+
+    std::shared_ptr<gorn::Material>& LabelCharacter::getMaterial()
+    {
+        return _frame.getMaterial();
+    }
+
+    void LabelCharacter::setMaterial(const std::shared_ptr<gorn::Material>& material)
+    {
+        _frame.setMaterial(material);
+    }
+
     void LabelCharacter::update()
     {
         if(_dirty)

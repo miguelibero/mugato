@@ -17,10 +17,12 @@ namespace mugato
         std::string _anim;
         ResizeMode _resizeMode;
         Sprite _sprite;
+        bool _resizeEntity;
     public:
         SpriteComponent(const std::string& name);
         SpriteComponent(const std::string& name, ResizeMode mode);
 
+        void setResizeEntity(bool enabled);
         void setAnimation(const std::string& name);
         Sprite& getSprite();
         const Sprite& getSprite() const;

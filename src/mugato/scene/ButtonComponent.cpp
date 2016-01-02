@@ -27,9 +27,26 @@ namespace mugato
         _labelName = name;
     }
 
-    void ButtonComponent::setCallback(const Callback& cb)
+    void ButtonComponent::setTouchCallback(const TouchCallback& cb)
     {
-        _callback = cb;
+        _touchCallback = cb;
+    }
+
+    void ButtonComponent::setClickCallback(const ClickCallback& cb)
+    {
+        _clickCallback = cb;
+    }
+
+    void ButtonComponent::setLabelMaterial(
+        const std::shared_ptr<gorn::Material>& material, State state)
+    {
+        _labelMaterials[state] = material;
+    }
+
+    void ButtonComponent::setBackgroundMaterial(
+        const std::shared_ptr<gorn::Material>& material, State state)
+    {
+        _bgMaterials[state] = material;
     }
 
     Sprite& ButtonComponent::getBackground()
@@ -52,13 +69,8 @@ namespace mugato
         return _label;
     }
 
-    void ButtonComponent::onAssignedToContext(Context& ctx)
+    void ButtonComponent::loadBackground(Context& ctx)
     {
-    }
-
-    void ButtonComponent::onAddedToEntity(Entity& entity)
-    {
-        auto& ctx = entity.getContext();
         auto resize = _bg.getResizeMode();
         if(!_bgName.empty())
         {
@@ -69,6 +81,15 @@ namespace mugato
             _bg = Sprite();
         }
         _bg.setResizeMode(resize);
+        auto itr = _bgMaterials.find(State::Normal);
+        if(itr == _bgMaterials.end())
+        {
+            _bgMaterials.insert(itr,
+                {State::Normal, _bg.getMaterial()});
+        }
+    }
+    void ButtonComponent::loadLabel(Context& ctx)
+    {
         auto text = _label.getText();
         auto align = _label.getAlignment();
         if(!_labelName.empty())
@@ -81,7 +102,19 @@ namespace mugato
         }
         _label.setText(text);
         _label.setAlignment(align);
+        auto itr = _labelMaterials.find(State::Normal);
+        if(itr == _labelMaterials.end())
+        {
+            _labelMaterials.insert(itr,
+                {State::Normal, _label.getMaterial()});
+        }
+    }
 
+    void ButtonComponent::onAddedToEntity(Entity& entity)
+    {
+        auto& ctx = entity.getContext();
+        loadBackground(ctx);
+        loadLabel(ctx);
         onEntityTransformChanged(entity);
     }
 
@@ -92,14 +125,45 @@ namespace mugato
         _label.setSize(size);
     }
 
+    void ButtonComponent::setState(State state)
+    {
+        {
+            auto itr = _bgMaterials.find(state);
+            if(itr != _bgMaterials.end())
+            {
+                _bg.setMaterial(itr->second);
+            }
+        }
+        {
+            auto itr = _labelMaterials.find(state);
+            if(itr != _labelMaterials.end())
+            {
+                _label.setMaterial(itr->second);
+            }
+        }
+    }
+
     bool ButtonComponent::onEntityTouched(Entity& entity, const glm::vec2& p,
         TouchPhase phase)
     {
-        if(_callback)
+        bool block = true;
+        if(phase == TouchPhase::Begin || phase == TouchPhase::Move)
         {
-            return _callback(entity, p, phase);
+            setState(State::Pressed);
         }
-        return false;
+        else
+        {
+            setState(State::Normal);
+        }
+        if(_touchCallback)
+        {
+            block = _touchCallback(phase, p);
+        }
+        if(phase == TouchPhase::End && _clickCallback)
+        {
+            _clickCallback();
+        }
+        return block;
     }
 
     void ButtonComponent::update(double dt)

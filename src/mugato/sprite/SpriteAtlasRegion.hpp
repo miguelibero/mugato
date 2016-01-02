@@ -71,6 +71,8 @@ namespace mugato {
         void setFlipY(bool enabled);
         bool getRotate() const;
         void setRotate(bool enabled);
+
+        bool empty() const;
     };
 
 }

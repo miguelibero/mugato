@@ -29,6 +29,7 @@ namespace mugato
 
         void onAssignedToContext(Context& ctx) override;
         void onAddedToEntity(Entity& entity) override;
+        void onEntityTransformChanged(Entity& entity) override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };

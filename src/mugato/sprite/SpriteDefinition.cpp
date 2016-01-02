@@ -32,6 +32,12 @@ namespace mugato {
         return *this;
     }
 
+    SpriteDefinition& SpriteDefinition::withResizeMode(ResizeMode mode)
+    {
+        _resizeMode = mode;
+        return *this;
+    }
+
     SpriteDefinition::Animation& SpriteDefinition::setAnimation(
         const std::string& name)
     {
@@ -72,6 +78,11 @@ namespace mugato {
     const glm::vec4& SpriteDefinition::getStretchBorders() const
     {
         return _stretchBorders;
+    }
+
+    SpriteDefinition::ResizeMode SpriteDefinition::getResizeMode() const
+    {
+        return _resizeMode;
     }
 
 }

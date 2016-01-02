@@ -7,6 +7,7 @@
 namespace mugato {
 
     const char* Label::kLineBreak = "\n";
+    const char* Label::kSpace = " ";
 
     Label::Label(const std::string& text):
     _text(text)
@@ -15,7 +16,7 @@ namespace mugato {
     }
 
     Label::Label(const std::shared_ptr<Font>& font):
-    _font(font) 
+    _font(font)
     {
         init();
     }
@@ -30,7 +31,7 @@ namespace mugato {
     {
         _dirtyChars = true;
         _dirtyAlignment = true;
-        _alignment = Alignment::BottomLeft;
+        _alignment = Alignment::Center;
         _resizeMode = ResizeMode::Original;
     }
 
@@ -43,6 +44,24 @@ namespace mugato {
     {
         _font = font;
     }
+
+    std::shared_ptr<gorn::Material> Label::getMaterial() const
+    {
+        if(_font)
+        {
+            return _font->getMaterial();
+        }
+        return nullptr;
+    }
+
+    void Label::setMaterial(const std::shared_ptr<gorn::Material>& material)
+    {
+        if(_font)
+        {
+            _font->setMaterial(material);
+        }
+    }
+
 
     void Label::setText(const std::string& text)
     {
@@ -111,7 +130,7 @@ namespace mugato {
             _dirtyAlignment = true;
         }
     }
-    
+
     void Label::updateChars()
     {
         if(!_dirtyChars)
@@ -119,33 +138,70 @@ namespace mugato {
             return;
         }
         _characters.clear();
+        if(_font == nullptr)
+        {
+            return;
+        }
 
-        std::string name;
+        std::string chr;
+        float w = 0.0f;
+        float ww = 0.0f;
+        std::vector<std::string> word;
+        _lineWidths.clear();
+        auto last = _text.end()-1;
         for(auto itr=_text.begin(); itr!=_text.end(); ++itr)
         {
-            name += *itr;
-            if(name == kLineBreak || _font->hasCharacter(name))
+            chr += *itr;
+            bool wordend = false;
+            bool lineend = false;
+            bool chrend = false;
+            if(chr == kLineBreak)
             {
-                _characters.push_back(name);
-                name.clear();
+                wordend = true;
+                lineend = true;
+                chrend = true;
             }
-        }
-        float w = 0.0f;
-        _lineWidths.clear();
-        for(auto& name : _characters)
-        {
-            if(name == kLineBreak)
+            else if(_font->hasCharacter(chr))
+            {
+                auto& fchr = _font->getCharacter(chr);
+                ww += fchr.getRegion().getAdvance();
+                word.push_back(chr);
+                if(_size.x > 0.0f && w + ww > _size.x)
+                {
+                    lineend = true;
+                }
+                chrend = true;
+            }
+            if(itr == last)
+            {
+                wordend = true;
+                lineend = true;
+                chrend = true;
+            }
+            if(chr == kSpace)
+            {
+                wordend = true;
+                chrend = true;
+            }
+            if(wordend)
+            {
+                _characters.insert(_characters.end(),
+                  word.begin(), word.end());
+                w += ww;
+                word.clear();
+                ww = 0.0f;
+            }
+            if(lineend)
             {
                 _lineWidths.push_back(w);
+                _characters.push_back(kLineBreak);
                 w = 0.0f;
             }
-            else if(_font->hasCharacter(name))
+            if(chrend)
             {
-                auto& chr = _font->getCharacter(name);
-                w += chr.getRegion().getAdvance();
+                chr.clear();
             }
         }
-        _lineWidths.push_back(w);
         _contentSize.x = *std::max_element(
             _lineWidths.begin(), _lineWidths.end());
         _contentSize.y = _font->getLineHeight()*_lineWidths.size();
@@ -168,6 +224,7 @@ namespace mugato {
     void Label::update(double dt)
     {
         updateChars();
+
         updateAlignmentTransform();
         for(auto& name : _characters)
         {
@@ -196,10 +253,30 @@ namespace mugato {
         {
             return glm::vec3(0.0f, 0.0f, 0.0f);
         }
-    } 
-    
+    }
+
+    void Label::renderLineBreak(gorn::RenderQueue& queue, float w)
+    {
+        queue.addCommand()
+          .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
+        queue.addCommand()
+          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransform(glm::translate(glm::mat4(),
+                glm::vec3(0.0f, -_font->getLineHeight(), 0.0f)));
+        queue.addCommand()
+          .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
+        queue.addCommand()
+          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransform(glm::translate(glm::mat4(),
+                getLineBreakTranslation(_contentSize.x, w)));
+    }
+
     void Label::render(gorn::RenderQueue& queue)
     {
+        if(_font == nullptr)
+        {
+            return;
+        }
         queue.addCommand().withTransformMode(
                 gorn::RenderCommand::TransformMode::PushCheckpoint);
         queue.addCommand()
@@ -216,21 +293,13 @@ namespace mugato {
         line++;
         for(auto& name : _characters)
         {
-            if(name == kLineBreak && line != _lineWidths.end())
+            if(name == kLineBreak)
             {
-                queue.addCommand()
-                  .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
-                queue.addCommand()
-                  .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
-                  .withTransform(glm::translate(glm::mat4(),
-                        glm::vec3(0.0f, -_font->getLineHeight(), 0.0f)));
-                queue.addCommand()
-                  .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
-                queue.addCommand()
-                  .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
-                  .withTransform(glm::translate(glm::mat4(),
-                        getLineBreakTranslation(_contentSize.x, *line)));
-                line++;
+                if(line != _lineWidths.end())
+                {
+                    renderLineBreak(queue, *line);
+                    line++;
+                }
             }
             else if(_font->hasCharacter(name))
             {

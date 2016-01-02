@@ -30,12 +30,12 @@ namespace mugato
 
     public:
         void add(float duration, std::unique_ptr<Action> action);
+        void clear();
 
         template<typename A, typename... Args>
         A& add(float duration, Args&&... args);
 
         void onAddedToEntity(Entity& entity) override;
-        bool hasFinished() const override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };

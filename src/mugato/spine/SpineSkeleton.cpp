@@ -85,6 +85,10 @@ namespace mugato {
     void SpineSkeleton::setAnimation(const std::string& name,
         int track, bool loop)
     {
+	    if (!_skeleton)
+        {
+		    throw Exception("Skeleton not found");
+	    }
         spAnimation* anim = spSkeletonData_findAnimation(
             _skeleton->data, name.c_str());
 	    if (!anim)
@@ -102,6 +106,10 @@ namespace mugato {
     void SpineSkeleton::addAnimation(const std::string& name,
         int track, bool loop, float delay)
     {
+	    if (!_skeleton)
+        {
+		    throw Exception("Skeleton not found");
+	    }
         spAnimation* anim = spSkeletonData_findAnimation(
             _skeleton->data, name.c_str());
 	    if (!anim)

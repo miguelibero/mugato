@@ -55,6 +55,10 @@ namespace mugato
 
         bool update();
 
+        EntityTransform& operator=(const EntityTransform& other);
+        bool operator==(const EntityTransform& other) const;
+        bool operator!=(const EntityTransform& other) const;
+
         Vector2 getLocalToParentPoint(const Vector2& val) const;
         Vector2 getParentToLocalPoint(const Vector2& val) const;
         Vector getLocalToParentPoint(const Vector& val) const;

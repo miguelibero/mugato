@@ -4,7 +4,6 @@
 #include <glm/gtc/constants.hpp>
 #include <functional>
 #include <random>
-#include <iostream>
 
 class SceneApplication : public mugato::Application
 {
