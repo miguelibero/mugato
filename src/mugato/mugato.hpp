@@ -54,7 +54,4 @@
 #include <mugato/spine/SpineSkeletonComponent.hpp>
 #include <mugato/spine/SpineSkeletonDefinition.hpp>
 
-
 #endif
-
-
