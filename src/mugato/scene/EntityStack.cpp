@@ -9,7 +9,7 @@ namespace mugato
     {
     }
 
-    void EntityStack::setContext(Context& ctx)
+    void EntityStack::onAssignedToContext(Context& ctx)
     {
         _ctx = &ctx;
         if(!_stack.empty())
@@ -30,7 +30,6 @@ namespace mugato
 
     void EntityStack::onAddedToEntity(Entity& entity)
     {
-        setContext(entity.getContext());
         _entity = entity.getSharedPtr();
         onEntityTransformChanged(entity);
     }
@@ -119,4 +118,3 @@ namespace mugato
         return push(entity);
     }
 }
-

@@ -22,10 +22,14 @@ namespace mugato {
         return _transform;
     }
 
+    void RenderInfoComponent::onAssignedToContext(Context& ctx)
+    {
+        _label = ctx.getLabels().load(_font);
+    }
+
     void RenderInfoComponent::onAddedToEntity(Entity& entity)
     {
         _entity = entity.getSharedPtr();
-        _label = entity.getContext().getLabels().load(_font);
     }
 
     void RenderInfoComponent::update(double dt)

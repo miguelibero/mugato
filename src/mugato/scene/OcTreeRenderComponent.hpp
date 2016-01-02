@@ -3,7 +3,7 @@
 
 #include <mugato/scene/Component.hpp>
 #include <mugato/sprite/Sprite.hpp>
-#include <gorn/render/RenderEnums.hpp>
+#include <gorn/gl/Enums.hpp>
 #include <gorn/gl/Material.hpp>
 #include <gorn/asset/Mesh.hpp>
 #include <string>

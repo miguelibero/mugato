@@ -9,6 +9,7 @@ namespace mugato
 {
     ButtonComponent::ButtonComponent()
     {
+        _bg.setResizeMode(SpriteResizeMode::Exact);
     }
 
     void ButtonComponent::setBackground(const std::string& name)
@@ -51,14 +52,36 @@ namespace mugato
         return _label;
     }
 
+    void ButtonComponent::onAssignedToContext(Context& ctx)
+    {
+    }
+
     void ButtonComponent::onAddedToEntity(Entity& entity)
     {
-        _bg = entity.getContext().getSprites().load(_bgName);
-        _bg.setResizeMode(SpriteResizeMode::Exact);
+        auto& ctx = entity.getContext();
+        auto resize = _bg.getResizeMode();
+        if(!_bgName.empty())
+        {
+            _bg = ctx.getSprites().load(_bgName);
+        }
+        else
+        {
+            _bg = Sprite();
+        }
+        _bg.setResizeMode(resize);
         auto text = _label.getText();
-        _label = entity.getContext().getLabels().load(_labelName);
+        auto align = _label.getAlignment();
+        if(!_labelName.empty())
+        {
+            _label = ctx.getLabels().load(_labelName);
+        }
+        else
+        {
+            _label = Label();
+        }
         _label.setText(text);
-        _label.setAlignment(Alignment::Center);
+        _label.setAlignment(align);
+
         onEntityTransformChanged(entity);
     }
 

@@ -8,8 +8,7 @@
 namespace mugato
 {
     SpineSkeletonComponent::SpineSkeletonComponent(const std::string& name):
-    _name(name),
-    _pivotPercent(0.0f)
+    _name(name)
     {
     }
 
@@ -23,29 +22,14 @@ namespace mugato
         return _skeleton;
     }
 
-    void SpineSkeletonComponent::setEntityPivotPercent(const glm::vec2& val)
+    void SpineSkeletonComponent::onAssignedToContext(Context& ctx)
     {
-        _pivotPercent = val;
-        if(auto ptr = _entity.lock())
-        {
-            ptr->getTransform().setPivot(_pivotPercent*_skeleton.getSize());
-        }
-    }
-
-    void SpineSkeletonComponent::setEntitySize()
-    {
-        if(auto ptr = _entity.lock())
-        {
-            ptr->getTransform().setSize(_skeleton.getSize());
-        }
+        _skeleton = ctx.getSkeletons().load(_name);
     }
 
     void SpineSkeletonComponent::onAddedToEntity(Entity& entity)
     {
-        _skeleton = entity.getContext().getSkeletons().load(_name);
         _entity = entity.getSharedPtr();
-        setEntityPivotPercent(_pivotPercent);
-        setEntitySize();
     }
 
     void SpineSkeletonComponent::update(double dt)

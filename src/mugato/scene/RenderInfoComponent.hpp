@@ -20,13 +20,14 @@ namespace mugato
         Label _label;
         std::string _font;
         Info _info;
-        
+
     public:
         RenderInfoComponent(const std::string& font="debug:");
 
         Transform& getTransform();
         const Transform& getTransform() const;
 
+        void onAssignedToContext(Context& ctx) override;
         void onAddedToEntity(Entity& entity) override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;

@@ -57,9 +57,8 @@ void SpineApplication::load()
         .withProgram(mugato::ProgramKind::Color));
 
     auto scene = getMugato().getScenes().push();
-    
-    auto& info = scene->addComponent<mugato::RenderInfoComponent>();
-    info.getTransform().setPosition(glm::vec3(0.0f, 60.f, 1.0f));
+
+    scene->addComponent<mugato::RenderInfoComponent>();
 
     {
         auto raptor = scene->addChild();

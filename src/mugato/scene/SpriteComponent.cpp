@@ -37,15 +37,19 @@ namespace mugato
         }
     }
 
-    void SpriteComponent::onAddedToEntity(Entity& entity)
+    void SpriteComponent::onAssignedToContext(Context& ctx)
     {
         auto resizeMode = _sprite.getResizeMode();
-        _sprite = entity.getContext().getSprites().load(_name);
+        _sprite = ctx.getSprites().load(_name);
         _sprite.setResizeMode(resizeMode);
         if(!_anim.empty())
         {
             _sprite.play(_anim);
         }
+    }
+
+    void SpriteComponent::onAddedToEntity(Entity& entity)
+    {
         onEntityTransformChanged(entity);
     }
 

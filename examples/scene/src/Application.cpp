@@ -4,6 +4,7 @@
 #include <glm/gtc/constants.hpp>
 #include <functional>
 #include <random>
+#include <iostream>
 
 class SceneApplication : public mugato::Application
 {
@@ -43,17 +44,17 @@ void SceneApplication::load()
     mugato::Application::load();
 
 #ifdef GORN_PLATFORM_LINUX
-	getGorn().getFiles()
+    getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
 #elif GORN_PLATFORM_ANDROID
-	getGorn().getFiles()
+    getGorn().getFiles()
         .makeDefaultLoader<gorn::AssetFileLoader>("%s");
 #elif GORN_PLATFORM_IOS
     getGorn().getFiles()
     .makeDefaultLoader<gorn::BundleFileLoader>("%s");
 #endif
 
-	getGorn().getImages()
+    getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
     glm::vec2 screenSize(480.0f, 320.0f);
@@ -72,8 +73,7 @@ void SceneApplication::load()
 
     auto scene = getMugato().getScenes().push();
     auto& bg = scene->addComponent<mugato::SpriteComponent>("background.png");
-    auto bgsize = bg.getSprite().getSize();
-    scene->getTransform().setScale(screenSize/bgsize);
+    bg.getSprite().setResizeMode(mugato::SpriteResizeMode::Exact);
 
     scene->addComponent<mugato::RenderInfoComponent>();
 
@@ -85,8 +85,8 @@ void SceneApplication::load()
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
     _randomAlgo = RandomAlgo(time(0));
-    _posXDistri = RandomDistri(0.0f, bgsize.x);
-    _posYDistri = RandomDistri(0.0f, bgsize.y);
+    _posXDistri = RandomDistri(0.0f, screenSize.x*1.5);
+    _posYDistri = RandomDistri(0.0f, screenSize.y*1.5);
     _rotDistri = RandomDistri(0.0f, glm::pi<float>()*2.0f);
 
     for(int i=0; i<100; ++i)
@@ -117,4 +117,3 @@ void SceneApplication::moveGuy(
         .withComplete(std::bind(
             &SceneApplication::moveGuy, this, guy, duration));
 }
-

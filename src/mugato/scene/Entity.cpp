@@ -192,7 +192,7 @@ namespace mugato
             .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
         queue.addCommand()
             .withTransform(_transform.getMatrix())
-            .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal);     
+            .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal);
         for(auto& comp : _components)
         {
             comp->render(queue);
@@ -237,6 +237,7 @@ namespace mugato
     Component& Entity::addComponent(std::unique_ptr<Component> comp)
     {
         auto ptr = comp.get();
+        ptr->onAssignedToContext(getContext());
         _componentsToAdd.push_back(std::move(comp));
         return *ptr;
     }
@@ -266,4 +267,3 @@ namespace mugato
         return _children;
     }
 }
-

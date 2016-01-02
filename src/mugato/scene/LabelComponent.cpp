@@ -41,10 +41,14 @@ namespace mugato
         _label.setText(text);
     }
 
+    void LabelComponent::onAssignedToContext(Context& ctx)
+    {
+        auto font = ctx.getLabels().loadLabelFont(_name);
+        _label.setFont(font);
+    }
+
     void LabelComponent::onAddedToEntity(Entity& entity)
     {
-        auto font = entity.getContext().getLabels().loadLabelFont(_name);
-        _label.setFont(font);
         onEntityTransformChanged(entity);
     }
 

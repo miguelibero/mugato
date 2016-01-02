@@ -32,6 +32,7 @@ namespace mugato
         Label& getLabel();
         const Label& getLabel() const;
 
+        void onAssignedToContext(Context& ctx) override;
         void onAddedToEntity(Entity& entity) override;
         void onEntityTransformChanged(Entity& entity) override;
         bool onEntityTouched(Entity& entity, const glm::vec2& p,

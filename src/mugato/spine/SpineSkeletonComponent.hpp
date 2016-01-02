@@ -15,16 +15,13 @@ namespace mugato
         std::string _animation;
         SpineSkeleton _skeleton;
         std::weak_ptr<Entity> _entity;
-        glm::vec2 _pivotPercent;
     public:
         SpineSkeletonComponent(const std::string& name);
 
         SpineSkeleton& getSkeleton();
         const SpineSkeleton& getSkeleton() const;
 
-        void setEntityPivotPercent(const glm::vec2& val);
-        void setEntitySize();
-
+        void onAssignedToContext(Context& ctx) override;
         void onAddedToEntity(Entity& entity) override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;

@@ -40,8 +40,8 @@ namespace gorn
 }
 
 QuadTreeApplication::QuadTreeApplication():
-_quadtree(gorn::Rect(glm::vec2(-1.0f), glm::vec2(2.0f)), 2),
-_randomPosDistri(-1.0f, 1.0f),
+_quadtree(gorn::Rect(glm::vec2(0.0f), glm::vec2(2.0f)), 2),
+_randomPosDistri(0.0f, 2.0f),
 _randomSizeDistri(0.0f, 0.1f),
 _deltaTime(0.0f)
 {

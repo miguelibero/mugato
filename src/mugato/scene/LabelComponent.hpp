@@ -26,6 +26,7 @@ namespace mugato
 
         void setText(const std::string& text);
 
+        void onAssignedToContext(Context& ctx) override;
         void onAddedToEntity(Entity& entity) override;
         void onEntityTransformChanged(Entity& entity) override;
         void update(double dt) override;
