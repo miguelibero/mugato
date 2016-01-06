@@ -72,14 +72,7 @@ namespace mugato
     void ButtonComponent::loadBackground(Context& ctx)
     {
         auto resize = _bg.getResizeMode();
-        if(!_bgName.empty())
-        {
-            _bg = ctx.getSprites().load(_bgName);
-        }
-        else
-        {
-            _bg = Sprite();
-        }
+        _bg = ctx.getSprites().tryLoad(_bgName);
         _bg.setResizeMode(resize);
         auto itr = _bgMaterials.find(State::Normal);
         if(itr == _bgMaterials.end())
@@ -92,14 +85,7 @@ namespace mugato
     {
         auto text = _label.getText();
         auto align = _label.getAlignment();
-        if(!_labelName.empty())
-        {
-            _label = ctx.getLabels().load(_labelName);
-        }
-        else
-        {
-            _label = Label();
-        }
+        _label = ctx.getLabels().tryLoad(_labelName);
         _label.setText(text);
         _label.setAlignment(align);
         auto itr = _labelMaterials.find(State::Normal);

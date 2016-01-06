@@ -4,7 +4,7 @@
 #include <mugato/label/FontAtlas.hpp>
 
 namespace mugato {
-    
+
     LabelManager::LabelManager(gorn::MaterialManager& materials,
         gorn::FileManager& files):
     _materials(materials), _atlases(files)
@@ -60,5 +60,13 @@ namespace mugato {
         auto& def = getDefinitions().get(name);
         return Label(loadFont(def.getAtlas()));
     }
-}
 
+    Label LabelManager::tryLoad(const std::string& name)
+    {
+        if(!getDefinitions().has(name))
+        {
+            return Label();
+        }
+        return load(name);
+    }
+}

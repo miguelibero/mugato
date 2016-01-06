@@ -35,7 +35,7 @@ namespace mugato {
     public:
         SpriteManager(gorn::MaterialManager& materials, gorn::FileManager& files);
         SpriteManager(const SpriteManager& other) = delete;
-    
+
         const Atlases& getAtlases() const;
         Atlases& getAtlases();
 
@@ -43,6 +43,7 @@ namespace mugato {
         Definitions& getDefinitions();
 
         Sprite load(const std::string& name);
+        Sprite tryLoad(const std::string& name);
         FrameList loadFrames(
             const std::string& aname, const std::string& fname);
         const FrameMap& loadFrames(
