@@ -47,7 +47,7 @@ void SpriteApplication::load()
             .withFrame("gb_walk")
             .withFrameDuration(1.0f/5.0f));
 
-    _ctx.setScreenSize(glm::vec2(200.0f, 200.0f));
+    _ctx.setViewportSize(glm::vec2(200.0f, 200.0f));
 
     _sprite1 = _ctx.getSprites().load("guybrush");
     _sprite1.play("walk");
@@ -77,4 +77,3 @@ void SpriteApplication::draw()
 
 	_ctx.getGorn().getQueue().draw();
 }
-

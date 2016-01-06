@@ -38,7 +38,7 @@ void GuiApplication::load()
 	getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
-    getMugato().setScreenSize(glm::vec2(480.0f, 320.0f));
+    getMugato().setViewportSize(glm::vec2(480.0f, 320.0f));
 
     getGorn().getMaterials().getDefinitions().get("button")
         .withTexture(gorn::UniformKind::Texture0, "button1.png");
@@ -61,10 +61,10 @@ void GuiApplication::load()
         .withUniformValue(gorn::UniformKind::Color,
             glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
         .withProgram(mugato::ProgramKind::Color));
-   
+
     auto scene = getMugato().getScenes().push();
     scene->addComponent<mugato::RenderInfoComponent>();
-  
+
     auto& materials = getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
     octree.setElementsMaterial(materials.load("octree_elements"));
@@ -136,5 +136,3 @@ bool GuiApplication::onButtonTouched(mugato::Sprite& sprite,
 
     return true;
 }
-
-

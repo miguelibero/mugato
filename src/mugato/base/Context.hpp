@@ -37,7 +37,7 @@ namespace mugato
         void touch(const glm::vec2& p);
         void touchEnd(const glm::vec2& p);
 
-        void setScreenSize(const glm::vec2& size);
+        void setViewportSize(const glm::vec2& size);
 
         const gorn::Context& getGorn() const;
         gorn::Context& getGorn();

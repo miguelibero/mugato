@@ -170,7 +170,7 @@ namespace mugato {
         auto bl = (size-rsize)*0.5f+_region.getOffset();
         auto tr = bl + rsize;
 
-        _posVerts = {
+        _posVerts = buffer{
             bl.x, bl.y,
             tr.x, bl.y,
             bl.x, tr.y,
@@ -180,7 +180,7 @@ namespace mugato {
         if(hasStretchBorders())
         {
             auto& b = _stretchBorders;
-            _posVerts.append({
+            _posVerts.append(buffer{
                 bl.x + b[1], bl.y + b[2],
                 tr.x - b[3], bl.y + b[2],
                 bl.x + b[1], tr.y - b[0],
@@ -228,7 +228,7 @@ namespace mugato {
 
         if(rotate)
         {
-            _texVerts = {
+            _texVerts = buffer{
                 tr.x, bl.y,
                 tr.x, tr.y,
                 bl.x, bl.y,
@@ -237,7 +237,7 @@ namespace mugato {
         }
         else
         {
-            _texVerts = {
+            _texVerts = buffer{
                 bl.x, bl.y,
                 tr.x, bl.y,
                 bl.x, tr.y,
@@ -252,7 +252,7 @@ namespace mugato {
             b[1] /= msize.x;
             b[2] /= msize.y;
             b[3] /= msize.x;
-            _texVerts.append({
+            _texVerts.append(buffer{
                 bl.x + b[1], bl.y + b[2],
                 tr.x - b[3], bl.y + b[2],
                 bl.x + b[1], tr.y - b[0],
@@ -297,9 +297,9 @@ namespace mugato {
 
         queue.addCommand()
             .withMaterial(_material)
-            .withAttribute(gorn::AttributeKind::Position, 
+            .withAttribute(gorn::AttributeKind::Position,
                 _posVerts, 2, gorn::BasicType::Float)
-            .withAttribute(gorn::AttributeKind::TexCoords, 
+            .withAttribute(gorn::AttributeKind::TexCoords,
                 _texVerts, 2, gorn::BasicType::Float)
             .withElements(std::move(elms));
     }

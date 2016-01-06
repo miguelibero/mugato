@@ -56,8 +56,8 @@ void SceneApplication::load()
     getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
-    glm::vec2 screenSize(480.0f, 320.0f);
-    getMugato().setScreenSize(screenSize);
+    glm::vec2 portSize(480.0f, 320.0f);
+    getMugato().setViewportSize(portSize);
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("octree_elements", gorn::MaterialDefinition()
@@ -84,8 +84,8 @@ void SceneApplication::load()
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
     _randomAlgo = RandomAlgo(time(0));
-    _posXDistri = RandomDistri(0.0f, screenSize.x*1.5);
-    _posYDistri = RandomDistri(0.0f, screenSize.y*1.5);
+    _posXDistri = RandomDistri(0.0f, portSize.x*1.5);
+    _posYDistri = RandomDistri(0.0f, portSize.y*1.5);
     _rotDistri = RandomDistri(0.0f, glm::pi<float>()*2.0f);
 
     for(int i=0; i<100; ++i)

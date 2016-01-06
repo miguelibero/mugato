@@ -43,7 +43,7 @@ void SpineApplication::load()
 	getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
-    getMugato().setScreenSize(glm::vec2(480.0f, 320.0f));
+    getMugato().setViewportSize(glm::vec2(480.0f, 320.0f));
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("spine_slots", gorn::MaterialDefinition()

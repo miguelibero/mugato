@@ -159,7 +159,7 @@ namespace mugato {
             buffer colors;
             buffer texcoords;
             buffer positions;
-            
+
 		    switch (slot->attachment->type)
             {
 		    case SP_ATTACHMENT_REGION: {
@@ -171,7 +171,7 @@ namespace mugato {
                     attach, slot->bone, reinterpret_cast<float*>(positions.data()));
                 texcoords.assign(attach->uvs, size);
 			    elements = {0, 1, 2, 2, 3, 0};
-			    colors = { attach->r, attach->g, attach->b, attach->a };
+			    colors = buffer{ attach->r, attach->g, attach->b, attach->a };
                 break;
 		    }
 		    case SP_ATTACHMENT_MESH: {
@@ -184,7 +184,7 @@ namespace mugato {
 			    texcoords.assign(attach->uvs, size);
 			    elements.assign(attach->triangles,
                     attach->triangles + attach->trianglesCount);
-                colors = { attach->r, attach->g, attach->b, attach->a };
+                colors = buffer{ attach->r, attach->g, attach->b, attach->a };
 			    break;
 		    }
 		    case SP_ATTACHMENT_SKINNED_MESH: {
@@ -197,12 +197,12 @@ namespace mugato {
                 texcoords.assign(attach->uvs, size);
 			    elements.assign(attach->triangles,
                     attach->triangles + attach->trianglesCount);
-                colors = { attach->r, attach->g, attach->b, attach->a };
+                colors = buffer{ attach->r, attach->g, attach->b, attach->a };
 			    break;
 		    }
 		    default:
                 break;
-		    } 
+		    }
 		    if (material)
             {
                 // flip y coordinates

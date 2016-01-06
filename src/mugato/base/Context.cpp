@@ -125,10 +125,10 @@ void main()
         _root->setContext(*this);
         _root->getTransform().setPosition(glm::vec2(-1.0f));
         _scenes = &_root->addComponent<EntityStack>();
-        setScreenSize(glm::vec2(2.0f));
+        setViewportSize(glm::vec2(2.0f));
     }
 
-    void Context::setScreenSize(const glm::vec2& size)
+    void Context::setViewportSize(const glm::vec2& size)
     {
         _root->getTransform().setScale(
             glm::vec2(2.0f/size.x, 2.0f/size.y));
@@ -248,4 +248,3 @@ void main()
     }
 
 }
-
