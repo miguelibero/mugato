@@ -45,6 +45,9 @@ void SceneApplication::load()
 #ifdef GORN_PLATFORM_LINUX
     getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
+#elif GORN_PLATFORM_MACOS
+    getGorn().getFiles()
+    .makeDefaultLoader<gorn::BundleFileLoader>("%s");
 #elif GORN_PLATFORM_ANDROID
     getGorn().getFiles()
         .makeDefaultLoader<gorn::AssetFileLoader>("%s");
@@ -83,7 +86,7 @@ void SceneApplication::load()
     octree.setNodesMaterial(materials.load("octree_nodes"));
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
-    _randomAlgo = RandomAlgo(time(0));
+    _randomAlgo = RandomAlgo((unsigned int)time(0));
     _posXDistri = RandomDistri(0.0f, portSize.x*1.5);
     _posYDistri = RandomDistri(0.0f, portSize.y*1.5);
     _rotDistri = RandomDistri(0.0f, glm::pi<float>()*2.0f);

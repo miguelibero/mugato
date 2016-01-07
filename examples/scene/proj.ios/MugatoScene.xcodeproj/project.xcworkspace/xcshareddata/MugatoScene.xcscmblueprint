@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "FCD88AD8A5C592ACDC32BD0D59FFDE05C39B91F7",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "4A131C6D61F940DE5452CB4F908FD849CEE0D370" : 0,
+    "0859B7651548761E8CD7AB9C8CED404441DC5FA4" : 0,
+    "FCD88AD8A5C592ACDC32BD0D59FFDE05C39B91F7" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "EAFC057A-FF50-4199-B675-949BEFCA2815",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "4A131C6D61F940DE5452CB4F908FD849CEE0D370" : "mugato\/lib\/gorn\/lib\/buffer\/",
+    "0859B7651548761E8CD7AB9C8CED404441DC5FA4" : "mugato\/lib\/gorn\/",
+    "FCD88AD8A5C592ACDC32BD0D59FFDE05C39B91F7" : "mugato\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "MugatoScene",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "examples\/scene\/proj.ios\/MugatoScene.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:miguelibero\/gorn.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0859B7651548761E8CD7AB9C8CED404441DC5FA4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:miguelibero\/buffer.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4A131C6D61F940DE5452CB4F908FD849CEE0D370"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:miguelibero\/mugato.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "FCD88AD8A5C592ACDC32BD0D59FFDE05C39B91F7"
+    }
+  ]
+}

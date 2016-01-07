@@ -3,6 +3,7 @@
 
 #include <mugato/scene/Component.hpp>
 #include <mugato/base/Alignment.hpp>
+#include <glm/glm.hpp>
 #include <memory>
 #include <vector>
 
@@ -11,7 +12,7 @@ namespace mugato
     class AlignComponent : public Component
     {
     public:
-        typedef std::vector<size_t> Constraints;
+        typedef std::vector<glm::length_t> Constraints;
     private:
         std::weak_ptr<Entity> _entity;
         Alignment _align;
