@@ -149,25 +149,16 @@ namespace mugato
 
     void Entity::addPendingComponents()
     {
-        Components componentsToAdd;
-        componentsToAdd.reserve(_componentsToAdd.size());
-        std::move(
-            _componentsToAdd.begin(),
-            _componentsToAdd.end(),
-            std::back_inserter(componentsToAdd));
-        _componentsToAdd.clear();
-        for(auto& comp : componentsToAdd)
+		bool wereEmpty = _componentsToAdd.empty();
+		_components.reserve(
+			_components.size() + _componentsToAdd.size());
+        for(auto& comp : _componentsToAdd)
         {
             comp->onAddedToEntity(*this);
+			_components.push_back(std::move(comp));
         }
-        bool wereEmpty = componentsToAdd.empty();
-        _components.reserve(
-            _components.size() + componentsToAdd.size());
-        std::move(
-            componentsToAdd.begin(),
-            componentsToAdd.end(),
-            std::back_inserter(_components));
-        if(!wereEmpty && _componentsToAdd.empty())
+		_componentsToAdd.clear();
+        if(!wereEmpty)
         {
             for(auto& comp : _components)
             {

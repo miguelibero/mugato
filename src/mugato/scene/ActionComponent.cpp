@@ -14,7 +14,7 @@ namespace mugato
     }
     void ActionState::update(double dt)
     {
-        _position += dt;
+        _position += (float)dt;
     }
 
     void ActionState::update(Entity& entity)

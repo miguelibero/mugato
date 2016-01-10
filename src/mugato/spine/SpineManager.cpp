@@ -16,13 +16,13 @@ extern "C" {
     {
         if(s_current == nullptr)
         {
-            throw mugato::Exception("No mugato::SpineManager found.");
+			return;
         }
         auto material = s_current->getMaterials().load(path);
 	    self->rendererObject = new std::shared_ptr<gorn::Material>(material);
         auto& size = material->getSize();
-	    self->width = size.x;
-	    self->height = size.y;
+	    self->width = (int)size.x;
+	    self->height = (int)size.y;
     }
 
     void _spAtlasPage_disposeTexture(spAtlasPage* self)
@@ -34,7 +34,7 @@ extern "C" {
     {
         if(s_current == nullptr)
         {
-            throw mugato::Exception("No mugato::SpineManager found.");
+			return nullptr;
         }
         auto buffer = s_current->getFiles().load(path).get();
         *length = (int)buffer.size()/sizeof(char);
