@@ -76,8 +76,8 @@ namespace mugato {
 
     void SpineSkeleton::update(double dt)
     {
-        spSkeleton_update(_skeleton, dt);
-	    spAnimationState_update(_anim, dt);
+        spSkeleton_update(_skeleton, (float)dt);
+	    spAnimationState_update(_anim, (float)dt);
 	    spAnimationState_apply(_anim, _skeleton);
         spSkeleton_updateWorldTransform(_skeleton);
     }
@@ -116,7 +116,7 @@ namespace mugato {
         {
 		    throw Exception("Animation not found");
 	    }
-	    spAnimationState_addAnimation(_anim, track, anim, delay, loop);
+	    spAnimationState_addAnimation(_anim, track, anim, loop, delay);
     }
 
     void SpineSkeleton::addAnimation(const std::string& name,

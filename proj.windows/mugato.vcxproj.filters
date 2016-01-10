@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{032cbad0-6972-4c92-b68b-898a8c87ce4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="label">
+      <UniqueIdentifier>{7583f771-91bd-42d9-a2c7-e8782c2a2c5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{655ac6d0-bb1e-4ce6-bfb2-e1819f44a9b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="spine">
+      <UniqueIdentifier>{9c26a8ee-6cc9-4c10-9bcd-99e303e8efb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sprite">
+      <UniqueIdentifier>{91228110-9869-41a6-bc2b-4c46435f5dfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{27947e48-fcc7-4218-89bc-349dbe7e2955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\spine">
+      <UniqueIdentifier>{b7c2fdf0-6bce-4bee-855f-ff81ec01c82f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\mugato\base\Kinds.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\base\Alignment.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\base\Application.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\base\Context.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\Label.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\LabelCharacter.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\LabelDefinition.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\LabelFont.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\LabelManager.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\DebugFontAtlasConfigurator.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\FntFontAtlasLoader.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\FontAtlas.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\FontAtlasRegion.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\label\GridFontAtlasLoader.cpp">
+      <Filter>label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\ActionComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\AlignComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\ButtonComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\EmptyAction.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\Entity.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\EntityStack.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\EntityTransform.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\LabelComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\OcTreeRenderComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\RenderInfoComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\SpriteComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\TouchComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\TweenAction.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\spine\SpineSkeletonData.cpp">
+      <Filter>spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\spine\SpineSkeletonDefinition.cpp">
+      <Filter>spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\spine\SpineAnimationMixDefinition.cpp">
+      <Filter>spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\spine\SpineAtlas.cpp">
+      <Filter>spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\spine\SpineManager.cpp">
+      <Filter>spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\spine\SpineSkeleton.cpp">
+      <Filter>spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\spine\SpineSkeletonComponent.cpp">
+      <Filter>spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\SpriteFrame.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\SpriteManager.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\CocosSpriteAtlasLoader.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\GdxSpriteAtlasLoader.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\MaterialSpriteAtlasLoader.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\Sprite.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\SpriteAnimation.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\SpriteAnimationDefinition.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\SpriteAtlas.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\SpriteAtlasRegion.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\SpriteDefinition.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\SkeletonData.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\SkeletonJson.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Skin.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\SkinnedMeshAttachment.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Slot.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\SlotData.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Animation.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\AnimationState.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\AnimationStateData.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Atlas.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\AtlasAttachmentLoader.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Attachment.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\AttachmentLoader.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Bone.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\BoneData.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\BoundingBoxAttachment.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Event.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\EventData.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\extension.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\IkConstraint.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\IkConstraintData.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Json.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\MeshAttachment.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\RegionAttachment.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\Skeleton.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\spine-c\src\spine\SkeletonBounds.c">
+      <Filter>lib\spine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\mugato\base\Kinds.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\OcTree.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\OcTreeElement.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\OcTreeNode.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\Alignment.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\Application.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\Context.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\Easing.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\Exception.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\Label.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\LabelCharacter.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\LabelDefinition.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\LabelEnums.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\LabelFont.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\LabelManager.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\DebugFontAtlasConfigurator.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\FntFontAtlasLoader.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\FontAtlas.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\FontAtlasRegion.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\label\GridFontAtlasLoader.hpp">
+      <Filter>label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\TweenAction.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\Action.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\ActionComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\AlignComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\ButtonComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\Component.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\EmptyAction.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\Entity.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\EntityEnums.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\EntityStack.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\EntityTransform.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\LabelComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\OcTreeRenderComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\RenderInfoComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\SpriteComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\TouchComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\spine\SpineSkeletonData.hpp">
+      <Filter>spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\spine\SpineSkeletonDefinition.hpp">
+      <Filter>spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\spine\SpineAnimationMixDefinition.hpp">
+      <Filter>spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\spine\SpineAtlas.hpp">
+      <Filter>spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\spine\SpineManager.hpp">
+      <Filter>spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\spine\SpineSkeleton.hpp">
+      <Filter>spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\spine\SpineSkeletonComponent.hpp">
+      <Filter>spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\SpriteDefinition.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\SpriteEnums.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\SpriteFrame.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\SpriteManager.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\CocosSpriteAtlasLoader.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\GdxSpriteAtlasLoader.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\MaterialSpriteAtlasLoader.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\Sprite.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\SpriteAnimation.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\SpriteAnimationDefinition.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\SpriteAtlas.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\SpriteAtlasRegion.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\spine-c\src\spine\Json.h">
+      <Filter>lib\spine</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

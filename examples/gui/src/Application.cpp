@@ -28,7 +28,7 @@ namespace gorn
 
 void GuiApplication::load()
 {
-#ifdef GORN_PLATFORM_LINUX
+#if GORN_PLATFORM_LINUX || GORN_PLATFORM_WINDOWS
 	getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
 #elif GORN_PLATFORM_ANDROID
@@ -63,7 +63,7 @@ void GuiApplication::load()
         .withProgram(mugato::ProgramKind::Color));
 
     auto scene = getMugato().getScenes().push();
-    scene->addComponent<mugato::RenderInfoComponent>();
+    auto& info = scene->addComponent<mugato::RenderInfoComponent>();
 
     auto& materials = getGorn().getMaterials();
     auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();

@@ -3,10 +3,9 @@
 #define __mugato__GdxSpriteAtlasLoader__
 
 #include <gorn/asset/DataAssetLoader.hpp>
+#include <mugato/sprite/SpriteAtlas.hpp>
 
 namespace mugato {
-
-    class SpriteAtlas;
 
     class GdxSpriteAtlasLoader : public gorn::DataAssetLoader<SpriteAtlas>
     {      

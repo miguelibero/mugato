@@ -14,8 +14,6 @@ class SceneApplication : public mugato::Application
     RandomDistri _posYDistri;
     RandomDistri _rotDistri;
 
-    float randomPos();
-
     void moveGuy(std::shared_ptr<mugato::Entity> guy, float duration);
 
 public:
@@ -42,16 +40,13 @@ void SceneApplication::load()
 {
     mugato::Application::load();
 
-#ifdef GORN_PLATFORM_LINUX
+#if GORN_PLATFORM_LINUX || GORN_PLATFORM_WINDOWS
     getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
-#elif GORN_PLATFORM_MACOS
-    getGorn().getFiles()
-    .makeDefaultLoader<gorn::BundleFileLoader>("%s");
 #elif GORN_PLATFORM_ANDROID
     getGorn().getFiles()
         .makeDefaultLoader<gorn::AssetFileLoader>("%s");
-#elif GORN_PLATFORM_IOS
+#elif GORN_PLATFORM_IOS || GORN_PLATFORM_MACOS
     getGorn().getFiles()
     .makeDefaultLoader<gorn::BundleFileLoader>("%s");
 #endif
@@ -87,8 +82,8 @@ void SceneApplication::load()
     octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
     _randomAlgo = RandomAlgo((unsigned int)time(0));
-    _posXDistri = RandomDistri(0.0f, portSize.x*1.5);
-    _posYDistri = RandomDistri(0.0f, portSize.y*1.5);
+    _posXDistri = RandomDistri(0.0f, portSize.x*1.5f);
+    _posYDistri = RandomDistri(0.0f, portSize.y*1.5f);
     _rotDistri = RandomDistri(0.0f, glm::pi<float>()*2.0f);
 
     for(int i=0; i<100; ++i)

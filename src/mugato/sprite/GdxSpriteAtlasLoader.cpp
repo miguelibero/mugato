@@ -70,33 +70,33 @@ namespace mugato {
                     {
                         sep = v.find(',');                       
                         region.setPosition(
-                            gorn::String::convertTo<int>(v.substr(0, sep)),
-                            gorn::String::convertTo<int>(v.substr(sep+1)));
+                            gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(0, sep)),
+                            gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(sep+1)));
                     }
                     else if(n == "size")
                     {
                         sep = v.find(',');
                         region.setSize(
-                            gorn::String::convertTo<int>(v.substr(0, sep)),
-                            gorn::String::convertTo<int>(v.substr(sep+1)));
+                            gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(0, sep)),
+                            gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(sep+1)));
                     }
                     else if(n == "orig")
                     {
                         sep = v.find(',');
                         region.setOriginalSize(
-                            gorn::String::convertTo<int>(v.substr(0, sep)),
-                            gorn::String::convertTo<int>(v.substr(sep+1)));
+                            gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(0, sep)),
+                            gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(sep+1)));
                     }
                     else if(n == "offset")
                     {
                         sep = v.find(',');
                         region.setOffset(
-                            gorn::String::convertTo<int>(v.substr(0, sep)),
-                            gorn::String::convertTo<int>(v.substr(sep+1)));
+                            gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(0, sep)),
+                            gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(sep+1)));
                     }
                     else if(n == "index")
                     {
-                        regionIndex = gorn::String::convertTo<int>(v);
+                        regionIndex = gorn::String::convertTo<size_t>(v);
                     }
                 }
                 else

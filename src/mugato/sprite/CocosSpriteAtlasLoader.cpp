@@ -46,8 +46,8 @@ namespace mugato {
                 {
                     throw std::runtime_error("Invalid frame value.");
                 }
-                region.setPosition(parts[0], parts[1]);
-                region.setSize(parts[2], parts[3]);
+                region.setPosition((float)parts[0], (float)parts[1]);
+                region.setSize((float)parts[2], (float)parts[3]);
 
             }
             else if(name == "offset")
@@ -58,7 +58,7 @@ namespace mugato {
                 {
                     throw std::runtime_error("Invalid offset value.");
                 }
-                region.setOffset(parts[0], parts[1]);
+                region.setOffset((SpriteAtlasRegion::value_type)parts[0], (SpriteAtlasRegion::value_type)parts[1]);
             }
             else if(name == "rotated")
             {                
@@ -73,7 +73,7 @@ namespace mugato {
                 {
                     throw std::runtime_error("Invalid sourceSize value.");
                 }
-                region.setOriginalSize(parts[0], parts[1]);
+                region.setOriginalSize((SpriteAtlasRegion::value_type)parts[0], (SpriteAtlasRegion::value_type)parts[1]);
             }
             key = key->next_sibling("key");
         }

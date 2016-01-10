@@ -49,7 +49,7 @@ _deltaTime(0.0f)
 
 void QuadTreeApplication::load()
 {
-#ifdef GORN_PLATFORM_LINUX
+#if GORN_PLATFORM_LINUX || GORN_PLATFORM_WINDOWS
 	_ctx.getGorn().getFiles()
         .makeDefaultLoader<gorn::LocalFileLoader>("../assets/%s");
 #elif GORN_PLATFORM_ANDROID

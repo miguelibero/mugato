@@ -3,6 +3,7 @@
 
 #include <buffer.hpp>
 #include <string>
+#include <mugato/label/FontAtlas.hpp>
 
 namespace gorn
 {
@@ -15,8 +16,6 @@ namespace gorn
 namespace mugato
 {
     class Context;
-
-    class FontAtlas;
 
     class DebugFontAtlasConfigurator
     {

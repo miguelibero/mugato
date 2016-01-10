@@ -12,6 +12,11 @@ proj.linux/bin/
 .DS_Store
 build/
 *.obj
+*.sdf
 *.tlog/
 xcuserdata/
-.xcworkspace/
+Debug/
+Release/
+*vcxproj.user
+*.xcworkspace/
+*.VC.opendb
