@@ -37,7 +37,8 @@ namespace mugato
         const gorn::Rect& getArea() const;
         void setArea(const gorn::Rect& area);
 
-        bool insert(const Element& elm);
+		bool fits(const Element& elm) const;
+        void insert(const Element& elm);
         bool remove(const Element& elm);
         bool adjust(bool all=true);
 
@@ -90,18 +91,15 @@ namespace mugato
         _area = area;
     }
 
+	template<typename T>
+	bool OcTreeNode<T>::fits(const Element& elm) const
+	{
+		return _area.matches(elm.getArea(), _matchType);
+	}
+
     template<typename T>
-    bool OcTreeNode<T>::insert(const Element& elm)
+    void OcTreeNode<T>::insert(const Element& elm)
     {
-        auto itr = std::find(_elements.begin(), _elements.end(), elm);
-        if(!_area.matches(elm.getArea(), _matchType))
-        {
-            if(itr != _elements.end())
-            {
-                _elements.erase(itr);
-            }
-            return false;
-        }
         for(auto& branch : _branches)
         {
             if(branch->remove(elm))
@@ -111,11 +109,13 @@ namespace mugato
         }
         for(auto& branch : _branches)
         {
-            if(branch->insert(elm))
+            if(branch->fits(elm))
             {
-                return true;
+				branch->insert(elm);
+                return;
             }
         }
+		auto itr = std::find(_elements.begin(), _elements.end(), elm);
         if(itr == _elements.end())
         {
             _elements.insert(itr, elm);
@@ -124,7 +124,6 @@ namespace mugato
         {
             *itr = elm;
         }
-        return true;
     }
 
     template<typename T>
@@ -419,8 +418,9 @@ namespace mugato
             {
                 for(auto& branch : _branches)
                 {
-                    if(branch->insert(elm))
+                    if(branch->fits(elm))
                     {
+						branch->insert(elm);
                         return true;
                     }
                 }

@@ -10,6 +10,7 @@ namespace mugato
 
         static const char* Sprite;
         static const char* Color;
+		static const char* Light;
     };
 }
 

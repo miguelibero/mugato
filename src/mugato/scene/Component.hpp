@@ -28,10 +28,11 @@ namespace mugato
         virtual bool onEntityTouched(Entity& entity,
             const glm::vec2& p, TouchPhase phase) { return false; };
         virtual void onEntityComponentsLoaded(Entity& entity){};
+		virtual void beforeEntityChildrenRender(gorn::RenderQueue& queue) {};
+		virtual void afterEntityChildrenRender(gorn::RenderQueue& queue) {};
         virtual void update(double dt){};
         virtual void fixedUpdate(double dt){};
         virtual void render(gorn::RenderQueue& queue){};
-
     };
 }
 

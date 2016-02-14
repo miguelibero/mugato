@@ -212,12 +212,20 @@ namespace mugato
         {
             comp->render(queue);
         }
+		for (auto& comp : _components)
+		{
+			comp->beforeEntityChildrenRender(queue);
+		}
         Children::Elements elements;
         _children.find(elements);
         for(auto& elm : elements)
         {
             elm.getContent()->render(queue);
         }
+		for (auto& comp : _components)
+		{
+			comp->afterEntityChildrenRender(queue);
+		}
         queue.addCommand()
             .withBoundingMode(
                 gorn::RenderCommand::BoundingMode::End)

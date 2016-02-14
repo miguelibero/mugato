@@ -50,12 +50,15 @@ void LabelApplication::load()
 
     _label1 = _ctx.getLabels().load("font.fnt");
     _label1.setText("This is a fnt label! gg_jj");
+	_label1.setAlignment(mugato::Alignment::Left);
 
     _label2 = _ctx.getLabels().load("grid_font.png");
     _label2.setText("This is a grid label!");
+	_label2.setAlignment(mugato::Alignment::Left);
 
     _label3 = _ctx.getLabels().load("debug:");
     _label3.setText("This is\na default\ndebug label!");
+	_label3.setAlignment(mugato::Alignment::Left);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

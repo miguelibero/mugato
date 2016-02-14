@@ -64,9 +64,11 @@ namespace mugato
 
     void Application::draw()
     {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		gorn::ClearAction()
+			.withColor(glm::vec4(0,0,0,1))
+			.withType(gorn::ClearType::Color)
+			.withType(gorn::ClearType::Depth)
+			.apply();
         getMugato().draw();
     }
 
