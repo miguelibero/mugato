@@ -47,6 +47,22 @@ namespace mugato
         return _transform;
     }
 
+	glm::mat4 Entity::getModelMatrix() const
+	{
+		auto entity = this;
+		glm::mat4 trans;
+		while(true)
+		{
+			trans = trans * entity->getTransform().getMatrix();
+			if(!entity->hasParent())
+			{
+				break;
+			}
+			entity = &entity->getParent();
+		}
+		return trans;
+	}
+
     std::shared_ptr<Entity> Entity::getSharedPtr()
     {
         return shared_from_this();
@@ -69,7 +85,7 @@ namespace mugato
         }
     }
 
-    Entity::TouchPhase Entity::touchChild(const glm::vec2& p,
+    Entity::TouchPhase Entity::touchChild(const glm::vec3& p,
         TouchPhase phase, const Children::Element& elm)
     {
         auto child(elm.getContent());
@@ -112,7 +128,7 @@ namespace mugato
         }
     }
 
-    bool Entity::touch(const glm::vec2& p, TouchPhase phase)
+    bool Entity::touch(const glm::vec3& p, TouchPhase phase)
     {
         auto ep = _transform.getParentToLocalPoint(p);
         bool handled = false;
@@ -201,7 +217,10 @@ namespace mugato
 
     void Entity::render(gorn::RenderQueue& queue)
     {
-        queue.addCommand()
+		queue.addCommand()
+			.withLayers(_layers)
+			.withLayersMode(gorn::RenderCommand::LayersMode::Start);
+		queue.addCommand()
             .withBounding(_transform.getArea(),
                 gorn::RenderCommand::BoundingMode::Start)
             .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
@@ -212,16 +231,25 @@ namespace mugato
         {
             comp->render(queue);
         }
+		for (auto& comp : _components)
+		{
+			comp->beforeEntityChildrenRender(queue);
+		}
         Children::Elements elements;
         _children.find(elements);
         for(auto& elm : elements)
         {
             elm.getContent()->render(queue);
         }
+		for (auto& comp : _components)
+		{
+			comp->afterEntityChildrenRender(queue);
+		}
         queue.addCommand()
-            .withBoundingMode(
-                gorn::RenderCommand::BoundingMode::End)
+            .withBoundingMode(gorn::RenderCommand::BoundingMode::End)
             .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
+		queue.addCommand()
+			.withLayersMode(gorn::RenderCommand::LayersMode::End);
     }
 
     std::shared_ptr<Entity> Entity::addChild(const std::shared_ptr<Entity>& child)
@@ -281,4 +309,14 @@ namespace mugato
     {
         return _children;
     }
+
+	const Entity::Layers& Entity::getLayers() const
+	{
+		return _layers;
+	}
+
+	Entity::Layers& Entity::getLayers()
+	{
+		return _layers;
+	}
 }

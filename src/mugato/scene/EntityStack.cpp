@@ -18,16 +18,6 @@ namespace mugato
         }
     }
 
-    const EntityTransform& EntityStack::getTransform() const
-    {
-        return _transform;
-    }
-
-    EntityTransform& EntityStack::getTransform()
-    {
-        return _transform;
-    }
-
     void EntityStack::onAddedToEntity(Entity& entity)
     {
         _entity = entity.getSharedPtr();
@@ -36,15 +26,20 @@ namespace mugato
 
     void EntityStack::onEntityTransformChanged(Entity& entity)
     {
+		_transform = entity.getTransform();
+		if (!_stack.empty())
+		{
+			_stack.back()->getTransform() = _transform;
+		}
     }
 
     bool EntityStack::onEntityTouched(Entity& entity,
-        const glm::vec2& p, TouchPhase phase)
+        const glm::vec3& p, TouchPhase phase)
     {
         return touch(p, phase);
     }
 
-    bool EntityStack::touch(const glm::vec2& p, TouchPhase phase)
+    bool EntityStack::touch(const glm::vec3& p, TouchPhase phase)
     {
         if(!_stack.empty())
         {

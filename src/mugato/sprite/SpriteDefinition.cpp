@@ -3,7 +3,8 @@
 
 namespace mugato {
 
-    SpriteDefinition::SpriteDefinition()   
+    SpriteDefinition::SpriteDefinition():
+	_resizeMode(ResizeMode::Original)
     {
     }
 

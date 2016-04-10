@@ -41,6 +41,7 @@
     <ClCompile Include="..\src\mugato\base\Application.cpp" />
     <ClCompile Include="..\src\mugato\base\Context.cpp" />
     <ClCompile Include="..\src\mugato\base\Kinds.cpp" />
+    <ClCompile Include="..\src\mugato\base\Light.cpp" />
     <ClCompile Include="..\src\mugato\label\DebugFontAtlasConfigurator.cpp" />
     <ClCompile Include="..\src\mugato\label\FntFontAtlasLoader.cpp" />
     <ClCompile Include="..\src\mugato\label\FontAtlas.cpp" />
@@ -54,11 +55,14 @@
     <ClCompile Include="..\src\mugato\scene\ActionComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\AlignComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\ButtonComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scene\CameraComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\EmptyAction.cpp" />
     <ClCompile Include="..\src\mugato\scene\Entity.cpp" />
     <ClCompile Include="..\src\mugato\scene\EntityStack.cpp" />
     <ClCompile Include="..\src\mugato\scene\EntityTransform.cpp" />
     <ClCompile Include="..\src\mugato\scene\LabelComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scene\LightComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scene\MeshComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\OcTreeRenderComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\RenderInfoComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\SpriteComponent.cpp" />
@@ -91,6 +95,7 @@
     <ClInclude Include="..\src\mugato\base\Easing.hpp" />
     <ClInclude Include="..\src\mugato\base\Exception.hpp" />
     <ClInclude Include="..\src\mugato\base\Kinds.hpp" />
+    <ClInclude Include="..\src\mugato\base\Light.hpp" />
     <ClInclude Include="..\src\mugato\base\OcTree.hpp" />
     <ClInclude Include="..\src\mugato\base\OcTreeElement.hpp" />
     <ClInclude Include="..\src\mugato\base\OcTreeNode.hpp" />
@@ -105,10 +110,12 @@
     <ClInclude Include="..\src\mugato\label\LabelEnums.hpp" />
     <ClInclude Include="..\src\mugato\label\LabelFont.hpp" />
     <ClInclude Include="..\src\mugato\label\LabelManager.hpp" />
+    <ClInclude Include="..\src\mugato\mugato.hpp" />
     <ClInclude Include="..\src\mugato\scene\Action.hpp" />
     <ClInclude Include="..\src\mugato\scene\ActionComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\AlignComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\ButtonComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scene\CameraComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\Component.hpp" />
     <ClInclude Include="..\src\mugato\scene\EmptyAction.hpp" />
     <ClInclude Include="..\src\mugato\scene\Entity.hpp" />
@@ -116,6 +123,8 @@
     <ClInclude Include="..\src\mugato\scene\EntityStack.hpp" />
     <ClInclude Include="..\src\mugato\scene\EntityTransform.hpp" />
     <ClInclude Include="..\src\mugato\scene\LabelComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scene\LightComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scene\MeshComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\OcTreeRenderComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\RenderInfoComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\SpriteComponent.hpp" />
@@ -185,12 +194,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <SDLCheck>
       </SDLCheck>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GORN_PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;GLM_FORCE_RADIANS;_HAS_ITERATOR_DEBUGGING=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GORN_PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;GLM_FORCE_RADIANS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
       <BufferSecurityCheck>
@@ -208,7 +217,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GORN_PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;GLM_FORCE_RADIANS;_HAS_ITERATOR_DEBUGGING=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GORN_PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;GLM_FORCE_RADIANS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

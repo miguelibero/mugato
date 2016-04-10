@@ -155,7 +155,6 @@ namespace mugato {
         {
             itr->second.render(queue);
         }
-
     }
 
 }

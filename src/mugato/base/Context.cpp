@@ -1,6 +1,6 @@
-
 #include <mugato/base/Context.hpp>
 #include <mugato/base/Kinds.hpp>
+#include <mugato/base/Light.hpp>
 #include <mugato/sprite/MaterialSpriteAtlasLoader.hpp>
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
@@ -39,16 +39,15 @@ namespace mugato
                     .withProgram(ProgramKind::Sprite);
             });
 
-	    _gorn.getPrograms().getDefinitions().get(ProgramKind::Sprite)
-            .withShaderData(gorn::ShaderType::Vertex, R"(#version 100
-
+		_gorn.getPrograms().getDefinitions().get(ProgramKind::Sprite)
+			.withShaderData(gorn::ShaderType::Vertex, R"(#version 100
 precision highp float;
 
 attribute vec3 position;
 attribute vec2 texCoords;
 
 uniform mat4 model;
-uniform mat4 view;
+uniform mat4 cam;
 uniform vec4 color;
 
 varying vec2 TexCoords;
@@ -56,12 +55,11 @@ varying vec2 TexCoords;
 void main()
 {
     TexCoords = texCoords;
-    gl_Position = view * model * vec4(position, 1.0);
+    gl_Position = cam * model * vec4(position, 1.0);
 }
 
 )")
-            .withShaderData(gorn::ShaderType::Fragment, R"(#version 100
-
+.withShaderData(gorn::ShaderType::Fragment, R"(#version 100
 precision highp float;
 
 varying vec2 TexCoords;
@@ -71,12 +69,12 @@ uniform vec4 color;
 
 void main()
 {
-    gl_FragColor = color*texture2D(texture, TexCoords);
+    gl_FragColor = color * texture2D(texture, TexCoords);
 }
 
 )")
             .withUniform(gorn::UniformKind::Model, "model")
-            .withUniform(gorn::UniformKind::View, "view")
+            .withUniform(gorn::UniformKind::Camera, "cam")
             .withUniform(gorn::UniformKind::Texture0, "texture")
             .withUniform(gorn::UniformKind::Color,
                 gorn::ProgramUniformDefinition("color")
@@ -85,7 +83,7 @@ void main()
             .withAttribute(gorn::AttributeKind::TexCoords, "texCoords");
 
 
- _gorn.getPrograms().getDefinitions().get(ProgramKind::Color)
+		_gorn.getPrograms().getDefinitions().get(ProgramKind::Color)
             .withShaderData(gorn::ShaderType::Vertex, R"(#version 100
 
 precision highp float;
@@ -93,12 +91,12 @@ precision highp float;
 attribute vec3 position;
 
 uniform mat4 model;
-uniform mat4 view;
+uniform mat4 cam;
 uniform vec4 color;
 
 void main()
 {
-    gl_Position = view * model * vec4(position, 1.0);
+    gl_Position = cam * model * vec4(position, 1.0);
 }
 
 )")
@@ -115,30 +113,17 @@ void main()
 
 )")
             .withUniform(gorn::UniformKind::Model, "model")
-            .withUniform(gorn::UniformKind::View, "view")
+            .withUniform(gorn::UniformKind::Camera, "cam")
             .withUniform(gorn::UniformKind::Color, "color")
             .withAttribute(gorn::AttributeKind::Position, "position");
 
         DebugFontAtlasConfigurator().setup(*this);
 
+		_lighting.setup(*this);
+
         _root = std::make_shared<Entity>();
         _root->setContext(*this);
-        _root->getTransform().setPosition(glm::vec2(-1.0f));
         _scenes = &_root->addComponent<EntityStack>();
-        setViewportSize(glm::vec2(2.0f));
-    }
-
-    void Context::setViewportSize(const glm::vec2& size)
-    {
-        _root->getTransform().setScale(
-            glm::vec2(2.0f/size.x, 2.0f/size.y));
-        _root->getTransform().setSize(size);
-        _scenes->getTransform().setSize(size);
-
-        // set model for rendering without entities
-        _root->getTransform().update();
-        getGorn().getQueue().setModelTransform(
-            _root->getTransform().getMatrix());
     }
 
     const gorn::Context& Context::getGorn() const
@@ -191,6 +176,16 @@ void main()
         return *_scenes;
     }
 
+	const LightingSystem& Context::getLighting() const
+	{
+		return _lighting;
+	}
+
+	LightingSystem& Context::getLighting()
+	{
+		return _lighting;
+	}
+
     const Entity& Context::getRoot() const
     {
         return *_root;
@@ -229,22 +224,25 @@ void main()
 
     void Context::draw()
     {
-        // reset model transform
-        _gorn.getQueue().addCommand()
-            .withTransform(glm::mat4(),
-                gorn::RenderCommandTransformMode::SetGlobal);
-        _root->render(_gorn.getQueue());
+		_lighting.render(_gorn.getQueue());
+		_root->render(_gorn.getQueue());
         _gorn.getQueue().draw();
     }
 
     void Context::touch(const glm::vec2& p)
     {
-        _root->touch(p);
+		for(auto& cam : _gorn.getQueue().getCameras())
+		{
+			_root->touch(cam->getScreenToWorldPoint(p));
+		}
     }
 
     void Context::touchEnd(const glm::vec2& p)
     {
-        _root->touch(p, EntityTouchPhase::End);
+		for (auto& cam : _gorn.getQueue().getCameras())
+		{
+			_root->touch(cam->getScreenToWorldPoint(p), EntityTouchPhase::End);
+		}
     }
 
 }

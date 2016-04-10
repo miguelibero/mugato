@@ -1,0 +1,5 @@
+include ':mugato'
+project(':mugato').projectDir = new File("../../../proj.android/mugato")
+include ':gorn'
+project(':gorn').projectDir = new File("../../../lib/gorn/proj.android/gorn")
+

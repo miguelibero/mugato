@@ -6,6 +6,7 @@
 #include <mugato/spine/SpineManager.hpp>
 #include <mugato/label/LabelManager.hpp>
 #include <mugato/scene/Entity.hpp>
+#include <mugato/base/Light.hpp>
 #include <glm/glm.hpp>
 
 namespace mugato
@@ -20,6 +21,7 @@ namespace mugato
         LabelManager _labels;
         SpineManager _skeletons;
         EntityStack* _scenes;
+		LightingSystem _lighting;
         std::shared_ptr<Entity> _root;
 
         double _fixedUpdateInterval;
@@ -37,8 +39,6 @@ namespace mugato
         void touch(const glm::vec2& p);
         void touchEnd(const glm::vec2& p);
 
-        void setViewportSize(const glm::vec2& size);
-
         const gorn::Context& getGorn() const;
         gorn::Context& getGorn();
 
@@ -53,6 +53,9 @@ namespace mugato
 
         const EntityStack& getScenes() const;
         EntityStack& getScenes();
+
+		const LightingSystem& getLighting() const;
+		LightingSystem& getLighting();
 
         const Entity& getRoot() const;
         Entity& getRoot();

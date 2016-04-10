@@ -241,6 +241,18 @@
     <ClCompile Include="..\lib\spine-c\src\spine\SkeletonBounds.c">
       <Filter>lib\spine</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\MeshComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\CameraComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\base\Light.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\LightComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\mugato\base\Kinds.hpp">
@@ -410,6 +422,19 @@
     </ClInclude>
     <ClInclude Include="..\lib\spine-c\src\spine\Json.h">
       <Filter>lib\spine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\MeshComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\mugato.hpp" />
+    <ClInclude Include="..\src\mugato\scene\CameraComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\base\Light.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\LightComponent.hpp">
+      <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

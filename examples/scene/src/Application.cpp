@@ -2,6 +2,7 @@
 #include <gorn/gorn.hpp>
 #include <mugato/mugato.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtx/transform.hpp>
 #include <functional>
 #include <random>
 
@@ -53,9 +54,10 @@ void SceneApplication::load()
 
     getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
-
     glm::vec2 portSize(480.0f, 320.0f);
-    getMugato().setViewportSize(portSize);
+	getMugato().getRoot().getTransform().setSize(portSize);
+    getGorn().getQueue().addCamera()
+        .withProjection(glm::ortho(0.0f, portSize.x, 0.0f, portSize.y));
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("octree_elements", gorn::MaterialDefinition()
@@ -71,7 +73,6 @@ void SceneApplication::load()
     auto scene = getMugato().getScenes().push();
     auto& bg = scene->addComponent<mugato::SpriteComponent>("background.png");
     bg.getSprite().setResizeMode(mugato::SpriteResizeMode::Exact);
-
     scene->addComponent<mugato::RenderInfoComponent>();
 
     auto& materials = getGorn().getMaterials();
@@ -86,7 +87,7 @@ void SceneApplication::load()
     _posYDistri = RandomDistri(0.0f, portSize.y*1.5f);
     _rotDistri = RandomDistri(0.0f, glm::pi<float>()*2.0f);
 
-    for(int i=0; i<100; ++i)
+    for(int i=0; i<50; ++i)
     {
         auto guy = scene->addChild();
         auto& sprite = guy->addComponent<mugato::SpriteComponent>(

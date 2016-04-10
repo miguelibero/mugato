@@ -24,14 +24,11 @@ namespace mugato
 
         EntityStack();
 
-        const EntityTransform& getTransform() const;
-        EntityTransform& getTransform();
-
-        bool touch(const glm::vec2& p, TouchPhase phase=TouchPhase::Begin);
+        bool touch(const glm::vec3& p, TouchPhase phase=TouchPhase::Begin);
 
         void onAssignedToContext(Context& ctx) override;
         void onEntityTransformChanged(Entity& entity) override;
-        bool onEntityTouched(Entity& entity, const glm::vec2& p,
+        bool onEntityTouched(Entity& entity, const glm::vec3& p,
             TouchPhase phase) override;
         void onAddedToEntity(Entity& entity) override;
         void update(double dt) override;

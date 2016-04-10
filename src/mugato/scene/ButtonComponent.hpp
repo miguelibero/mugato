@@ -19,11 +19,8 @@ namespace mugato
     public:
         typedef ButtonState State;
         typedef std::function<bool(TouchPhase phase,
-            const glm::vec2& p)> TouchCallback;
+            const glm::vec3& p)> TouchCallback;
         typedef std::function<void()> ClickCallback;
-
-        void loadBackground(Context& ctx);
-        void loadLabel(Context& ctx);
     private:
         Sprite _bg;
         Label _label;
@@ -35,6 +32,8 @@ namespace mugato
         std::map<State, std::shared_ptr<gorn::Material>> _bgMaterials;
 
         void setState(State state);
+		void loadBackground(Context& ctx);
+		void loadLabel(Context& ctx);
     public:
         ButtonComponent();
 
@@ -55,7 +54,7 @@ namespace mugato
 
         void onAddedToEntity(Entity& entity) override;
         void onEntityTransformChanged(Entity& entity) override;
-        bool onEntityTouched(Entity& entity, const glm::vec2& p,
+        bool onEntityTouched(Entity& entity, const glm::vec3& p,
             TouchPhase phase) override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;

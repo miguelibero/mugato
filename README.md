@@ -21,9 +21,10 @@ Some functionalities that the library supports:
 ## Example
 
 ```c++
-Conext ctx = getContext();
+auto& ctx = getContext();
 
-ctx.setScreenSize(glm::vec2(480.0f, 320.0f));
+ctx.getQueue().addCamera()
+    .withProjection(glm::ortho(0.0f, 480.0f, 0.0f, 320.0f));
 
 auto scene = ctx.getScenes().push();
 
