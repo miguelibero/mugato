@@ -17,33 +17,33 @@ namespace mugato
 	void LightingSystem::setup(mugato::Context& ctx)
 	{
 		ctx.getGorn().getPrograms().getDefinitions().get(ProgramKind::Light)
-			.withShaderData(gorn::ShaderType::Vertex, R"(#version 150
+			.withShaderData(gorn::ShaderType::Vertex, R"(#version 100
+precision highp float;
 
 uniform mat4 camera;
 uniform mat4 model;
 
-in vec3 vert;
-in vec2 vertTexCoord;
-in vec3 vertNormal;
+attribute vec3 vert;
+attribute vec2 vertTexCoord;
+attribute vec3 vertNormal;
 
-out vec3 fragVert;
-out vec2 fragTexCoord;
-out vec3 fragNormal;
+varying vec3 fragVert;
+varying vec2 fragTexCoord;
+varying vec3 fragNormal;
 
 void main() {
-    // Pass some variables to the fragment shader
     fragTexCoord = vertTexCoord;
     fragNormal = vertNormal;
     fragVert = vert;
-    
-    // Apply all matrix transformations to vert
     gl_Position = camera * model * vec4(vert, 1);
 }
 
 )")
-.withShaderData(gorn::ShaderType::Fragment, R"(#version 150
+.withShaderData(gorn::ShaderType::Fragment, R"(#version 100
+precision highp float;
 
-	uniform mat4 model;
+uniform mat4 model;
+uniform mat3 normalMatrix;
 uniform vec3 cameraPosition;
 
 uniform sampler2D materialTex;
@@ -54,85 +54,72 @@ uniform vec3 materialSpecularColor;
 uniform int numLights;
 uniform struct Light {
    vec4 position;
-   vec3 intensities; //a.k.a the color of the light
+   vec3 intensities;
    float attenuation;
    float ambientCoefficient;
    float coneAngle;
    vec3 coneDirection;
 } allLights[MAX_LIGHTS];
 
-in vec2 fragTexCoord;
-in vec3 fragNormal;
-in vec3 fragVert;
-
-out vec4 finalColor;
+varying vec2 fragTexCoord;
+varying vec3 fragNormal;
+varying vec3 fragVert;
 
 vec3 ApplyLight(Light light, vec3 surfaceColor, vec3 normal, vec3 surfacePos, vec3 surfaceToCamera) {
     vec3 surfaceToLight;
     float attenuation = 1.0;
-
-		if(light.position.w == 0.0) {
-        //directional light
+    if(light.position.w == 0.0) {
         surfaceToLight = normalize(light.position.xyz);
-        attenuation = 1.0; //no attenuation for directional lights
     } else {
-        //point light
         surfaceToLight = normalize(light.position.xyz - surfacePos);
-        float distanceToLight = length(light.position.xyz - surfacePos);
-        attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
+        float distanceToLight = distance(light.position.xyz, surfacePos);
+        attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2.0));
 
-			//cone restrictions (affects attenuation)
         float lightToSurfaceAngle = degrees(acos(dot(-surfaceToLight, normalize(light.coneDirection))));
-        if(lightToSurfaceAngle > light.coneAngle){
+        if(lightToSurfaceAngle > light.coneAngle) {
             attenuation = 0.0;
         }
     }
 
-		//ambient
-	vec3 ambient = light.ambientCoefficient * surfaceColor.rgb * light.intensities;
+    vec3 ambient = light.ambientCoefficient * surfaceColor.rgb * light.intensities;
 
-		//diffuse
     float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));
     vec3 diffuse = diffuseCoefficient * surfaceColor.rgb * light.intensities;
-    
-    //specular
+
     float specularCoefficient = 0.0;
-    if(diffuseCoefficient > 0.0)
-	{
+    if(diffuseCoefficient > 0.0) {
         specularCoefficient = pow(max(0.0, dot(surfaceToCamera, reflect(-surfaceToLight, normal))), materialShininess);
-	}
+    }
     vec3 specular = specularCoefficient * materialSpecularColor * light.intensities;
 
-	//linear color (color before gamma correction)
     return ambient + attenuation*(diffuse + specular);
 }
 
 void main() {
-    vec3 normal = normalize(transpose(inverse(mat3(model))) * fragNormal);
+    vec3 normal = normalize(normalMatrix * fragNormal);
     vec3 surfacePos = vec3(model * vec4(fragVert, 1));
-    vec4 surfaceColor = texture(materialTex, fragTexCoord);
+    vec4 surfaceColor = texture2D(materialTex, fragTexCoord);
     vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
 
-	//combine color from all the lights
     vec3 linearColor = vec3(0);
-    for(int i = 0; i < numLights; ++i){
+    for(int i = 0; i < numLights; ++i) {
         linearColor += ApplyLight(allLights[i], surfaceColor.rgb, normal, surfacePos, surfaceToCamera);
     }
-    
-    //final color (after gamma correction)
+
     vec3 gamma = vec3(1.0/2.2);
-    finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
+    gl_FragColor = vec4(pow(linearColor, gamma), surfaceColor.a);
 }
 
 )")
 		.withUniform(gorn::UniformKind::Model, "model")
+		.withUniform(gorn::UniformKind::NormalMatrix, "normalMatrix")
 		.withUniform(gorn::UniformKind::CameraPosition, "cameraPosition")
 		.withUniform(gorn::UniformKind::Camera, "camera")
 		.withUniform(gorn::UniformKind::Texture0, "materialTex")
 		.withUniform(gorn::UniformKind::Color,
 			gorn::ProgramUniformDefinition("materialSpecularColor")
 				.withValue(glm::vec3(1.0)))
-		.withUniform(gorn::ProgramUniformDefinition("materialShininess").withValue(1.0f))
+		.withUniform(gorn::ProgramUniformDefinition("materialShininess").withValue(80.0f))
 		.withAttribute(gorn::AttributeKind::TexCoords, "vertTexCoord")
 		.withAttribute(gorn::AttributeKind::Normal, "vertNormal")
 		.withAttribute(gorn::AttributeKind::Position, "vert");
@@ -151,8 +138,7 @@ void main() {
 	Light& LightingSystem::add(LightType type)
 	{
 		auto& light = add();
-		light.type = type;
-		return light;
+		return light.withType(type);
 	}
 
 	Light& LightingSystem::add()
@@ -171,66 +157,117 @@ void main() {
 		return true;
 	}
 
-	LightingSystem::UniformValueMap LightingSystem::getUniforms() const
+	gorn::UniformValueMap LightingSystem::getUniformValues(const gorn::RenderCamera& cam) const
 	{
 		int i = 0;
 		std::stringstream ss;
-		UniformValueMap uniforms;
+		gorn::UniformValueMap values;
 		for(auto& light : _lights)
 		{
-			ss << "allLights[" << i++ << "].";
-			std::string prefix = ss.str();
-			ss.str("");
-			auto lightUniforms = light->getUniforms();
-			for(auto itr = lightUniforms.begin(); itr != lightUniforms.end(); ++itr)
+			if(cam.matchesLayers(light->getLayers()))
 			{
-				uniforms[prefix+itr->first] = itr->second;
+				ss << "allLights[" << i++ << "].";
+				std::string prefix = ss.str();
+				ss.str("");
+				auto lightUniforms = light->getUniformValues();
+				for (auto itr = lightUniforms.begin(); itr != lightUniforms.end(); ++itr)
+				{
+					values[prefix + itr->first] = itr->second;
+				}
 			}
 		}
-		uniforms["numLights"] = (int)_lights.size();
-		return uniforms;
+		values["numLights"] = i;
+		return values;
 	}
 
 	void LightingSystem::render(gorn::RenderQueue& queue) const
 	{
-		// TODO: check for light changes to not reload the uniforms all the time
-		auto uniforms = queue.getUniformValues();
-		for(auto itr = uniforms.begin(); itr != uniforms.end(); ++itr)
+		for(auto& cam : queue.getCameras())
 		{
-			if (itr->first.substr(0, 10) == "allLights[")
-			{
-				queue.removeUniformValue(itr->first);
-			}
-		}
-		queue.removeUniformValue("numLights");
-		uniforms = getUniforms();
-		for (auto itr = uniforms.begin(); itr != uniforms.end(); ++itr)
-		{
-			queue.setUniformValue(itr->first, itr->second);
+			cam->withUniformValues(getUniformValues(*cam));
 		}
 	}
 
 	Light::Light(Type type):
-	type(type),
-	position(0.0f),
-	color(1.0f),
-	attenuation(0.0f),
-	ambientCoefficient(1.0f),
-	coneAngle(glm::pi<float>()),
-	direction(-1.0f, -1.0f, 1.0f)
+	_type(type),
+	_position(0.0f),
+	_color(1.0f),
+	_attenuation(0.0f),
+	_ambientCoefficient(0.0f),
+	_coneAngle(90.0f),
+	_direction(0, -1, 0)
 	{
 	}
 
-	Light::UniformValueMap Light::getUniforms() const
+	Light& Light::withType(Type type)
 	{
-		UniformValueMap uniforms;
-		uniforms["position"] = glm::vec4(position, (int)type);
-		uniforms["intensities"] = color;
-		uniforms["attenuation"] = attenuation;
-		uniforms["ambientCoefficient"] = ambientCoefficient;
-		uniforms["coneAngle"] = coneAngle;
-		uniforms["coneDirection"] = direction;
-		return uniforms;
+		_type = type;
+		return *this;
+	}
+
+	Light& Light::withPosition(const glm::vec3& position)
+	{
+		_position = position;
+		return *this;
+	}
+
+	Light& Light::withColor(const glm::vec3& color)
+	{
+		_color = color;
+		return *this;
+	}
+
+	Light& Light::withDirection(const glm::vec3& dir)
+	{
+		_direction = dir;
+		return *this;
+	}
+
+	Light& Light::withAttenuation(float attenuation)
+	{
+		_attenuation = attenuation;
+		return *this;
+	}
+
+	Light& Light::withAmbient(float ambientCoefficient)
+	{
+		_ambientCoefficient = ambientCoefficient;
+		return *this;
+	}
+
+	Light& Light::withConeAngle(float angle)
+	{
+		_coneAngle = angle;
+		return *this;
+	}
+
+	Light& Light::withLayer(int layer)
+	{
+		_layers.push_back(layer);
+		return *this;
+	}
+
+	Light& Light::withLayers(const Layers& layers)
+	{
+		_layers.insert(_layers.end(), layers.begin(), layers.end());
+		return *this;
+	}
+
+	const Light::Layers& Light::getLayers() const
+	{
+		return _layers;
+	}
+
+	gorn::UniformValueMap Light::getUniformValues() const
+	{
+		return{
+			{ "position",			glm::vec4(_position, (int)_type) },
+			{ "intensities",		_color },
+			{ "attenuation",		_attenuation },
+			{ "ambientCoefficient", _ambientCoefficient },
+			{ "coneAngle",			_coneAngle },
+			{ "coneDirection",		_direction },
+		};
 	}
 
 }

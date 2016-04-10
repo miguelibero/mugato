@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(mugato_raycast)
+project(mugato_lighting)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -20,5 +20,5 @@ include_directories(../../../lib/gorn/lib)
 include_directories(../../../lib/gorn/lib/buffer/src)
 
 file(GLOB SOURCES "../src/*.cpp")
-add_executable(raycast ${SOURCES})
-target_link_libraries(raycast mugato)
+add_executable(lighting ${SOURCES})
+target_link_libraries(lighting mugato)

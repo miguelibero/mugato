@@ -41,10 +41,9 @@ namespace mugato
 
 		_gorn.getPrograms().getDefinitions().get(ProgramKind::Sprite)
 			.withShaderData(gorn::ShaderType::Vertex, R"(#version 100
+precision highp float;
 
-				precision highp float;
-
-				attribute vec3 position;
+attribute vec3 position;
 attribute vec2 texCoords;
 
 uniform mat4 model;
@@ -61,12 +60,11 @@ void main()
 
 )")
 .withShaderData(gorn::ShaderType::Fragment, R"(#version 100
+precision highp float;
 
-	precision highp float;
+varying vec2 TexCoords;
 
-	varying vec2 TexCoords;
-
-	uniform sampler2D texture;
+uniform sampler2D texture;
 uniform vec4 color;
 
 void main()
@@ -125,22 +123,7 @@ void main()
 
         _root = std::make_shared<Entity>();
         _root->setContext(*this);
-        _root->getTransform().setPosition(glm::vec2(-1.0f));
         _scenes = &_root->addComponent<EntityStack>();
-        setViewportSize(glm::vec2(2.0f));
-    }
-
-    void Context::setViewportSize(const glm::vec2& size)
-    {
-        _root->getTransform().setScale(
-            glm::vec2(2.0f/size.x, 2.0f/size.y));
-        _root->getTransform().setSize(size);
-        _scenes->getTransform().setSize(size);
-
-        // set model for rendering without entities
-        _root->getTransform().update();
-        getGorn().getQueue().setModelTransform(
-            _root->getTransform().getMatrix());
     }
 
     const gorn::Context& Context::getGorn() const
@@ -241,10 +224,6 @@ void main()
 
     void Context::draw()
     {
-        // reset model transform
-        _gorn.getQueue().addCommand()
-            .withTransform(glm::mat4(),
-                gorn::RenderCommandTransformMode::SetGlobal);
 		_lighting.render(_gorn.getQueue());
 		_root->render(_gorn.getQueue());
         _gorn.getQueue().draw();
@@ -252,12 +231,18 @@ void main()
 
     void Context::touch(const glm::vec2& p)
     {
-        _root->touch(p);
+		for(auto& cam : _gorn.getQueue().getCameras())
+		{
+			_root->touch(cam->getScreenToWorldPoint(p));
+		}
     }
 
     void Context::touchEnd(const glm::vec2& p)
     {
-        _root->touch(p, EntityTouchPhase::End);
+		for (auto& cam : _gorn.getQueue().getCameras())
+		{
+			_root->touch(cam->getScreenToWorldPoint(p), EntityTouchPhase::End);
+		}
     }
 
 }

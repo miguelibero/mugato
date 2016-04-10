@@ -11,7 +11,7 @@ class GuiApplication : public mugato::Application
 private:
     bool onButtonTouched(mugato::Sprite& sprite,
         mugato::EntityTouchPhase phase,
-        const glm::vec2& p);
+        const glm::vec3& p);
 
     void createButton(mugato::Entity& p, mugato::Alignment a);
 public:
@@ -38,7 +38,9 @@ void GuiApplication::load()
 	getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
-    getMugato().setViewportSize(glm::vec2(480.0f, 320.0f));
+    getGorn().getQueue().addCamera()
+		.withOrtho(glm::vec2(480.0f, 320.0f));
+	getMugato().getRoot().getTransform().setSize(glm::vec2(480.0f, 320.0f));
 
     getGorn().getMaterials().getDefinitions().get("button")
         .withTexture(gorn::UniformKind::Texture0, "button1.png");
@@ -109,7 +111,7 @@ void GuiApplication::createButton(mugato::Entity& p, mugato::Alignment a)
 }
 
 bool GuiApplication::onButtonTouched(mugato::Sprite& sprite,
-    mugato::EntityTouchPhase phase, const glm::vec2& p)
+    mugato::EntityTouchPhase phase, const glm::vec3& p)
 {
     std::string phaseStr;
     switch(phase)

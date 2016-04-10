@@ -4,6 +4,7 @@
 #include <gorn/render/RenderQueue.hpp>
 #include <gorn/render/RenderKinds.hpp>
 #include <gorn/gl/Material.hpp>
+#include <gorn/base/Math.hpp>
 
 namespace mugato {
 
@@ -130,8 +131,7 @@ namespace mugato {
 
     bool SpriteFrame::hasStretchBorders() const
     {
-        auto& b = _stretchBorders;
-        return b[0] != 0.0f || b[1] != 0.0f || b[2] != 0.0f || b[3] != 0.0f;
+		return !gorn::Math::isZero(_stretchBorders);
     }
 
     void SpriteFrame::setSize(const glm::vec2& size)

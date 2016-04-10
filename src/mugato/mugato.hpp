@@ -48,6 +48,7 @@
 #include <mugato/scene/AlignComponent.hpp>
 #include <mugato/scene/MeshComponent.hpp>
 #include <mugato/scene/CameraComponent.hpp>
+#include <mugato/scene/LightComponent.hpp>
 #include <mugato/scene/Action.hpp>
 #include <mugato/scene/EmptyAction.hpp>
 #include <mugato/scene/TweenAction.hpp>

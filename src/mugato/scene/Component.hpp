@@ -26,7 +26,7 @@ namespace mugato
         virtual void onParentEntitySizeChanged(Entity& entity){};
         virtual void onEntityTransformChanged(Entity& entity){};
         virtual bool onEntityTouched(Entity& entity,
-            const glm::vec2& p, TouchPhase phase) { return false; };
+            const glm::vec3& p, TouchPhase phase) { return false; };
         virtual void onEntityComponentsLoaded(Entity& entity){};
 		virtual void beforeEntityChildrenRender(gorn::RenderQueue& queue) {};
 		virtual void afterEntityChildrenRender(gorn::RenderQueue& queue) {};

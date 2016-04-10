@@ -11,6 +11,7 @@
 namespace gorn
 {
 	class RenderQueue;
+	class RenderCamera;
 }
 
 namespace mugato
@@ -23,32 +24,42 @@ namespace mugato
 		Point
 	};
 
-	struct Light
+	class Light
 	{
+	public:
 		typedef LightType Type;
-		typedef std::map<std::string, gorn::UniformValue> UniformValueMap;
-
-		Type type;
-		glm::vec3 position;
-		glm::vec3 color;
-		float attenuation;
-		float ambientCoefficient;
-		float coneAngle;
-		glm::vec3 direction;
-
+		typedef std::vector<int> Layers;
+	private:
+		Type _type;
+		glm::vec3 _position;
+		glm::vec3 _color;
+		float _attenuation;
+		float _ambientCoefficient;
+		float _coneAngle;
+		glm::vec3 _direction;
+		Layers _layers;
+	public:
 		Light(Type type=Type::Point);
 
+		Light& withType(Type type);
+		Light& withPosition(const glm::vec3& position);
+		Light& withColor(const glm::vec3& color);
+		Light& withDirection(const glm::vec3& dir);
+		Light& withAttenuation(float attenuation);
+		Light& withAmbient(float ambientCoefficient);
+		Light& withConeAngle(float angle);
+		Light& withLayer(int layer);
+		Light& withLayers(const Layers& layers);
 
-		UniformValueMap getUniforms() const;
+		gorn::UniformValueMap getUniformValues() const;
+		const Layers& getLayers() const;
 	};
 
 	class LightingSystem
 	{
 	private:
-		typedef std::map<std::string, gorn::UniformValue> UniformValueMap;
-
 		std::vector<std::shared_ptr<Light>> _lights;
-		UniformValueMap getUniforms() const;
+		gorn::UniformValueMap getUniformValues(const gorn::RenderCamera& cam) const;
 	public:
 
 		LightingSystem();

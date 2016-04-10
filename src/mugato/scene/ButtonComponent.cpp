@@ -129,7 +129,7 @@ namespace mugato
         }
     }
 
-    bool ButtonComponent::onEntityTouched(Entity& entity, const glm::vec2& p,
+    bool ButtonComponent::onEntityTouched(Entity& entity, const glm::vec3& p,
         TouchPhase phase)
     {
         bool block = true;

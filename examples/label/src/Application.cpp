@@ -46,7 +46,8 @@ void LabelApplication::load()
         _ctx.getGorn().getMaterials(), glm::vec2(8.0f));
     loader.setAdvanceDifference(-3.0f);
 
-    _ctx.setViewportSize(glm::vec2(200.0f, 200.0f));
+    _ctx.getGorn().getQueue().addCamera()
+		.withOrtho(0.0f, 200.0f, 0.0f, 200.0f);
 
     _label1 = _ctx.getLabels().load("font.fnt");
     _label1.setText("This is a fnt label! gg_jj");

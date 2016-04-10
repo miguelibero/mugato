@@ -61,6 +61,7 @@
     <ClCompile Include="..\src\mugato\scene\EntityStack.cpp" />
     <ClCompile Include="..\src\mugato\scene\EntityTransform.cpp" />
     <ClCompile Include="..\src\mugato\scene\LabelComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scene\LightComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\MeshComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\OcTreeRenderComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\RenderInfoComponent.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="..\src\mugato\scene\EntityStack.hpp" />
     <ClInclude Include="..\src\mugato\scene\EntityTransform.hpp" />
     <ClInclude Include="..\src\mugato\scene\LabelComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scene\LightComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\MeshComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\OcTreeRenderComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\RenderInfoComponent.hpp" />
@@ -192,7 +194,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <SDLCheck>
       </SDLCheck>
       <AdditionalIncludeDirectories>

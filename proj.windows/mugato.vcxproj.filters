@@ -250,6 +250,9 @@
     <ClCompile Include="..\src\mugato\base\Light.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\LightComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\mugato\base\Kinds.hpp">
@@ -429,6 +432,9 @@
     </ClInclude>
     <ClInclude Include="..\src\mugato\base\Light.hpp">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\LightComponent.hpp">
+      <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

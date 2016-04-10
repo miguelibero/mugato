@@ -9,6 +9,7 @@ class SpriteApplication : public gorn::Application
 	mugato::Context _ctx;
     mugato::Sprite _sprite1;
     mugato::Sprite _sprite2;
+	gorn::Mesh _debugMesh;
 
 public:
 
@@ -37,6 +38,13 @@ void SpriteApplication::load()
 	_ctx.getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
+	auto& matdefs = _ctx.getGorn().getMaterials().getDefinitions();
+
+	matdefs.set("debug", gorn::MaterialDefinition()
+		.withUniformValue(gorn::UniformKind::Color,
+			glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
+		.withProgram(mugato::ProgramKind::Color));
+
     _ctx.getGorn().getTextures().getDefinitions().get("guybrush.png")
         .withParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         .withParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -47,13 +55,17 @@ void SpriteApplication::load()
             .withFrame("gb_walk")
             .withFrameDuration(1.0f/5.0f));
 
-    _ctx.setViewportSize(glm::vec2(200.0f, 200.0f));
+	_ctx.getGorn().getQueue().addCamera()
+		.withProjection(glm::ortho(0.0f, 200.0f, 0.0f, 250.0f));
 
     _sprite1 = _ctx.getSprites().load("guybrush");
     _sprite1.play("walk");
 
     _sprite2 = _ctx.getSprites().load("guybrush");
     _sprite2.play("walk");
+
+	_debugMesh = gorn::ShapeMeshFactory::create(
+		gorn::Rect(glm::vec2(0.0f), glm::vec2(100.0f)).shape());
 }
 
 void SpriteApplication::update(double dt)
@@ -65,11 +77,17 @@ void SpriteApplication::update(double dt)
 
 void SpriteApplication::draw()
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+	_ctx.getGorn().getQueue().addCommand()
+		.withClearAction(gorn::ClearAction()
+			.withColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
+			.withType(gorn::ClearType::Color));
+
+	auto cmd = _debugMesh.render();
+	cmd.withMaterial(_ctx.getGorn().getMaterials().load("debug"));
+	_ctx.getGorn().getQueue().addCommand(std::move(cmd));
 
     _sprite1.render(_ctx.getGorn().getQueue());
-    _ctx.getGorn().getQueue().addCommand()
+	_ctx.getGorn().getQueue().addCommand()
         .withTransform(
             glm::translate(glm::mat4(),
             glm::vec3(100.f, 100.f, 0.0f)));

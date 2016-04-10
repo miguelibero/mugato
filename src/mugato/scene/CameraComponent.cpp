@@ -1,53 +1,67 @@
 #include <mugato/scene/CameraComponent.hpp>
-#include <gorn/render/RenderQueue.hpp>
+#include <mugato/scene/Entity.hpp>
+#include <mugato/base/Context.hpp>
 
 namespace mugato
 {
-    CameraComponent::CameraComponent()
+    CameraComponent::CameraComponent():
+	_camera(std::make_shared<gorn::RenderCamera>()),
+	_ctx(nullptr)
     {
     }
 
-	CameraComponent::CameraComponent(const glm::mat4& view, const glm::mat4& proj):
-	_view(view), _proj(proj)
+	CameraComponent::~CameraComponent()
 	{
-		updateTransform();
+		cleanContext();
 	}
 
-	void CameraComponent::setViewTransform(const glm::mat4& view)
+	void CameraComponent::cleanContext()
 	{
-		if (_view != view)
+		if (_ctx != nullptr && _camera != nullptr)
 		{
-			_view = view;
-			updateTransform();
+			_ctx->getGorn().getQueue().removeCamera(_camera);
 		}
 	}
 
-	void CameraComponent::setProjectionTransform(const glm::mat4& proj)
+	CameraComponent& CameraComponent::withProjection(const glm::mat4& proj)
 	{
-		if (_proj != proj)
-		{
-			_proj = proj;
-			updateTransform();
-		}
+		_camera->withProjection(proj);
+		return *this;
 	}
 
-	void  CameraComponent::updateTransform()
+	CameraComponent& CameraComponent::withBlendMode(const gorn::BlendMode& blend)
 	{
-		_transform = _proj*_view;
+		_camera->withBlendMode(blend);
+		return *this;
 	}
 
-	void CameraComponent::beforeEntityChildrenRender(gorn::RenderQueue& queue)
+	CameraComponent& CameraComponent::withUniformValue(const std::string& name, const gorn::UniformValue& value)
 	{
-		queue.addCommand()
-			.withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
-		queue.addCommand()
-			.withTransform(_transform)
-			.withTransformMode(gorn::RenderCommand::TransformMode::SetGlobal);
-	}
-	void CameraComponent::afterEntityChildrenRender(gorn::RenderQueue& queue)
-	{
-		queue.addCommand()
-			.withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
+		_camera->withUniformValue(name, value);
+		return *this;
 	}
 
+	CameraComponent& CameraComponent::withUniformValues(const gorn::UniformValueMap& values)
+	{
+		_camera->withUniformValues(values);
+		return *this;
+	}
+
+	void CameraComponent::onAssignedToContext(Context& ctx)
+	{
+		cleanContext();
+		ctx.getGorn().getQueue().addCamera(_camera);
+		_ctx = &ctx;
+	}
+
+	void CameraComponent::onAddedToEntity(Entity& entity)
+	{
+		onEntityTransformChanged(entity);
+	}
+
+	void CameraComponent::onEntityTransformChanged(Entity& entity)
+	{
+		auto mat = entity.getModelMatrix();
+		_camera->withView(mat);
+	}
 }

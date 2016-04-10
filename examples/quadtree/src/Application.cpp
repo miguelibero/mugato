@@ -1,12 +1,13 @@
 
 #include <gorn/gorn.hpp>
 #include <mugato/mugato.hpp>
+#include <glm/gtx/transform.hpp>
 #include <random>
 #include <iostream>
 
 class QuadTreeApplication : public gorn::Application
 {
-	mugato::Context _ctx;
+	  mugato::Context _ctx;
     mugato::OcTree<void> _quadtree;
 
     std::mt19937 _randomAlgo;
@@ -62,6 +63,9 @@ void QuadTreeApplication::load()
 
     auto& matdefs = _ctx.getGorn().getMaterials().getDefinitions();
 
+	_ctx.getGorn().getQueue().addCamera()
+		.withOrtho(glm::vec2(2.0f));
+
     matdefs.set("octree_elements", gorn::MaterialDefinition()
         .withUniformValue(gorn::UniformKind::Color,
             glm::vec3(1.0f, 0.0f, 0.0f))
@@ -90,7 +94,7 @@ void QuadTreeApplication::update(double dt)
     {
         _quadtree.clear();
         for(size_t i=0; i<100; i++)
-        {            
+        {
             gorn::Rect rect(
                 glm::vec2(randomPos(), randomPos()),
                 glm::vec2(randomSize(), randomSize())
@@ -101,7 +105,7 @@ void QuadTreeApplication::update(double dt)
 
         _elmsMesh = gorn::ShapeMeshFactory::create(
             _quadtree.getElementsRects(), gorn::DrawMode::Lines);
-        
+
         _nodesMesh = gorn::ShapeMeshFactory::create(
             _quadtree.getNodesRects(), gorn::DrawMode::Lines);
 
@@ -132,4 +136,3 @@ void QuadTreeApplication::draw()
 
     queue.draw();
 }
-

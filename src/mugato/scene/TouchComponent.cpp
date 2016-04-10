@@ -8,7 +8,7 @@ namespace mugato
     }
 
     bool TouchComponent::onEntityTouched(Entity& entity,
-        const glm::vec2& p, TouchPhase phase)
+        const glm::vec3& p, TouchPhase phase)
     {
         if(_callback)
         {

@@ -14,7 +14,11 @@ namespace mugato
 	MeshComponent::MeshComponent(const std::shared_ptr<gorn::Mesh>& mesh, const std::shared_ptr<gorn::Material>& material):
 	_mesh(mesh), _material(material)
 	{
+	}
 
+	void MeshComponent::setNormalMaterial(const std::shared_ptr<gorn::Material>& material)
+	{
+		_normalMaterial = material;
 	}
 
 	void MeshComponent::onAssignedToContext(Context& ctx)
@@ -39,12 +43,19 @@ namespace mugato
 
     void MeshComponent::render(gorn::RenderQueue& queue)
     {
-		auto cmd = _mesh->render();
 		if(_material)
 		{
+			auto cmd = _mesh->render();
 			cmd.withMaterial(_material);
+			queue.addCommand(std::move(cmd));
 		}
-		queue.addCommand(std::move(cmd));
+		if(_normalMaterial)
+		{
+			auto normals = _mesh->getNormalsMesh();
+			auto cmd = normals.render();
+			cmd.withMaterial(_normalMaterial);
+			queue.addCommand(std::move(cmd));
+		}
     }
 
 }

@@ -28,6 +28,7 @@ namespace mugato
         typedef std::vector<std::weak_ptr<Entity>> TouchedChildren;
         typedef std::weak_ptr<Entity> Parent;
         typedef std::vector<std::unique_ptr<Component>> Components;
+		typedef std::vector<int> Layers;
     private:
         Context* _ctx;      
         Components _componentsToAdd;
@@ -36,10 +37,11 @@ namespace mugato
         Parent _parent;
         Transform _transform;
         TouchedChildren _touchedChildren;
-        
+		Layers _layers;
+
         void updateTransform();
         void addPendingComponents();
-        TouchPhase touchChild(const glm::vec2& p, TouchPhase phase,
+        TouchPhase touchChild(const glm::vec3& p, TouchPhase phase,
             const Children::Element& elm);
     public:
 
@@ -53,8 +55,9 @@ namespace mugato
 
         Transform& getTransform();
         const Transform& getTransform() const;
+		glm::mat4 getModelMatrix() const;
 
-        bool touch(const glm::vec2& p, TouchPhase phase=TouchPhase::None);
+        bool touch(const glm::vec3& p, TouchPhase phase=TouchPhase::None);
         void update(double dt);
         void fixedUpdate(double dt);
         void render(gorn::RenderQueue& queue);
@@ -76,6 +79,9 @@ namespace mugato
         bool hasParent() const;
         Entity& getParent();
         const Entity& getParent() const;
+
+		const Layers& getLayers() const;
+		Layers& getLayers();
     };
 
     template<typename C, typename... Args>
