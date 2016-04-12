@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
-#include <mugato/base/OcTree.hpp>
 #include <mugato/scene/Component.hpp>
 #include <mugato/scene/EntityTransform.hpp>
 #include <mugato/scene/EntityEnums.hpp>
@@ -24,13 +23,13 @@ namespace mugato
     public:
         typedef EntityTouchPhase TouchPhase;
         typedef EntityTransform Transform;
-        typedef OcTree<std::shared_ptr<Entity>> Children;
+        typedef std::vector<std::shared_ptr<Entity>> Children;
         typedef std::vector<std::weak_ptr<Entity>> TouchedChildren;
         typedef std::weak_ptr<Entity> Parent;
         typedef std::vector<std::unique_ptr<Component>> Components;
 		typedef std::vector<int> Layers;
     private:
-        Context* _ctx;      
+        Context* _ctx;
         Components _componentsToAdd;
         Components _components;
         Children _children;
@@ -42,7 +41,9 @@ namespace mugato
         void updateTransform();
         void addPendingComponents();
         TouchPhase touchChild(const glm::vec3& p, TouchPhase phase,
-            const Children::Element& elm);
+            const std::shared_ptr<Entity>& child);
+
+        void onChildTransformChanged(Entity& child);
     public:
 
         Entity();
@@ -63,10 +64,10 @@ namespace mugato
         void render(gorn::RenderQueue& queue);
 
         std::shared_ptr<Entity> addChild(const std::shared_ptr<Entity>& child=nullptr);
+        bool removeChild(const std::shared_ptr<Entity>& child);
         bool removeFromParent();
 
         const Children& getChildren() const;
-        Children& getChildren();
 
         Component& addComponent(std::unique_ptr<Component> comp);
 

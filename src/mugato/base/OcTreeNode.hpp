@@ -60,7 +60,7 @@ namespace mugato
 
         template<typename Filter>
         bool empty(Filter f) const;
-        
+
         template<typename Filter>
         size_t size(Filter f) const;
 
@@ -526,4 +526,3 @@ namespace mugato
 }
 
 #endif
-

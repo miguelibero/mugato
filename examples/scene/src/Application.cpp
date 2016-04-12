@@ -76,7 +76,7 @@ void SceneApplication::load()
     scene->addComponent<mugato::RenderInfoComponent>();
 
     auto& materials = getGorn().getMaterials();
-    auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
+    auto& octree = scene->addComponent<mugato::OcTreeComponent>();
     octree.setElementsMaterial(materials.load("octree_elements"));
     octree.setElementsDrawMode(gorn::DrawMode::Lines);
     octree.setNodesMaterial(materials.load("octree_nodes"));

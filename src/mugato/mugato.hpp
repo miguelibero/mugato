@@ -40,7 +40,7 @@
 #include <mugato/scene/EntityStack.hpp>
 #include <mugato/scene/SpriteComponent.hpp>
 #include <mugato/scene/LabelComponent.hpp>
-#include <mugato/scene/OcTreeRenderComponent.hpp>
+#include <mugato/scene/OcTreeComponent.hpp>
 #include <mugato/scene/RenderInfoComponent.hpp>
 #include <mugato/scene/ActionComponent.hpp>
 #include <mugato/scene/TouchComponent.hpp>

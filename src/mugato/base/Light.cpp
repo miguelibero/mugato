@@ -5,6 +5,7 @@
 #include <gorn/gl/VertexArray.hpp>
 #include <gorn/render/RenderKinds.hpp>
 #include <sstream>
+#include <algorithm>
 
 namespace mugato
 {

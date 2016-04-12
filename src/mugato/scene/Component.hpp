@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <mugato/scene/EntityEnums.hpp>
-#include <functional>
+#include <memory>
 
 namespace gorn
 {
@@ -30,6 +30,12 @@ namespace mugato
         virtual void onEntityComponentsLoaded(Entity& entity){};
 		virtual void beforeEntityChildrenRender(gorn::RenderQueue& queue) {};
 		virtual void afterEntityChildrenRender(gorn::RenderQueue& queue) {};
+        virtual void onEntityChildTransformChanged(Entity& entity,
+            const std::shared_ptr<Entity>& child) {};
+        virtual void onEntityChildAdded(Entity& entity,
+            const std::shared_ptr<Entity>& child) {};
+        virtual void onEntityChildRemoved(Entity& entity,
+            const std::shared_ptr<Entity>& child) {};
         virtual void update(double dt){};
         virtual void fixedUpdate(double dt){};
         virtual void render(gorn::RenderQueue& queue){};

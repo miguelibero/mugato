@@ -3,6 +3,7 @@
 #include <mugato/base/Exception.hpp>
 #include <gorn/render/RenderQueue.hpp>
 #include <gorn/render/RenderCommand.hpp>
+#include <algorithm>
 
 namespace mugato
 {
@@ -72,28 +73,34 @@ namespace mugato
     {
         if(_transform.update())
         {
-            _children.setArea(gorn::Rect(
-                glm::vec3(0.0f), _transform.getSize()));
-            if(auto parent = _parent.lock())
-            {
-                parent->addChild(getSharedPtr());
-            }
             for(auto& comp : _components)
             {
                 comp->onEntityTransformChanged(*this);
             }
+            if(auto parent = _parent.lock())
+            {
+                parent->onChildTransformChanged(*this);
+            }
+        }
+    }
+
+    void Entity::onChildTransformChanged(Entity& child)
+    {
+        auto ptr = child.getSharedPtr();
+        for(auto& comp : _components)
+        {
+            comp->onEntityChildTransformChanged(*this, ptr);
         }
     }
 
     Entity::TouchPhase Entity::touchChild(const glm::vec3& p,
-        TouchPhase phase, const Children::Element& elm)
+        TouchPhase phase, const std::shared_ptr<Entity>& child)
     {
-        auto child(elm.getContent());
         auto itr = std::find_if(_touchedChildren.begin(),
             _touchedChildren.end(), [&child](std::weak_ptr<Entity>& c){
             return c.lock() == child;
         });
-        auto contained = elm.getArea().contains(p);
+        auto contained = child->getTransform().getArea().contains(p);
         auto ending = phase == TouchPhase::End || phase == TouchPhase::Cancel;
         if(itr == _touchedChildren.end())
         {
@@ -126,6 +133,7 @@ namespace mugato
                 }
             }
         }
+        return TouchPhase::None;
     }
 
     bool Entity::touch(const glm::vec3& p, TouchPhase phase)
@@ -134,15 +142,13 @@ namespace mugato
         bool handled = false;
         if(!handled)
         {
-            Children::Elements elements;
-            _children.find(elements);
-            for(auto itr = elements.rbegin(); itr != elements.rend(); ++itr)
+            for(auto itr = _children.rbegin(); itr != _children.rend(); ++itr)
             {
-                auto& elm = *itr;
-                auto cphase = touchChild(ep, phase, elm);
+                auto& child = *itr;
+                auto cphase = touchChild(ep, phase, child);
                 if(cphase != TouchPhase::None)
                 {
-                    if(elm.getContent()->touch(ep, cphase))
+                    if(child->touch(ep, cphase))
                     {
                         handled = true;
                         phase = TouchPhase::Cancel;
@@ -191,11 +197,9 @@ namespace mugato
         {
             comp->update(dt);
         }
-        Children::Elements elements;
-        _children.find(elements);
-        for(auto& elm : elements)
+        for(auto& child : _children)
         {
-            elm.getContent()->update(dt);
+            child->update(dt);
         }
     }
 
@@ -205,14 +209,10 @@ namespace mugato
         {
             comp->fixedUpdate(dt);
         }
-        Children::Elements elements;
-        _children.find(elements);
-        for(auto& elm : elements)
+        for(auto& child : _children)
         {
-            elm.getContent()->fixedUpdate(dt);
+            child->fixedUpdate(dt);
         }
-
-        _children.adjust(false);
     }
 
     void Entity::render(gorn::RenderQueue& queue)
@@ -235,11 +235,9 @@ namespace mugato
 		{
 			comp->beforeEntityChildrenRender(queue);
 		}
-        Children::Elements elements;
-        _children.find(elements);
-        for(auto& elm : elements)
+        for(auto& child : _children)
         {
-            elm.getContent()->render(queue);
+            child->render(queue);
         }
 		for (auto& comp : _components)
 		{
@@ -261,7 +259,11 @@ namespace mugato
         updateTransform();
         child->updateTransform();
         child->_parent = getSharedPtr();
-        _children.insert(Children::Element(child->getTransform().getArea(), child));
+        _children.push_back(child);
+        for (auto& comp : _components)
+        {
+            comp->onEntityChildAdded(*this, child);
+        }
         return child;
     }
 
@@ -269,12 +271,28 @@ namespace mugato
     {
         if(auto parent = _parent.lock())
         {
-            auto ptr = getSharedPtr();
-            return parent->_children.clear([&ptr](const Children::Element& elm){
-                return elm.getContent() == ptr;
-            });
+            return parent->removeChild(getSharedPtr());
         }
         return false;
+    }
+
+    bool Entity::removeChild(const std::shared_ptr<Entity>& child)
+    {
+        auto& c = _children;
+        auto itr = std::remove_if(c.begin(), c.end(),
+            [child](std::shared_ptr<Entity>& c){
+                return c == child;
+        });
+        if(itr == c.end())
+        {
+            return false;
+        }
+        c.erase(itr, c.end());
+        for (auto& comp : _components)
+        {
+            comp->onEntityChildRemoved(*this, child);
+        }
+        return true;
     }
 
     Component& Entity::addComponent(std::unique_ptr<Component> comp)
@@ -301,11 +319,6 @@ namespace mugato
     }
 
     const Entity::Children& Entity::getChildren() const
-    {
-        return _children;
-    }
-
-    Entity::Children& Entity::getChildren()
     {
         return _children;
     }

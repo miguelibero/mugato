@@ -64,7 +64,7 @@ void QuadTreeApplication::load()
     auto& matdefs = _ctx.getGorn().getMaterials().getDefinitions();
 
 	_ctx.getGorn().getQueue().addCamera()
-		.withOrtho(glm::vec2(2.0f));
+		.withProjection(glm::ortho(0.0f, 2.0f, 0.0f, 2.0f));
 
     matdefs.set("octree_elements", gorn::MaterialDefinition()
         .withUniformValue(gorn::UniformKind::Color,

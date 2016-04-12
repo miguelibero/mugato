@@ -17,6 +17,7 @@ Some functionalities that the library supports:
 * GUI: text labels, buttons
 * Spine skeletal animations
 * animations
+* lighting
 
 ## Example
 
