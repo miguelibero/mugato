@@ -1,6 +1,6 @@
 #include <mugato/scene/EntityTransform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/euler_angles.hpp> 
+#include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
 namespace mugato
@@ -142,7 +142,7 @@ namespace mugato
     EntityTransform::Vector2
         EntityTransform::getLocalToParentPoint(const Vector2& p) const
     {
-        return Vector2(_matrix*glm::vec4(p, 0.0, 1.0));    
+        return Vector2(_matrix*glm::vec4(p, 0.0, 1.0));
     }
 
     EntityTransform::Vector2
@@ -168,7 +168,7 @@ namespace mugato
     {
         if(_dirty)
         {
-            _matrix = glm::translate(glm::mat4(), _position)                
+            _matrix = glm::translate(glm::mat4(), _position)
                 * glm::translate(glm::mat4(), _pivot)
                 * glm::scale(glm::mat4(), _scale)
                 * glm::orientate4(_rotation)
@@ -209,4 +209,3 @@ namespace mugato
     }
 
 }
-

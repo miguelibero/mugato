@@ -1,12 +1,15 @@
 #include <mugato/scene/CameraComponent.hpp>
 #include <mugato/scene/Entity.hpp>
 #include <mugato/base/Context.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/transform.hpp>
 
 namespace mugato
 {
     CameraComponent::CameraComponent():
 	_camera(std::make_shared<gorn::RenderCamera>()),
-	_ctx(nullptr)
+	_ctx(nullptr),
+    _updateView(false)
     {
     }
 
@@ -28,6 +31,16 @@ namespace mugato
 		_camera->withProjection(proj);
 		return *this;
 	}
+
+    CameraComponent& CameraComponent::withDirection(const glm::vec3& dir)
+    {
+        if(_dir != dir)
+        {
+            _dir = dir;
+            _updateView = true;
+        }
+        return *this;
+    }
 
 	CameraComponent& CameraComponent::withBlendMode(const gorn::BlendMode& blend)
 	{
@@ -61,7 +74,23 @@ namespace mugato
 
 	void CameraComponent::onEntityTransformChanged(Entity& entity)
 	{
-		auto mat = entity.getModelMatrix();
-		_camera->withView(mat);
+		auto& pos = entity.getTransform().getPosition();
+        auto mat = glm::orientate4(entity.getTransform().getRotation());
+        auto up = glm::vec3(mat * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+        if(_pos != pos || _up != up)
+        {
+            _pos = pos;
+            _up = up;
+            _updateView = true;
+        }
 	}
+
+    void CameraComponent::update(double dt)
+    {
+        if(_updateView)
+        {
+            _camera->withView(glm::lookAt(_pos, _pos + _dir, _up));
+            _updateView = false;
+        }
+    }
 }
