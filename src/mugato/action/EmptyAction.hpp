@@ -2,7 +2,7 @@
 #ifndef __mugato__EmptyAction__
 #define __mugato__EmptyAction__
 
-#include <mugato/scene/Action.hpp>
+#include <mugato/action/Action.hpp>
 #include <functional>
 
 namespace mugato {

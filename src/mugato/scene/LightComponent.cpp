@@ -72,6 +72,11 @@ namespace mugato
 		onEntityTransformChanged(entity);
 	}
 
+	void LightComponent::onEntityParentTransformChanged(Entity& entity, Entity& parent)
+	{
+		onEntityTransformChanged(entity);
+	}
+
 	void LightComponent::onEntityTransformChanged(Entity& entity)
 	{
 		auto mat = entity.getModelMatrix();

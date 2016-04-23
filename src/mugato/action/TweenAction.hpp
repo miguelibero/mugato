@@ -3,7 +3,7 @@
 #define __mugato__TweenAction__
 
 #include <mugato/base/Easing.hpp>
-#include <mugato/scene/Action.hpp>
+#include <mugato/action/Action.hpp>
 #include <mugato/scene/EntityTransform.hpp>
 #include <functional>
 
@@ -32,7 +32,7 @@ namespace mugato {
 		TweenAction& withComplete(const CompleteCallback& complete);
 
 		void start(Entity& entity) override;
-		void update(Entity& entity, float pos) override;
+		void update(Entity& entity, double pos) override;
 		void finish(Entity& entity) override;
 	};
 }

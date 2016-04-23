@@ -1,4 +1,5 @@
 #include <mugato/scene/EntityTransform.hpp>
+#include <gorn/base/Ray.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -103,6 +104,34 @@ namespace mugato
         }
     }
 
+	void EntityTransform::setPositionX(float val)
+	{
+		if(_position.x != val)
+		{
+			_dirty = true;
+			_position.x = val;
+		}
+	}
+
+	void EntityTransform::setPositionY(float val)
+	{
+		if(_position.y != val)
+		{
+			_dirty = true;
+			_position.y = val;
+		}
+	}
+
+	void EntityTransform::setPositionZ(float val)
+	{
+		if(_position.z != val)
+		{
+			_dirty = true;
+			_position.z = val;
+		}
+	}
+
+
     void EntityTransform::setRotation(const Vector& val)
     {
         if(_rotation != val)
@@ -162,7 +191,6 @@ namespace mugato
     {
         return Vector(_inverseMatrix*glm::vec4(p, 1.0));
     }
-
 
     bool EntityTransform::update()
     {

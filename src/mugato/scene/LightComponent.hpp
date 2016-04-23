@@ -32,6 +32,7 @@ namespace mugato
 
 		void onAssignedToContext(Context& ctx) override;
 		void onAddedToEntity(Entity& entity) override;
+		void onEntityParentTransformChanged(Entity& entity, Entity& parent) override;
         void onEntityTransformChanged(Entity& entity) override;
 
 

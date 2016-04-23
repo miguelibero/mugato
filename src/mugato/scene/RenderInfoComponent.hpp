@@ -22,7 +22,7 @@ namespace mugato
         Info _info;
 
     public:
-        RenderInfoComponent(const std::string& font="debug:");
+        RenderInfoComponent(const std::string& font="debug_font");
 
         Transform& getTransform();
         const Transform& getTransform() const;

@@ -10,6 +10,7 @@
 #include <gorn/gl/ProgramManager.hpp>
 #include <gorn/render/RenderKinds.hpp>
 #include <gorn/asset/FileManager.hpp>
+#include <gorn/platform/StbImageLoader.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -21,7 +22,8 @@ namespace mugato
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
     _skeletons(_gorn.getMaterials(), _gorn.getFiles()),
     _fixedUpdateInterval(0.0),
-    _fixedUpdatesPerSecond(10.0)
+    _fixedUpdatesPerSecond(10.0),
+	_touching(false)
     {
         _sprites.getAtlases().makeDefaultDataLoader
             <GdxSpriteAtlasLoader>();
@@ -31,6 +33,8 @@ namespace mugato
             <FntFontAtlasLoader>();
         _sprites.getAtlases().makeDefaultLoader
             <MaterialSpriteAtlasLoader>(_gorn.getMaterials());
+        _gorn.getImages().makeDefaultDataLoader
+            <gorn::StbImageLoader>();
 
         _gorn.getMaterials().getDefinitions().set(
             [](const std::string& name){
@@ -231,18 +235,30 @@ void main()
 
     void Context::touch(const glm::vec2& p)
     {
-		for(auto& cam : _gorn.getQueue().getCameras())
+		auto phase = EntityTouchPhase::Begin;
+		if(_touching)
 		{
-			_root->touch(cam->getScreenToWorldPoint(p));
+			phase = EntityTouchPhase::Move;
 		}
+		else
+		{
+			_touching = true;
+		}
+		doTouch(p, phase);
     }
 
     void Context::touchEnd(const glm::vec2& p)
     {
-		for (auto& cam : _gorn.getQueue().getCameras())
-		{
-			_root->touch(cam->getScreenToWorldPoint(p), EntityTouchPhase::End);
-		}
+		_touching = false;
+		doTouch(p, EntityTouchPhase::End);
     }
+
+	void Context::doTouch(const glm::vec2& p, Entity::TouchPhase phase)
+	{
+		for(auto& cam : _gorn.getQueue().getCameras())
+		{
+			_root->onScreenTouched(*cam, p, phase);
+		}
+	}
 
 }

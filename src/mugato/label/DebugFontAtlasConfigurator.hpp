@@ -20,23 +20,19 @@ namespace mugato
     class DebugFontAtlasConfigurator
     {
     private:
-        std::string _fileName;
-        std::string _tagName;
+        std::string _name;
 
         static buffer createBuffer();
     public:
         DebugFontAtlasConfigurator(
-            const std::string& fileName="debug_font",
-            const std::string& tagName="debug");
+            const std::string& name="debug_font");
 
         void setup(Context& ctx);
         void setup(
             gorn::AssetManager<FontAtlas>& atlases,
-            gorn::MaterialManager& materials, 
+            gorn::MaterialManager& materials,
             gorn::FileManager& files);
     };
 }
 
 #endif
-
-

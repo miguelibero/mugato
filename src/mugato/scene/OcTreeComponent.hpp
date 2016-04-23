@@ -38,12 +38,9 @@ namespace mugato
 
         void onAddedToEntity(Entity& entity) override;
         void onEntityTransformChanged(Entity& entity) override;
-        void onEntityChildAdded(Entity& entity,
-            const std::shared_ptr<Entity>& child) override;
-        void onEntityChildRemoved(Entity& entity,
-            const std::shared_ptr<Entity>& child) override;
-        void onEntityChildTransformChanged(Entity& entity,
-            const std::shared_ptr<Entity>& child) override;
+        void onEntityChildAdded(Entity& entity, Entity& child) override;
+        void onEntityChildRemoved(Entity& entity, Entity& child) override;
+        void onEntityChildTransformChanged(Entity& entity, Entity& child) override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };

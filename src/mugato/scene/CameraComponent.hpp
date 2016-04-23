@@ -12,9 +12,9 @@ namespace mugato
     private:
 		std::shared_ptr<gorn::RenderCamera> _camera;
 		Context* _ctx;
-        glm::vec3 _dir;
-        glm::vec3 _pos;
-        glm::vec3 _up;
+		glm::vec3 _lookAt;
+		glm::vec3 _pos;
+		glm::mat4 _model;
         bool _updateView;
 
 		void cleanContext();
@@ -23,14 +23,16 @@ namespace mugato
 		~CameraComponent();
 
 		CameraComponent& withProjection(const glm::mat4& proj);
-        CameraComponent& withDirection(const glm::vec3& dir);
+		CameraComponent& withLookAt(const glm::vec3& lookAt);
 		CameraComponent& withBlendMode(const gorn::BlendMode& blend);
 		CameraComponent& withUniformValue(const std::string& name, const gorn::UniformValue& value);
 		CameraComponent& withUniformValues(const gorn::UniformValueMap& values);
 
 		void onAssignedToContext(Context& ctx) override;
 		void onAddedToEntity(Entity& entity) override;
+		void onEntityParentTransformChanged(Entity& entity, Entity& parent) override;
 		void onEntityTransformChanged(Entity& entity) override;
+		void onEntityLayersChanged(Entity& entity) override;
         void update(double dt) override;
     };
 }

@@ -39,6 +39,9 @@ namespace mugato
         const Matrix& getInverseMatrix() const;
 
         void setPosition(const Vector& val);
+		void setPositionX(float val);
+		void setPositionY(float val);
+		void setPositionZ(float val);
         void setRotation(const Vector& val);
         void setScale(const Vector& val);
         void setPivot(const Vector& val);

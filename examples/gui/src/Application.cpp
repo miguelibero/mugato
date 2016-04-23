@@ -39,7 +39,7 @@ void GuiApplication::load()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
     getGorn().getQueue().addCamera()
-		.withOrtho(glm::vec2(480.0f, 320.0f));
+		.withProjection(glm::ortho(0.0f, 480.0f, 0.0f, 320.0f));
 	getMugato().getRoot().getTransform().setSize(glm::vec2(480.0f, 320.0f));
 
     getGorn().getMaterials().getDefinitions().get("button")
@@ -53,36 +53,20 @@ void GuiApplication::load()
         .withMaterial("button")
         .withStretchBorders(glm::vec4(4.0f, 5.0f, 9.0f, 5.0f));
 
-    auto& matdefs = getGorn().getMaterials().getDefinitions();
-    matdefs.set("octree_elements", gorn::MaterialDefinition()
-        .withUniformValue(gorn::UniformKind::Color,
-            glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
-        .withProgram(mugato::ProgramKind::Color));
-
-    matdefs.set("octree_nodes", gorn::MaterialDefinition()
-        .withUniformValue(gorn::UniformKind::Color,
-            glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
-        .withProgram(mugato::ProgramKind::Color));
-
     auto scene = getMugato().getScenes().push();
     auto& info = scene->addComponent<mugato::RenderInfoComponent>();
 
     auto& materials = getGorn().getMaterials();
-    auto& octree = scene->addComponent<mugato::OcTreeRenderComponent>();
-    octree.setElementsMaterial(materials.load("octree_elements"));
-    octree.setElementsDrawMode(gorn::DrawMode::Lines);
-    octree.setNodesMaterial(materials.load("octree_nodes"));
-    octree.setNodesDrawMode(gorn::DrawMode::Lines);
 
     createButton(*scene, mugato::Alignment::TopLeft);
-    createButton(*scene, mugato::Alignment::Top);
-    createButton(*scene, mugato::Alignment::TopRight);
-    createButton(*scene, mugato::Alignment::Left);
+	createButton(*scene, mugato::Alignment::Top);
+	createButton(*scene, mugato::Alignment::TopRight);
+	createButton(*scene, mugato::Alignment::Left);
     createButton(*scene, mugato::Alignment::Center);
-    createButton(*scene, mugato::Alignment::Right);
-    createButton(*scene, mugato::Alignment::BottomLeft);
-    createButton(*scene, mugato::Alignment::Bottom);
-    createButton(*scene, mugato::Alignment::BottomRight);
+	createButton(*scene, mugato::Alignment::Right);
+	createButton(*scene, mugato::Alignment::BottomLeft);
+	createButton(*scene, mugato::Alignment::Bottom);
+	createButton(*scene, mugato::Alignment::BottomRight);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

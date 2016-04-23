@@ -5,6 +5,7 @@
 #include <mugato/sprite/Sprite.hpp>
 #include <mugato/label/Label.hpp>
 #include <string>
+#include <functional>
 
 namespace mugato
 {
@@ -18,8 +19,7 @@ namespace mugato
     {
     public:
         typedef ButtonState State;
-        typedef std::function<bool(TouchPhase phase,
-            const glm::vec3& p)> TouchCallback;
+        typedef std::function<bool(TouchPhase phase, const glm::vec3& p)> TouchCallback;
         typedef std::function<void()> ClickCallback;
     private:
         Sprite _bg;
@@ -28,6 +28,7 @@ namespace mugato
         ClickCallback _clickCallback;
         std::string _bgName;
         std::string _labelName;
+		State _state;
         std::map<State, std::shared_ptr<gorn::Material>> _labelMaterials;
         std::map<State, std::shared_ptr<gorn::Material>> _bgMaterials;
 
@@ -54,8 +55,8 @@ namespace mugato
 
         void onAddedToEntity(Entity& entity) override;
         void onEntityTransformChanged(Entity& entity) override;
-        bool onEntityTouched(Entity& entity, const glm::vec3& p,
-            TouchPhase phase) override;
+		bool onScreenTouched(Entity& entity, const gorn::RenderCamera& cam,
+			const glm::vec2& p, TouchPhase phase) override;
         void update(double dt) override;
         void render(gorn::RenderQueue& queue) override;
     };

@@ -23,11 +23,13 @@ namespace mugato
         EntityStack* _scenes;
 		LightingSystem _lighting;
         std::shared_ptr<Entity> _root;
+		bool _touching;
 
         double _fixedUpdateInterval;
         double _fixedUpdatesPerSecond;
 
         void fixedUpdate(double dt);
+		void doTouch(const glm::vec2& p, Entity::TouchPhase phase);
     public:
 
         Context();

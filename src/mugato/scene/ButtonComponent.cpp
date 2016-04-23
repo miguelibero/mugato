@@ -4,10 +4,12 @@
 #include <mugato/scene/EntityTransform.hpp>
 #include <mugato/base/Context.hpp>
 #include <mugato/sprite/SpriteManager.hpp>
+#include <gorn/base/Ray.hpp>
 
 namespace mugato
 {
-    ButtonComponent::ButtonComponent()
+    ButtonComponent::ButtonComponent():
+	_state(State::Normal)
     {
         _bg.setResizeMode(SpriteResizeMode::Exact);
     }
@@ -113,6 +115,7 @@ namespace mugato
 
     void ButtonComponent::setState(State state)
     {
+		_state = state;
         {
             auto itr = _bgMaterials.find(state);
             if(itr != _bgMaterials.end())
@@ -129,10 +132,25 @@ namespace mugato
         }
     }
 
-    bool ButtonComponent::onEntityTouched(Entity& entity, const glm::vec3& p,
-        TouchPhase phase)
+	bool ButtonComponent::onScreenTouched(Entity& entity,
+		const gorn::RenderCamera& cam,
+		const glm::vec2& p, TouchPhase phase)
     {
-        bool block = true;
+		glm::vec3 hp;
+		auto r = cam.getScreenPointRay(p);
+		r = r.transform(entity.getModelInverse());
+		bool hit = r.hits(entity.getTransform().getLocalArea(), hp);
+		if(!hit)
+		{
+			if(_state == State::Pressed)
+			{
+				phase = TouchPhase::Cancel;
+			}
+			else
+			{
+				phase = TouchPhase::None;
+			}
+		}
         if(phase == TouchPhase::Begin || phase == TouchPhase::Move)
         {
             setState(State::Pressed);
@@ -141,15 +159,15 @@ namespace mugato
         {
             setState(State::Normal);
         }
-        if(_touchCallback)
+        if(phase != TouchPhase::None && _touchCallback)
         {
-            block = _touchCallback(phase, p);
+            hit = _touchCallback(phase, hp);
         }
         if(phase == TouchPhase::End && _clickCallback)
         {
             _clickCallback();
         }
-        return block;
+        return hit;
     }
 
     void ButtonComponent::update(double dt)

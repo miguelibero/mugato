@@ -1,4 +1,4 @@
-#include <mugato/scene/EmptyAction.hpp>
+#include <mugato/action/EmptyAction.hpp>
 #include <mugato/scene/Entity.hpp>
 
 namespace mugato {
@@ -6,7 +6,6 @@ namespace mugato {
 	EmptyAction::EmptyAction(const CompleteCallback& complete) :
 	_complete(complete)
 	{
-
 	}
 
 	EmptyAction& EmptyAction::withComplete(const CompleteCallback& complete)
@@ -22,6 +21,4 @@ namespace mugato {
             _complete();
         }
     }
-
-
 }

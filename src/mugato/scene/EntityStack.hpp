@@ -24,12 +24,13 @@ namespace mugato
 
         EntityStack();
 
-        bool touch(const glm::vec3& p, TouchPhase phase=TouchPhase::Begin);
+        bool touch(const gorn::RenderCamera& cam,
+			const glm::vec2& p, TouchPhase phase =TouchPhase::Begin);
 
         void onAssignedToContext(Context& ctx) override;
         void onEntityTransformChanged(Entity& entity) override;
-        bool onEntityTouched(Entity& entity, const glm::vec3& p,
-            TouchPhase phase) override;
+		bool onScreenTouched(Entity& entity, const gorn::RenderCamera& cam,
+			const glm::vec2& p, TouchPhase phase) override;
         void onAddedToEntity(Entity& entity) override;
         void update(double dt) override;
         void fixedUpdate(double dt) override;

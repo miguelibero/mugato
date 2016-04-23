@@ -32,11 +32,11 @@ namespace mugato
 		return *this;
 	}
 
-    CameraComponent& CameraComponent::withDirection(const glm::vec3& dir)
+    CameraComponent& CameraComponent::withLookAt(const glm::vec3& lookAt)
     {
-        if(_dir != dir)
+        if(_lookAt != lookAt)
         {
-            _dir = dir;
+			_lookAt = lookAt;
             _updateView = true;
         }
         return *this;
@@ -72,24 +72,43 @@ namespace mugato
 		onEntityTransformChanged(entity);
 	}
 
+	void CameraComponent::onEntityParentTransformChanged(Entity& entity, Entity& parent)
+	{
+		onEntityTransformChanged(entity);
+	}
+
 	void CameraComponent::onEntityTransformChanged(Entity& entity)
 	{
-		auto& pos = entity.getTransform().getPosition();
-        auto mat = glm::orientate4(entity.getTransform().getRotation());
-        auto up = glm::vec3(mat * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-        if(_pos != pos || _up != up)
+		auto model = entity.getModelMatrix();
+		if(_model != model)
         {
-            _pos = pos;
-            _up = up;
+			_model = model;
             _updateView = true;
         }
+		auto& pos = entity.getTransform().getPosition();
+		if(_pos != pos)
+		{
+			_pos = pos;
+			_updateView = true;
+		}
+		onEntityLayersChanged(entity);
+	}
+
+	void CameraComponent::onEntityLayersChanged(Entity& entity)
+	{
+		_camera->withLayers(entity.getLayers());
 	}
 
     void CameraComponent::update(double dt)
     {
         if(_updateView)
         {
-            _camera->withView(glm::lookAt(_pos, _pos + _dir, _up));
+			auto p = glm::vec3(_model * glm::vec4(0, 0, 0, 1));
+			auto c = glm::vec3(_model * glm::vec4(_lookAt - _pos, 1.0f));
+			auto n = glm::transpose(glm::inverse(glm::mat3(_model)));
+			auto u = n * glm::vec3(0, 1, 0);
+            _camera->withView(glm::lookAt(
+				p, c, u));
             _updateView = false;
         }
     }

@@ -4,79 +4,66 @@
 
 namespace mugato
 {
-    ActionState::ActionState(float duration,
-        std::unique_ptr<Action> action):
-    _action(std::move(action)),
-    _duration(duration),
-    _position(0.0f),
-    _started(false)
-    {
-    }
-    void ActionState::update(double dt)
-    {
-        _position += (float)dt;
-    }
-
-    void ActionState::update(Entity& entity)
-    {
-        if(!_started)
-        {
-            _action->start(entity);
-            _started = true;
-        }
-        if(finished())
-        {
-            _action->finish(entity);
-            return;
-        }
-        else
-        {
-            _action->update(entity, _position / _duration);
-        }
-    }
-
-    bool ActionState::finished() const
-    {
-        return _position >= _duration;
-    }
-
-    void ActionComponent::clear()
-    {
-        _actions.clear();
-    }
-
-    void ActionComponent::add(float duration,
-        std::unique_ptr<Action> action)
-    {
-        _actions.push_back(ActionState(duration, std::move(action)));
-    }
+	ActionComponent::ActionComponent(double duration,
+		std::unique_ptr<Action> action,
+		const FinishCallback& finished):
+	_action(std::move(action)),
+	_duration(duration),
+	_position(0.0),
+	_started(false),
+	_finished(finished)
+	{
+	}
 
     void ActionComponent::onAddedToEntity(Entity& entity)
     {
-        _entity = entity.getSharedPtr();
+		_entity = entity.getSharedPtr();
     }
+
+	void ActionComponent::setFinishCallback(const FinishCallback& cb)
+	{
+		_finished = cb;
+	}
+
+	double ActionComponent::getDuration() const
+	{
+		return _duration;
+	}
+
+	bool ActionComponent::finished() const
+	{
+		return _position >= _duration;
+	}
 
     void ActionComponent::update(double dt)
     {
-        for(auto itr = _actions.begin(); itr != _actions.end(); ++itr)
-        {
-            itr->update(dt);
-        }
-        if(auto ptr = _entity.lock())
-        {
-            for(auto itr = _actions.begin(); itr != _actions.end(); ++itr)
-            {
-                itr->update(*ptr);
-            }
-        }
-        _actions.erase(std::remove_if(_actions.begin(), _actions.end(),
-            [&dt](ActionState& state){
-                return state.finished();
-            }), _actions.end());
+		_position += dt;
+		auto entity = _entity.lock();
+		if(entity == nullptr)
+		{
+			return;
+		}
+		if(finished())
+		{
+			_action->finish(*entity);
+			if (_finished != nullptr)
+			{
+				auto f = _finished;
+				_finished = nullptr;
+				f();
+			}
+			return;
+		}
+		else
+		{
+			if (!_started)
+			{
+				_action->start(*entity);
+				_started = true;
+			}
+			_action->update(*entity, _position / _duration);
+		}
     }
 
-    void ActionComponent::render(gorn::RenderQueue& queue)
-    {
-    }
 }
 

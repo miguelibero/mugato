@@ -37,6 +37,10 @@
     <ClCompile Include="..\lib\spine-c\src\spine\SkinnedMeshAttachment.c" />
     <ClCompile Include="..\lib\spine-c\src\spine\Slot.c" />
     <ClCompile Include="..\lib\spine-c\src\spine\SlotData.c" />
+    <ClCompile Include="..\src\mugato\action\EmptyAction.cpp" />
+    <ClCompile Include="..\src\mugato\action\RemoveAction.cpp" />
+    <ClCompile Include="..\src\mugato\action\SequenceAction.cpp" />
+    <ClCompile Include="..\src\mugato\action\TweenAction.cpp" />
     <ClCompile Include="..\src\mugato\base\Alignment.cpp" />
     <ClCompile Include="..\src\mugato\base\Application.cpp" />
     <ClCompile Include="..\src\mugato\base\Context.cpp" />
@@ -56,18 +60,16 @@
     <ClCompile Include="..\src\mugato\scene\AlignComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\ButtonComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\CameraComponent.cpp" />
-    <ClCompile Include="..\src\mugato\scene\EmptyAction.cpp" />
     <ClCompile Include="..\src\mugato\scene\Entity.cpp" />
     <ClCompile Include="..\src\mugato\scene\EntityStack.cpp" />
     <ClCompile Include="..\src\mugato\scene\EntityTransform.cpp" />
     <ClCompile Include="..\src\mugato\scene\LabelComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\LightComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\MeshComponent.cpp" />
-    <ClCompile Include="..\src\mugato\scene\OcTreeRenderComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scene\OcTreeComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\RenderInfoComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\SpriteComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\TouchComponent.cpp" />
-    <ClCompile Include="..\src\mugato\scene\TweenAction.cpp" />
     <ClCompile Include="..\src\mugato\spine\SpineAnimationMixDefinition.cpp" />
     <ClCompile Include="..\src\mugato\spine\SpineAtlas.cpp" />
     <ClCompile Include="..\src\mugato\spine\SpineManager.cpp" />
@@ -89,6 +91,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\spine-c\src\spine\Json.h" />
+    <ClInclude Include="..\src\mugato\action\Action.hpp" />
+    <ClInclude Include="..\src\mugato\action\EmptyAction.hpp" />
+    <ClInclude Include="..\src\mugato\action\RemoveAction.hpp" />
+    <ClInclude Include="..\src\mugato\action\SequenceAction.hpp" />
+    <ClInclude Include="..\src\mugato\action\TweenAction.hpp" />
     <ClInclude Include="..\src\mugato\base\Alignment.hpp" />
     <ClInclude Include="..\src\mugato\base\Application.hpp" />
     <ClInclude Include="..\src\mugato\base\Context.hpp" />
@@ -111,13 +118,11 @@
     <ClInclude Include="..\src\mugato\label\LabelFont.hpp" />
     <ClInclude Include="..\src\mugato\label\LabelManager.hpp" />
     <ClInclude Include="..\src\mugato\mugato.hpp" />
-    <ClInclude Include="..\src\mugato\scene\Action.hpp" />
     <ClInclude Include="..\src\mugato\scene\ActionComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\AlignComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\ButtonComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\CameraComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\Component.hpp" />
-    <ClInclude Include="..\src\mugato\scene\EmptyAction.hpp" />
     <ClInclude Include="..\src\mugato\scene\Entity.hpp" />
     <ClInclude Include="..\src\mugato\scene\EntityEnums.hpp" />
     <ClInclude Include="..\src\mugato\scene\EntityStack.hpp" />
@@ -125,11 +130,10 @@
     <ClInclude Include="..\src\mugato\scene\LabelComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\LightComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\MeshComponent.hpp" />
-    <ClInclude Include="..\src\mugato\scene\OcTreeRenderComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scene\OcTreeComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\RenderInfoComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\SpriteComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\TouchComponent.hpp" />
-    <ClInclude Include="..\src\mugato\scene\TweenAction.hpp" />
     <ClInclude Include="..\src\mugato\spine\SpineAnimationMixDefinition.hpp" />
     <ClInclude Include="..\src\mugato\spine\SpineAtlas.hpp" />
     <ClInclude Include="..\src\mugato\spine\SpineManager.hpp" />

@@ -2364,9 +2364,8 @@ namespace mugato {
     }
 
     DebugFontAtlasConfigurator::DebugFontAtlasConfigurator(
-            const std::string& fileName,
-            const std::string& tagName):
-    _fileName(fileName), _tagName(tagName)
+            const std::string& name):
+    _name(name)
     {
     }
 
@@ -2382,22 +2381,12 @@ namespace mugato {
             gorn::MaterialManager& materials,
             gorn::FileManager& files)
     {
-        std::string fileName(_fileName);
-        files.preload(fileName, std::move(createBuffer()));
-        atlases.makeLoader<GridFontAtlasLoader>(
-            _tagName, materials, glm::vec2(12, 32), '.');
-        
-        materials.getDefinitions().set(_tagName,
-            [fileName](const std::string& name){
-                auto program(gorn::String::splitTag(name).second);
-                if(program.empty())
-                {
-                    program = ProgramKind::Sprite;
-                }
-                return gorn::MaterialDefinition()
-                    .withTexture(fileName)
-                    .withProgram(program);
-        });
+        files.preload(_name, std::move(createBuffer()));
+        atlases.makeCustomLoader<GridFontAtlasLoader>(
+            _name, materials, glm::vec2(12, 32), '.');
+        materials.getDefinitions().get(_name)
+            .withTexture(_name)
+            .withProgram(ProgramKind::Sprite);
     }
 
 }

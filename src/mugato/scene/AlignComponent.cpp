@@ -25,7 +25,7 @@ namespace mugato
         _dirty = true;
     }
 
-    void AlignComponent::onParentEntitySizeChanged(Entity& entity)
+    void AlignComponent::onEntityParentTransformChanged(Entity& entity, Entity& parent)
     {
         _dirty = true;
     }

@@ -49,9 +49,11 @@
 #include <mugato/scene/MeshComponent.hpp>
 #include <mugato/scene/CameraComponent.hpp>
 #include <mugato/scene/LightComponent.hpp>
-#include <mugato/scene/Action.hpp>
-#include <mugato/scene/EmptyAction.hpp>
-#include <mugato/scene/TweenAction.hpp>
+#include <mugato/action/Action.hpp>
+#include <mugato/action/EmptyAction.hpp>
+#include <mugato/action/TweenAction.hpp>
+#include <mugato/action/RemoveAction.hpp>
+#include <mugato/action/SequenceAction.hpp>
 
 #include <mugato/spine/SpineManager.hpp>
 #include <mugato/spine/SpineSkeleton.hpp>

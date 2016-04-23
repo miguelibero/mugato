@@ -8,6 +8,7 @@
 namespace gorn
 {
     class RenderQueue;
+	class RenderCamera;
 }
 
 namespace mugato
@@ -23,19 +24,20 @@ namespace mugato
         virtual ~Component(){};
         virtual void onAssignedToContext(Context& ctx){};
         virtual void onAddedToEntity(Entity& entity){};
-        virtual void onParentEntitySizeChanged(Entity& entity){};
         virtual void onEntityTransformChanged(Entity& entity){};
-        virtual bool onEntityTouched(Entity& entity,
-            const glm::vec3& p, TouchPhase phase) { return false; };
-        virtual void onEntityComponentsLoaded(Entity& entity){};
+		virtual void onEntityParentTransformChanged(Entity& entity, Entity& parent){};
+        virtual bool onScreenTouched(Entity& entity, const gorn::RenderCamera& cam,
+			const glm::vec2& p, TouchPhase phase) { return false; };
+		virtual void onEntityLayersChanged(Entity& entity) {};
+		virtual void onEntityComponentsLoaded(Entity& entity){};
 		virtual void beforeEntityChildrenRender(gorn::RenderQueue& queue) {};
 		virtual void afterEntityChildrenRender(gorn::RenderQueue& queue) {};
         virtual void onEntityChildTransformChanged(Entity& entity,
-            const std::shared_ptr<Entity>& child) {};
+            Entity& child) {};
         virtual void onEntityChildAdded(Entity& entity,
-            const std::shared_ptr<Entity>& child) {};
+            Entity& child) {};
         virtual void onEntityChildRemoved(Entity& entity,
-            const std::shared_ptr<Entity>& child) {};
+            Entity& child) {};
         virtual void update(double dt){};
         virtual void fixedUpdate(double dt){};
         virtual void render(gorn::RenderQueue& queue){};

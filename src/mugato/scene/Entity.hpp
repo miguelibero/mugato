@@ -11,12 +11,14 @@
 namespace gorn
 {
     class RenderQueue;
+	class RenderCamera;
 }
 
 namespace mugato
 {
     class Context;
     class Component;
+	class Action;
 
     class Entity final : public std::enable_shared_from_this<Entity>
     {
@@ -33,17 +35,17 @@ namespace mugato
         Components _componentsToAdd;
         Components _components;
         Children _children;
+		Children _removedChildren;
         Parent _parent;
         Transform _transform;
         TouchedChildren _touchedChildren;
 		Layers _layers;
 
+		void updateRemovedChildren();
         void updateTransform();
         void addPendingComponents();
-        TouchPhase touchChild(const glm::vec3& p, TouchPhase phase,
-            const std::shared_ptr<Entity>& child);
-
         void onChildTransformChanged(Entity& child);
+		void onParentTransformChanged(Entity& parent);
     public:
 
         Entity();
@@ -57,8 +59,10 @@ namespace mugato
         Transform& getTransform();
         const Transform& getTransform() const;
 		glm::mat4 getModelMatrix() const;
+		glm::mat4 getModelInverse() const;
 
-        bool touch(const glm::vec3& p, TouchPhase phase=TouchPhase::None);
+        bool onScreenTouched(const gorn::RenderCamera& cam, const glm::vec2& p,
+			TouchPhase phase=TouchPhase::None);
         void update(double dt);
         void fixedUpdate(double dt);
         void render(gorn::RenderQueue& queue);
@@ -74,6 +78,11 @@ namespace mugato
         template<typename C, typename... Args>
         C& addComponent(Args&&... args);
 
+		Action& addAction(double duration, std::unique_ptr<Action> action);
+
+		template<typename C, typename... Args>
+		C& addAction(double duration, Args&&... args);
+
         template<typename C, typename... Args>
         std::shared_ptr<Entity> addChildWithComponent(Args&&... args);
 
@@ -82,7 +91,9 @@ namespace mugato
         const Entity& getParent() const;
 
 		const Layers& getLayers() const;
-		Layers& getLayers();
+		void setLayers(const Layers& layers);
+		void setLayer(int layer);
+		void clearLayers();
     };
 
     template<typename C, typename... Args>
@@ -92,6 +103,14 @@ namespace mugato
         addComponent(std::unique_ptr<Component>(ptr));
         return *ptr;
     }
+
+	template<typename C, typename... Args>
+	C& Entity::addAction(double duration, Args&&... args)
+	{
+		auto ptr = new C(std::forward<Args>(args)...);
+		addAction(duration, std::unique_ptr<Action>(ptr));
+		return *ptr;
+	}
 
     template<typename C, typename... Args>
     std::shared_ptr<Entity> Entity::addChildWithComponent(Args&&... args)

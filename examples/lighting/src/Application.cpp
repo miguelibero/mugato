@@ -41,8 +41,6 @@ void LightingApplication::load()
 	getGorn().getFiles()
 		.makeDefaultLoader<gorn::AssetFileLoader>("%s");
 #endif
-	getGorn().getImages()
-		.makeDefaultDataLoader<gorn::StbImageLoader>();
 
 	getGorn().getTextures().getDefinitions().get("white")
 		.withImage(gorn::Image::createWithColor(glm::vec4(1.0, 1.0, 1.0, 1.0)));
@@ -81,10 +79,10 @@ void LightingApplication::load()
 	auto scene = getMugato().getScenes().push();
 
 	auto scene3d = scene->addChild();
-	scene3d->getLayers().push_back(2);
+	scene3d->setLayer(2);
 
 	auto scene2d = scene->addChild();
-	scene2d->getLayers().push_back(1);
+	scene2d->setLayer(1);
 	scene2d->getTransform().setSize(getSize());
 	scene2d->addComponent<mugato::RenderInfoComponent>();
 
@@ -94,7 +92,7 @@ void LightingApplication::load()
 		.withColor(glm::vec3(0.5f));
 
 	auto pointLight = scene3d->addChild();
-	pointLight->getLayers().push_back(2);
+	pointLight->setLayer(2);
 	pointLight->getTransform().setPosition(glm::vec3(0, 5, 0));
 	moveLight(pointLight, true);
 

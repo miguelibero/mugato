@@ -1,4 +1,4 @@
-#include <mugato/scene/TweenAction.hpp>
+#include <mugato/action/TweenAction.hpp>
 #include <mugato/scene/Entity.hpp>
 
 namespace mugato {
@@ -40,7 +40,7 @@ namespace mugato {
 	    _start = entity.getTransform();
     }
 
-	void TweenAction::update(Entity& entity, float p)
+	void TweenAction::update(Entity& entity, double p)
 	{
         auto& t = entity.getTransform();
         Vector sv, ev;

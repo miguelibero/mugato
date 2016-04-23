@@ -33,19 +33,14 @@ namespace mugato
 		}
     }
 
-    bool EntityStack::onEntityTouched(Entity& entity,
-        const glm::vec3& p, TouchPhase phase)
+    bool EntityStack::onScreenTouched(Entity& entity,
+		const gorn::RenderCamera& cam, const glm::vec2& p, TouchPhase phase)
     {
-        return touch(p, phase);
-    }
-
-    bool EntityStack::touch(const glm::vec3& p, TouchPhase phase)
-    {
-        if(!_stack.empty())
-        {
-            return _stack.back()->touch(p, phase);
-        }
-        return false;
+		if (!_stack.empty())
+		{
+			return _stack.back()->onScreenTouched(cam, p, phase);
+		}
+		return false;
     }
 
     void EntityStack::update(double dt)

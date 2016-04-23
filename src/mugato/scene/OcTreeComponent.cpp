@@ -49,23 +49,23 @@ namespace mugato
     }
 
     void OcTreeComponent::onEntityChildAdded(Entity& entity,
-        const std::shared_ptr<Entity>& child)
+        Entity& child)
     {
         onEntityChildTransformChanged(entity, child);
     }
 
     void OcTreeComponent::onEntityChildRemoved(Entity& entity,
-        const std::shared_ptr<Entity>& child)
+        Entity& child)
     {
         _octree.clear([&child](const OcElement& elm){
-            return elm.getContent() == child;
+            return elm.getContent() == child.getSharedPtr();
         });
     }
 
     void OcTreeComponent::onEntityChildTransformChanged(Entity& entity,
-        const std::shared_ptr<Entity>& child)
+        Entity& child)
     {
-        _octree.insert(OcElement(child->getTransform().getArea(), child));
+        _octree.insert(OcElement(child.getTransform().getArea(), child.getSharedPtr()));
         _needsAdjust = true;
     }
 
@@ -87,8 +87,7 @@ namespace mugato
         if(!_elementsMesh.empty() || !_nodesMesh.empty())
         {
             queue.addCommand()
-                .withTransform(glm::translate(glm::mat4(),
-                    glm::vec3(0.0f, 0.0f, 1.0f)),
+                .withTransform(glm::mat4(),
                     gorn::RenderCommand::TransformMode::PushLocal);
             queue.addCommand(_elementsMesh.render())
                 .withMaterial(_elementsMaterial);

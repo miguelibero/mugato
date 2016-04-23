@@ -26,6 +26,9 @@
     <Filter Include="lib\spine">
       <UniqueIdentifier>{b7c2fdf0-6bce-4bee-855f-ff81ec01c82f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="action">
+      <UniqueIdentifier>{94047fbb-8143-4c84-ba59-be4b67d58031}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\mugato\base\Kinds.cpp">
@@ -79,9 +82,6 @@
     <ClCompile Include="..\src\mugato\scene\ButtonComponent.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\mugato\scene\EmptyAction.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\mugato\scene\Entity.cpp">
       <Filter>scene</Filter>
     </ClCompile>
@@ -94,9 +94,6 @@
     <ClCompile Include="..\src\mugato\scene\LabelComponent.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\mugato\scene\OcTreeRenderComponent.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\mugato\scene\RenderInfoComponent.cpp">
       <Filter>scene</Filter>
     </ClCompile>
@@ -104,9 +101,6 @@
       <Filter>scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\mugato\scene\TouchComponent.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mugato\scene\TweenAction.cpp">
       <Filter>scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\mugato\spine\SpineSkeletonData.cpp">
@@ -253,6 +247,21 @@
     <ClCompile Include="..\src\mugato\scene\LightComponent.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\OcTreeComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\action\EmptyAction.cpp">
+      <Filter>action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\action\RemoveAction.cpp">
+      <Filter>action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\action\SequenceAction.cpp">
+      <Filter>action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\action\TweenAction.cpp">
+      <Filter>action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\mugato\base\Kinds.hpp">
@@ -315,12 +324,6 @@
     <ClInclude Include="..\src\mugato\label\GridFontAtlasLoader.hpp">
       <Filter>label</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\mugato\scene\TweenAction.hpp">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mugato\scene\Action.hpp">
-      <Filter>scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\mugato\scene\ActionComponent.hpp">
       <Filter>scene</Filter>
     </ClInclude>
@@ -331,9 +334,6 @@
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mugato\scene\Component.hpp">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mugato\scene\EmptyAction.hpp">
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mugato\scene\Entity.hpp">
@@ -349,9 +349,6 @@
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mugato\scene\LabelComponent.hpp">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mugato\scene\OcTreeRenderComponent.hpp">
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mugato\scene\RenderInfoComponent.hpp">
@@ -435,6 +432,24 @@
     </ClInclude>
     <ClInclude Include="..\src\mugato\scene\LightComponent.hpp">
       <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\OcTreeComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\action\Action.hpp">
+      <Filter>action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\action\EmptyAction.hpp">
+      <Filter>action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\action\RemoveAction.hpp">
+      <Filter>action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\action\SequenceAction.hpp">
+      <Filter>action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\action\TweenAction.hpp">
+      <Filter>action</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
