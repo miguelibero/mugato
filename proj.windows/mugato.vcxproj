@@ -80,6 +80,9 @@
     <ClCompile Include="..\src\mugato\sprite\CocosSpriteAtlasLoader.cpp" />
     <ClCompile Include="..\src\mugato\sprite\GdxSpriteAtlasLoader.cpp" />
     <ClCompile Include="..\src\mugato\sprite\MaterialSpriteAtlasLoader.cpp" />
+    <ClCompile Include="..\src\mugato\sprite\ParticleManager.cpp" />
+    <ClCompile Include="..\src\mugato\sprite\ParticleSystem.cpp" />
+    <ClCompile Include="..\src\mugato\sprite\ParticleSystemDefinition.cpp" />
     <ClCompile Include="..\src\mugato\sprite\Sprite.cpp" />
     <ClCompile Include="..\src\mugato\sprite\SpriteAnimation.cpp" />
     <ClCompile Include="..\src\mugato\sprite\SpriteAnimationDefinition.cpp" />
@@ -144,6 +147,9 @@
     <ClInclude Include="..\src\mugato\sprite\CocosSpriteAtlasLoader.hpp" />
     <ClInclude Include="..\src\mugato\sprite\GdxSpriteAtlasLoader.hpp" />
     <ClInclude Include="..\src\mugato\sprite\MaterialSpriteAtlasLoader.hpp" />
+    <ClInclude Include="..\src\mugato\sprite\ParticleManager.hpp" />
+    <ClInclude Include="..\src\mugato\sprite\ParticleSystem.hpp" />
+    <ClInclude Include="..\src\mugato\sprite\ParticleSystemDefinition.hpp" />
     <ClInclude Include="..\src\mugato\sprite\Sprite.hpp" />
     <ClInclude Include="..\src\mugato\sprite\SpriteAnimation.hpp" />
     <ClInclude Include="..\src\mugato\sprite\SpriteAnimationDefinition.hpp" />

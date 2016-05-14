@@ -4,7 +4,8 @@
 #include <gorn/render/RenderKinds.hpp>
 #include <mugato/base/Exception.hpp>
 
-namespace mugato {
+namespace mugato
+{
 
     const char* Sprite::kDefaultAnimation = "default";
     const char* Sprite::kDefaultFrame = "default";

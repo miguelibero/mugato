@@ -1,7 +1,8 @@
 
 #include <mugato/sprite/SpriteDefinition.hpp>
 
-namespace mugato {
+namespace mugato
+{
 
     SpriteDefinition::SpriteDefinition():
 	_resizeMode(ResizeMode::Original)

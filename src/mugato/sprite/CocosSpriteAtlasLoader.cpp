@@ -9,7 +9,8 @@
 
 using namespace rapidxml;
 
-namespace mugato {
+namespace mugato
+{
 
     void loadXmlDocument(rapidxml::xml_document<>& doc, const buffer& data)
     {

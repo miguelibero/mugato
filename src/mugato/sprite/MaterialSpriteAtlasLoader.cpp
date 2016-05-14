@@ -6,7 +6,8 @@
 #include <gorn/gl/MaterialManager.hpp>
 #include <gorn/gl/Material.hpp>
 
-namespace mugato {
+namespace mugato
+{
 
     MaterialSpriteAtlasLoader::MaterialSpriteAtlasLoader
         (gorn::MaterialManager& materials):

@@ -5,7 +5,8 @@
 #include <buffer.hpp>
 #include <buffer_reader.hpp>
 
-namespace mugato {
+namespace mugato
+{
 
     GdxSpriteAtlasLoader::GdxSpriteAtlasLoader()
     {

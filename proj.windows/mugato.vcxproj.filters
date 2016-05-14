@@ -262,6 +262,15 @@
     <ClCompile Include="..\src\mugato\action\TweenAction.cpp">
       <Filter>action</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\ParticleManager.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\ParticleSystem.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\ParticleSystemDefinition.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\mugato\base\Kinds.hpp">
@@ -450,6 +459,15 @@
     </ClInclude>
     <ClInclude Include="..\src\mugato\action\TweenAction.hpp">
       <Filter>action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\ParticleManager.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\ParticleSystem.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\ParticleSystemDefinition.hpp">
+      <Filter>sprite</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
