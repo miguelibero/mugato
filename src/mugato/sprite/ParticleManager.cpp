@@ -8,8 +8,13 @@
 namespace mugato {
 
     ParticleManager::ParticleManager(mugato::SpriteManager& sprites, gorn::FileManager& files):
-    _sprites(sprites)
+    _sprites(sprites),
+	_configs(files)
     {
+		getDefinitions().set([](const std::string& name) {
+			return Definition()
+				.withConfig(name);
+		});
     }
 
     const ParticleManager::Definitions& ParticleManager::getDefinitions() const
@@ -22,10 +27,30 @@ namespace mugato {
         return _definitions;
     }
 
+	const ParticleManager::Configs& ParticleManager::getConfigs() const
+	{
+		return _configs;
+	}
+
+	ParticleManager::Configs& ParticleManager::getConfigs()
+	{
+		return _configs;
+	}
+
     ParticleSystem ParticleManager::load(const std::string& dname)
     {
 		ParticleSystem particles;
         auto& def = getDefinitions().get(dname);
+		auto config = def.getConfig();
+		if(config == nullptr)
+		{
+			config = getConfigs().load(def.getConfigName()).get();
+		}
+		if(config != nullptr)
+		{
+			particles.setSprite(_sprites.load(config->getSprite()));
+			particles.setProperties(config->getProperties());
+		}
         return particles;
     }
 

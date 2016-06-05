@@ -5,6 +5,7 @@
 #include <mugato/sprite/SpriteManager.hpp>
 #include <mugato/spine/SpineManager.hpp>
 #include <mugato/label/LabelManager.hpp>
+#include <mugato/sprite/ParticleManager.hpp>
 #include <mugato/scene/Entity.hpp>
 #include <mugato/base/Light.hpp>
 #include <glm/glm.hpp>
@@ -20,6 +21,7 @@ namespace mugato
         SpriteManager _sprites;
         LabelManager _labels;
         SpineManager _skeletons;
+		ParticleManager _particles;
         EntityStack* _scenes;
 		LightingSystem _lighting;
         std::shared_ptr<Entity> _root;
@@ -52,6 +54,9 @@ namespace mugato
 
         const SpineManager& getSkeletons() const;
         SpineManager& getSkeletons();
+
+		const ParticleManager& getParticles() const;
+		ParticleManager& getParticles();
 
         const EntityStack& getScenes() const;
         EntityStack& getScenes();

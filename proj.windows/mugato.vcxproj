@@ -67,6 +67,7 @@
     <ClCompile Include="..\src\mugato\scene\LightComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\MeshComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\OcTreeComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scene\ParticleSystemComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\RenderInfoComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\SpriteComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\TouchComponent.cpp" />
@@ -83,6 +84,8 @@
     <ClCompile Include="..\src\mugato\sprite\ParticleManager.cpp" />
     <ClCompile Include="..\src\mugato\sprite\ParticleSystem.cpp" />
     <ClCompile Include="..\src\mugato\sprite\ParticleSystemDefinition.cpp" />
+    <ClCompile Include="..\src\mugato\sprite\ParticleSystemConfig.cpp" />
+    <ClCompile Include="..\src\mugato\sprite\ParticleSystemProperties.cpp" />
     <ClCompile Include="..\src\mugato\sprite\Sprite.cpp" />
     <ClCompile Include="..\src\mugato\sprite\SpriteAnimation.cpp" />
     <ClCompile Include="..\src\mugato\sprite\SpriteAnimationDefinition.cpp" />
@@ -91,6 +94,7 @@
     <ClCompile Include="..\src\mugato\sprite\SpriteDefinition.cpp" />
     <ClCompile Include="..\src\mugato\sprite\SpriteFrame.cpp" />
     <ClCompile Include="..\src\mugato\sprite\SpriteManager.cpp" />
+    <ClCompile Include="..\src\mugato\sprite\StarlingParticleLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\spine-c\src\spine\Json.h" />
@@ -134,6 +138,7 @@
     <ClInclude Include="..\src\mugato\scene\LightComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\MeshComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\OcTreeComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scene\ParticleSystemComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\RenderInfoComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\SpriteComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\TouchComponent.hpp" />
@@ -150,6 +155,8 @@
     <ClInclude Include="..\src\mugato\sprite\ParticleManager.hpp" />
     <ClInclude Include="..\src\mugato\sprite\ParticleSystem.hpp" />
     <ClInclude Include="..\src\mugato\sprite\ParticleSystemDefinition.hpp" />
+    <ClInclude Include="..\src\mugato\sprite\ParticleSystemConfig.hpp" />
+    <ClInclude Include="..\src\mugato\sprite\ParticleSystemProperties.hpp" />
     <ClInclude Include="..\src\mugato\sprite\Sprite.hpp" />
     <ClInclude Include="..\src\mugato\sprite\SpriteAnimation.hpp" />
     <ClInclude Include="..\src\mugato\sprite\SpriteAnimationDefinition.hpp" />
@@ -159,6 +166,7 @@
     <ClInclude Include="..\src\mugato\sprite\SpriteEnums.hpp" />
     <ClInclude Include="..\src\mugato\sprite\SpriteFrame.hpp" />
     <ClInclude Include="..\src\mugato\sprite\SpriteManager.hpp" />
+    <ClInclude Include="..\src\mugato\sprite\StarlingParticleLoader.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\gorn\proj.windows\gorn.vcxproj">

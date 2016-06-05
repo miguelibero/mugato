@@ -4,6 +4,7 @@
 #include <mugato/sprite/MaterialSpriteAtlasLoader.hpp>
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/GdxSpriteAtlasLoader.hpp>
+#include <mugato/sprite/StarlingParticleLoader.hpp>
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/DebugFontAtlasConfigurator.hpp>
 #include <mugato/scene/EntityStack.hpp>
@@ -19,6 +20,7 @@ namespace mugato
 
     Context::Context():
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
+	_particles(_sprites, _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
     _skeletons(_gorn.getMaterials(), _gorn.getFiles()),
     _fixedUpdateInterval(0.0),
@@ -35,7 +37,8 @@ namespace mugato
             <MaterialSpriteAtlasLoader>(_gorn.getMaterials());
         _gorn.getImages().makeDefaultDataLoader
             <gorn::StbImageLoader>();
-
+		_particles.getConfigs().makeDefaultDataLoader
+			<StarlingParticleLoader>();
         _gorn.getMaterials().getDefinitions().set(
             [](const std::string& name){
                 return gorn::MaterialDefinition()
@@ -169,6 +172,16 @@ void main()
     {
         return _skeletons;
     }
+
+	const ParticleManager& Context::getParticles() const
+	{
+		return _particles;
+	}
+
+	ParticleManager& Context::getParticles()
+	{
+		return _particles;
+	}
 
     const EntityStack& Context::getScenes() const
     {

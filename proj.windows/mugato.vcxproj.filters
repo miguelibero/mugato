@@ -271,6 +271,18 @@
     <ClCompile Include="..\src\mugato\sprite\ParticleSystemDefinition.cpp">
       <Filter>sprite</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\ParticleSystemComponent.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\StarlingParticleLoader.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\ParticleSystemConfig.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\sprite\ParticleSystemProperties.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\mugato\base\Kinds.hpp">
@@ -467,6 +479,18 @@
       <Filter>sprite</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mugato\sprite\ParticleSystemDefinition.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\ParticleSystemComponent.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\StarlingParticleLoader.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\ParticleSystemConfig.hpp">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\sprite\ParticleSystemProperties.hpp">
       <Filter>sprite</Filter>
     </ClInclude>
   </ItemGroup>

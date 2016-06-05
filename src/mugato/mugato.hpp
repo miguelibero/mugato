@@ -33,6 +33,9 @@
 #include <mugato/sprite/SpriteFrame.hpp>
 #include <mugato/sprite/SpriteManager.hpp>
 #include <mugato/sprite/SpriteEnums.hpp>
+#include <mugato/sprite/ParticleManager.hpp>
+#include <mugato/sprite/ParticleSystem.hpp>
+#include <mugato/sprite/ParticleSystemDefinition.hpp>
 
 #include <mugato/scene/Component.hpp>
 #include <mugato/scene/Entity.hpp>
@@ -49,6 +52,7 @@
 #include <mugato/scene/MeshComponent.hpp>
 #include <mugato/scene/CameraComponent.hpp>
 #include <mugato/scene/LightComponent.hpp>
+#include <mugato/scene/ParticleSystemComponent.hpp>
 #include <mugato/action/Action.hpp>
 #include <mugato/action/EmptyAction.hpp>
 #include <mugato/action/TweenAction.hpp>

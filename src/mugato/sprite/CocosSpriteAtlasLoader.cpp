@@ -12,7 +12,7 @@ using namespace rapidxml;
 namespace mugato
 {
 
-    void loadXmlDocument(rapidxml::xml_document<>& doc, const buffer& data)
+    void CocosSpriteAtlasLoadXmlDocument(xml_document<>& doc, const buffer& data)
     {
         buffer temp;
         buffer_writer output(temp);
@@ -21,7 +21,7 @@ namespace mugato
         doc.parse<0>(reinterpret_cast<char*>(temp.data()));
     }
 
-    std::vector<int> loadIntegerParts(const std::string& value)
+    std::vector<int> CocosSpriteAtlasLoadIntegerParts(const std::string& value)
     {
         std::vector<std::string> strparts = gorn::String::split(value, ",");
         std::vector<int> parts;
@@ -33,7 +33,7 @@ namespace mugato
         return parts;
     }
 
-    void loadFrame(xml_node<>* dict, SpriteAtlasRegion& region)
+    void CocosSpriteAtlasLoadFrame(xml_node<>* dict, SpriteAtlasRegion& region)
     {
         auto key = dict->first_node("key");
         while(key != nullptr)
@@ -42,7 +42,7 @@ namespace mugato
             if(name == "frame")
             {
                 std::string value = key->next_sibling()->value();
-                std::vector<int> parts = loadIntegerParts(value);
+                std::vector<int> parts = CocosSpriteAtlasLoadIntegerParts(value);
                 if(parts.size() != 4)
                 {
                     throw std::runtime_error("Invalid frame value.");
@@ -54,7 +54,7 @@ namespace mugato
             else if(name == "offset")
             {
                 std::string value = key->next_sibling()->value();
-                std::vector<int> parts = loadIntegerParts(value);
+                std::vector<int> parts = CocosSpriteAtlasLoadIntegerParts(value);
                 if(parts.size() != 2)
                 {
                     throw std::runtime_error("Invalid offset value.");
@@ -69,7 +69,7 @@ namespace mugato
             else if(name == "sourceSize")                
             {
                 std::string value = key->next_sibling()->value();
-                std::vector<int> parts = loadIntegerParts(value);
+                std::vector<int> parts = CocosSpriteAtlasLoadIntegerParts(value);
                 if(parts.size() != 2)
                 {
                     throw std::runtime_error("Invalid sourceSize value.");
@@ -82,19 +82,19 @@ namespace mugato
         region.getOffset() += (region.getOriginalSize()-region.getSize())/2.0f;
     }
 
-    void loadFrames(xml_node<>* dict, SpriteAtlas& atlas)
+    void CocosSpriteAtlasLoadFrames(xml_node<>* dict, SpriteAtlas& atlas)
     {
         auto key = dict->first_node("key");
         while(key != nullptr)
         {
             SpriteAtlasRegion region;
-            loadFrame(key->next_sibling("dict"), region);
+            CocosSpriteAtlasLoadFrame(key->next_sibling("dict"), region);
             atlas.addRegion(key->value(), region);
             key = key->next_sibling("key");
         }
     }
 
-    void loadMetadata(xml_node<>* dict, SpriteAtlas& atlas)
+    void CocosSpriteAtlasLoadMetadata(xml_node<>* dict, SpriteAtlas& atlas)
     {
         auto key = dict->first_node("key");
         while(key != nullptr)
@@ -120,14 +120,14 @@ namespace mugato
             return false;
         }
         xml_document<> doc;
-        loadXmlDocument(doc, data);
+        CocosSpriteAtlasLoadXmlDocument(doc, data);
         return std::string(doc.first_node()->name()) == "plist";
     }
 
     SpriteAtlas CocosSpriteAtlasLoader::load(const buffer& data) const
     {
         xml_document<> doc;
-        loadXmlDocument(doc, data);
+        CocosSpriteAtlasLoadXmlDocument(doc, data);
         
         SpriteAtlas atlas;
         auto root = doc.first_node("plist");
@@ -140,11 +140,11 @@ namespace mugato
                 std::string name = key->value();
                 if(name == "frames")
                 {
-                    loadFrames(key->next_sibling("dict"), atlas);
+                    CocosSpriteAtlasLoadFrames(key->next_sibling("dict"), atlas);
                 }
                 if(name == "metadata")
                 {
-                    loadMetadata(key->next_sibling("dict"), atlas);
+                    CocosSpriteAtlasLoadMetadata(key->next_sibling("dict"), atlas);
                 }
                 key = key->next_sibling("key");
             }
