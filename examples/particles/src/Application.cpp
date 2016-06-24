@@ -46,7 +46,9 @@ void ParticlesAnimation::load()
 	scene->addComponent<mugato::RenderInfoComponent>();
 
 	auto particles = scene->addChild();
-	particles->getTransform().setSize(glm::vec2(240.0f, 160.0f));
+	particles->getTransform().setScale(0.5f);
+	particles->getTransform().setPosition(size*glm::vec2(0.5f, 0.2f));
+	particles->getTransform().setSize(size*0.5f);
 	particles->addComponent<mugato::ParticleSystemComponent>("fire");
 
 	

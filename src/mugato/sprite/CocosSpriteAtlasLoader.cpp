@@ -2,24 +2,13 @@
 #include <mugato/sprite/CocosSpriteAtlasLoader.hpp>
 #include <mugato/sprite/SpriteAtlas.hpp>
 #include <gorn/base/String.hpp>
-#include <gorn/gl/MaterialManager.hpp>
 #include <rapidxml/rapidxml.hpp>
 #include <buffer.hpp>
-#include <buffer_writer.hpp>
 
 using namespace rapidxml;
 
 namespace mugato
 {
-
-    void CocosSpriteAtlasLoadXmlDocument(xml_document<>& doc, const buffer& data)
-    {
-        buffer temp;
-        buffer_writer output(temp);
-        output.write(data);
-        output.fill(0);
-        doc.parse<0>(reinterpret_cast<char*>(temp.data()));
-    }
 
     std::vector<int> CocosSpriteAtlasLoadIntegerParts(const std::string& value)
     {
@@ -120,14 +109,14 @@ namespace mugato
             return false;
         }
         xml_document<> doc;
-        CocosSpriteAtlasLoadXmlDocument(doc, data);
+		doc.parse<0>(const_cast<char*>(data.c_str()));
         return std::string(doc.first_node()->name()) == "plist";
     }
 
     SpriteAtlas CocosSpriteAtlasLoader::load(const buffer& data) const
     {
         xml_document<> doc;
-        CocosSpriteAtlasLoadXmlDocument(doc, data);
+		doc.parse<0>(const_cast<char*>(data.c_str()));
         
         SpriteAtlas atlas;
         auto root = doc.first_node("plist");

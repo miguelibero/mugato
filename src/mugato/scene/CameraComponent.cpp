@@ -42,12 +42,6 @@ namespace mugato
         return *this;
     }
 
-	CameraComponent& CameraComponent::withBlendMode(const gorn::BlendMode& blend)
-	{
-		_camera->withBlendMode(blend);
-		return *this;
-	}
-
 	CameraComponent& CameraComponent::withUniformValue(const std::string& name, const gorn::UniformValue& value)
 	{
 		_camera->withUniformValue(name, value);

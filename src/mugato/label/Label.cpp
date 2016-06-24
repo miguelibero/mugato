@@ -258,15 +258,15 @@ namespace mugato {
     void Label::renderLineBreak(gorn::RenderQueue& queue, float w)
     {
         queue.addCommand()
-          .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
+          .withTransformAction(gorn::RenderTransformStackAction::PopCheckpoint);
         queue.addCommand()
-          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransformAction(gorn::RenderTransformStackAction::PushLocal)
           .withTransform(glm::translate(glm::mat4(),
                 glm::vec3(0.0f, -_font->getLineHeight(), 0.0f)));
         queue.addCommand()
-          .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
+          .withTransformAction(gorn::RenderTransformStackAction::PushCheckpoint);
         queue.addCommand()
-          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransformAction(gorn::RenderTransformStackAction::PushLocal)
           .withTransform(glm::translate(glm::mat4(),
                 getLineBreakTranslation(_contentSize.x, w)));
     }
@@ -277,17 +277,17 @@ namespace mugato {
         {
             return;
         }
-        queue.addCommand().withTransformMode(
-                gorn::RenderCommand::TransformMode::PushCheckpoint);
+        queue.addCommand().withTransformAction(
+                gorn::RenderTransformStackAction::PushCheckpoint);
         queue.addCommand()
-          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransformAction(gorn::RenderTransformStackAction::PushLocal)
           .withTransform(_transform);
-        queue.addCommand().withTransformMode(
-                gorn::RenderCommand::TransformMode::PushCheckpoint);
+        queue.addCommand().withTransformAction(
+                gorn::RenderTransformStackAction::PushCheckpoint);
 
         auto line = _lineWidths.begin();
         queue.addCommand()
-          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransformAction(gorn::RenderTransformStackAction::PushLocal)
           .withTransform(glm::translate(glm::mat4(),
                 getLineBreakTranslation(_contentSize.x, *line)));
         line++;
@@ -308,10 +308,10 @@ namespace mugato {
             }
         }
 
-        queue.addCommand().withTransformMode(
-                gorn::RenderCommand::TransformMode::PopCheckpoint);
-        queue.addCommand().withTransformMode(
-                gorn::RenderCommand::TransformMode::PopCheckpoint);
+        queue.addCommand().withTransformAction(
+                gorn::RenderTransformStackAction::PopCheckpoint);
+        queue.addCommand().withTransformAction(
+                gorn::RenderTransformStackAction::PopCheckpoint);
 
     }
 

@@ -119,8 +119,8 @@ void main() {
 		.withUniform(gorn::UniformKind::Texture0, "materialTex")
 		.withUniform(gorn::UniformKind::Color,
 			gorn::ProgramUniformDefinition("materialSpecularColor")
-				.withValue(glm::vec3(1.0)))
-		.withUniform(gorn::ProgramUniformDefinition("materialShininess").withValue(80.0f))
+				.withDefaultValue(glm::vec3(1.0)))
+		.withUniform(gorn::ProgramUniformDefinition("materialShininess").withDefaultValue(80.0f))
 		.withAttribute(gorn::AttributeKind::TexCoords, "vertTexCoord")
 		.withAttribute(gorn::AttributeKind::Normal, "vertNormal")
 		.withAttribute(gorn::AttributeKind::Position, "vert");

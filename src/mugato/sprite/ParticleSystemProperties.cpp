@@ -1,5 +1,6 @@
 
 #include <mugato/sprite/ParticleSystemProperties.hpp>
+#include <gorn/base/Math.hpp>
 
 namespace mugato
 {
@@ -38,7 +39,6 @@ namespace mugato
 	_startSpinVar(0.0f),
 	_endSpin(0.0f),
 	_endSpinVar(0.0f),
-	_emissionRate(0.0f),
 	_totalCount(0)
 	{
     }
@@ -247,15 +247,15 @@ namespace mugato
 		return *this;
 	}
 
-	ParticleSystemProperties& ParticleSystemProperties::withEmissionRate(float rate)
-	{
-		_emissionRate = rate;
-		return *this;
-	}
-
 	ParticleSystemProperties& ParticleSystemProperties::withTotalCount(int count)
 	{
 		_totalCount = count;
+		return *this;
+	}
+
+	ParticleSystemProperties& ParticleSystemProperties::withBlendMode(const gorn::BlendMode& mode)
+	{
+		_blendMode = mode;
 		return *this;
 	}
 
@@ -430,12 +430,90 @@ namespace mugato
 
 	float ParticleSystemProperties::getEmissionRate() const
 	{
-		return _emissionRate;
+		return (float)_totalCount / _life;
 	}
 
-	int ParticleSystemProperties::getTotalCount() const
+	unsigned int ParticleSystemProperties::getTotalCount() const
 	{
 		return _totalCount;
 	}
 
+	const gorn::BlendMode& ParticleSystemProperties::getBlendMode() const
+	{
+		return _blendMode;
+	}
+
+	float ParticleSystemProperties::getRandomSpeed() const
+	{
+		return _speed + gorn::Math::random(-1.0f, 1.0f) * _speedVar;
+	}
+
+	float ParticleSystemProperties::getRandomTangentialAcceleration() const
+	{
+		return _tanAccel + gorn::Math::random(-1.0f, 1.0f) * _tanAccelVar;
+	}
+
+	float ParticleSystemProperties::getRandomRadialAcceleration() const
+	{
+		return _radAccel + gorn::Math::random(-1.0f, 1.0f) * _radAccelVar;
+	}
+
+	float ParticleSystemProperties::getRandomStartRadius() const
+	{
+		return _startRadius + gorn::Math::random(-1.0f, 1.0f) * _startRadiusVar;
+	}
+	float ParticleSystemProperties::getRandomEndRadius() const
+	{
+		return _endRadius + gorn::Math::random(-1.0f, 1.0f) * _endRadiusVar;
+	}
+
+	float ParticleSystemProperties::getRandomRotatePerSecond() const
+	{
+		return _rotPerSec + gorn::Math::random(-1.0f, 1.0f) * _rotPerSecVar;
+	}
+
+	glm::vec3 ParticleSystemProperties::getRandomSourcePosition() const
+	{
+		return _srcPos + gorn::Math::random(-1.0f, 1.0f) * _srcPosVar;
+	}
+
+	float ParticleSystemProperties::getRandomLife() const
+	{
+		return _life + gorn::Math::random(-1.0f, 1.0f) * _lifeVar;
+	}
+
+	float ParticleSystemProperties::getRandomAngle() const
+	{
+		return _angle + gorn::Math::random(-1.0f, 1.0f) * _angleVar;
+	}
+
+	float ParticleSystemProperties::getRandomStartSize() const
+	{
+		return _startSize + gorn::Math::random(-1.0f, 1.0f) * _startSizeVar;
+	}
+
+	float ParticleSystemProperties::getRandomEndSize() const
+	{
+		return _endSize + gorn::Math::random(-1.0f, 1.0f) * _endSizeVar;
+	}
+
+	glm::vec4 ParticleSystemProperties::getRandomStartColor() const
+	{
+		return _startColor + gorn::Math::random(-1.0f, 1.0f) * _startColorVar;
+	}
+
+	glm::vec4 ParticleSystemProperties::getRandomEndColor() const
+	{
+		return _endColor + gorn::Math::random(-1.0f, 1.0f) * _endColorVar;
+	}
+	
+	float ParticleSystemProperties::getRandomStartSpin() const
+	{
+		return _startSpin + gorn::Math::random(-1.0f, 1.0f) * _startSpinVar;
+	}
+
+	float ParticleSystemProperties::getRandomEndSpin() const
+	{
+		return _endSpin + gorn::Math::random(-1.0f, 1.0f) * _endSpinVar;
+	}
 }

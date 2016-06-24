@@ -75,7 +75,7 @@ namespace mugato
 
     void SpriteComponent::render(gorn::RenderQueue& queue)
     {
-        _sprite.render(queue);
+        queue.addCommand(_sprite.render());
     }
 
 }

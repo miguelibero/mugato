@@ -65,10 +65,10 @@ namespace mugato {
 
     void LabelCharacter::render(gorn::RenderQueue& queue) const
     {
-        _frame.render(queue);
+        queue.addCommand(_frame.render());
 
         queue.addCommand()
-          .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal)
+          .withTransformAction(gorn::RenderTransformStackAction::PushLocal)
           .withTransform(_transform);
     }
 

@@ -182,8 +182,11 @@ namespace mugato {
 			    spMeshAttachment_computeWorldVertices(
                     attach, slot, reinterpret_cast<float*>(positions.data()));
 			    texcoords.assign(attach->uvs, size);
-			    elements.assign(attach->triangles,
-                    attach->triangles + attach->trianglesCount);
+				elements.resize(attach->trianglesCount);
+				for(auto i = 0; i < attach->trianglesCount; i++)
+				{
+					elements[i] = attach->triangles[i];
+				}
                 colors = buffer{ attach->r, attach->g, attach->b, attach->a };
 			    break;
 		    }
@@ -195,8 +198,11 @@ namespace mugato {
 			    spSkinnedMeshAttachment_computeWorldVertices(
                     attach, slot, reinterpret_cast<float*>(positions.data()));
                 texcoords.assign(attach->uvs, size);
-			    elements.assign(attach->triangles,
-                    attach->triangles + attach->trianglesCount);
+				elements.resize(attach->trianglesCount);
+				for (auto i = 0; i < attach->trianglesCount; i++)
+				{
+					elements[i] = attach->triangles[i];
+				}
                 colors = buffer{ attach->r, attach->g, attach->b, attach->a };
 			    break;
 		    }
@@ -215,11 +221,11 @@ namespace mugato {
                 queue.addCommand()
                     .withMaterial(material)
                     .withAttribute(gorn::AttributeKind::Position,
-                        std::move(positions), 2, gorn::BasicType::Float)
+                        std::move(positions), 2)
                     .withAttribute(gorn::AttributeKind::TexCoords,
-                        std::move(texcoords), 2, gorn::BasicType::Float)
-                    .withAttribute(gorn::AttributeKind::Color,
-                        std::move(colors), 4, gorn::BasicType::Byte)
+                        std::move(texcoords), 2)
+                    .withRepeatAttribute(gorn::AttributeKind::Color,
+                        std::move(colors))
                     .withElements(elements);
 		    }
 	    }
@@ -290,7 +296,7 @@ namespace mugato {
             queue.addCommand()
                 .withMaterial(_slotsMaterial)
                 .withAttribute(gorn::AttributeKind::Position,
-                    std::move(positions), 2, gorn::BasicType::Float)
+                    std::move(positions), 2)
                 .withDrawMode(gorn::DrawMode::Lines)
                 .withElements(linelms);
 	    }
@@ -311,7 +317,7 @@ namespace mugato {
             queue.addCommand()
                 .withMaterial(_bonesMaterial)
                 .withAttribute(gorn::AttributeKind::Position,
-                    std::move(positions), 2, gorn::BasicType::Float)
+                    std::move(positions), 2)
                 .withDrawMode(gorn::DrawMode::Lines);
 	    }
     }

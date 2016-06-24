@@ -2,6 +2,7 @@
 #include <gorn/gorn.hpp>
 #include <mugato/mugato.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtx/transform.hpp>
 #include <functional>
 #include <random>
 #include <iostream>
@@ -43,7 +44,10 @@ void SpineApplication::load()
 	getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
 
-    getMugato().setViewportSize(glm::vec2(480.0f, 320.0f));
+	glm::vec2 size(480.0f, 320.0f);
+	setSize(size);
+	getGorn().getQueue().addCamera()
+		.withProjection(glm::ortho(0.0f, size.x, 0.0f, size.y));
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("spine_slots", gorn::MaterialDefinition()

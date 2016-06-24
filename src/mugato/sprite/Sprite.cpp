@@ -149,13 +149,14 @@ namespace mugato
         }
     }
 
-    void Sprite::render(gorn::RenderQueue& queue) const
+    gorn::RenderCommand Sprite::render() const
     {
         auto itr = _anims.find(_currentAnim);
         if(itr != _anims.end())
         {
-            itr->second.render(queue);
+            return itr->second.render();
         }
+		return gorn::RenderCommand();
     }
 
 }

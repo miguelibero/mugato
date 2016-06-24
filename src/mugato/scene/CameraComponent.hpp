@@ -24,7 +24,6 @@ namespace mugato
 
 		CameraComponent& withProjection(const glm::mat4& proj);
 		CameraComponent& withLookAt(const glm::vec3& lookAt);
-		CameraComponent& withBlendMode(const gorn::BlendMode& blend);
 		CameraComponent& withUniformValue(const std::string& name, const gorn::UniformValue& value);
 		CameraComponent& withUniformValues(const gorn::UniformValueMap& values);
 

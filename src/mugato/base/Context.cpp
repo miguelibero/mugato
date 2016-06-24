@@ -52,16 +52,18 @@ precision highp float;
 
 attribute vec3 position;
 attribute vec2 texCoords;
+attribute vec4 color;
 
 uniform mat4 model;
 uniform mat4 cam;
-uniform vec4 color;
 
 varying vec2 TexCoords;
+varying vec4 Color;
 
 void main()
 {
     TexCoords = texCoords;
+	Color = color;
     gl_Position = cam * model * vec4(position, 1.0);
 }
 
@@ -70,25 +72,32 @@ void main()
 precision highp float;
 
 varying vec2 TexCoords;
+varying vec4 Color;
 
 uniform sampler2D texture;
-uniform vec4 color;
 
 void main()
 {
-    gl_FragColor = color * texture2D(texture, TexCoords);
+    gl_FragColor = Color * texture2D(texture, TexCoords);
 }
 
 )")
             .withUniform(gorn::UniformKind::Model, "model")
             .withUniform(gorn::UniformKind::Camera, "cam")
             .withUniform(gorn::UniformKind::Texture0, "texture")
-            .withUniform(gorn::UniformKind::Color,
-                gorn::ProgramUniformDefinition("color")
-                .withValue(glm::vec4(1.0f)))
-            .withAttribute(gorn::AttributeKind::Position, "position")
-            .withAttribute(gorn::AttributeKind::TexCoords, "texCoords");
-
+            .withAttribute(gorn::AttributeKind::Position,
+				gorn::ProgramAttributeDefinition("position")
+				.withType(gorn::BasicType::Float)
+				.withCount(3))
+            .withAttribute(gorn::AttributeKind::TexCoords,
+				gorn::ProgramAttributeDefinition("texCoords")
+				.withType(gorn::BasicType::Float)
+				.withCount(2))
+			.withAttribute(gorn::AttributeKind::Color,
+				gorn::ProgramAttributeDefinition("color")
+				.withType(gorn::BasicType::Float)
+				.withCount(4)
+				.withDefaultValue(buffer{ 1.0f, 1.0f, 1.0f, 1.0f }));
 
 		_gorn.getPrograms().getDefinitions().get(ProgramKind::Color)
             .withShaderData(gorn::ShaderType::Vertex, R"(#version 100
@@ -122,7 +131,10 @@ void main()
             .withUniform(gorn::UniformKind::Model, "model")
             .withUniform(gorn::UniformKind::Camera, "cam")
             .withUniform(gorn::UniformKind::Color, "color")
-            .withAttribute(gorn::AttributeKind::Position, "position");
+			.withAttribute(gorn::AttributeKind::Position,
+				gorn::ProgramAttributeDefinition("position")
+				.withType(gorn::BasicType::Float)
+				.withCount(3));
 
         DebugFontAtlasConfigurator().setup(*this);
 

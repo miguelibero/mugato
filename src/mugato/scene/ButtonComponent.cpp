@@ -178,7 +178,7 @@ namespace mugato
 
     void ButtonComponent::render(gorn::RenderQueue& queue)
     {
-        _bg.render(queue);
+        queue.addCommand(_bg.render());
         _label.render(queue);
     }
 

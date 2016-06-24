@@ -204,14 +204,13 @@ namespace mugato
     {
 		queue.addCommand()
 			.withLayers(_layers)
-			.withLayersMode(gorn::RenderCommand::LayersMode::Start);
+			.withLayersAction(gorn::RenderStackAction::Push);
 		queue.addCommand()
-            .withBounding(_transform.getArea(),
-                gorn::RenderCommand::BoundingMode::Start)
-            .withTransformMode(gorn::RenderCommand::TransformMode::PushCheckpoint);
+            .withBounding(_transform.getArea())
+            .withTransformAction(gorn::RenderTransformStackAction::PushCheckpoint);
         queue.addCommand()
             .withTransform(_transform.getMatrix())
-            .withTransformMode(gorn::RenderCommand::TransformMode::PushLocal);
+            .withTransformAction(gorn::RenderTransformStackAction::PushLocal);
         for(auto& comp : _components)
         {
             comp->render(queue);
@@ -229,10 +228,10 @@ namespace mugato
 			comp->afterEntityChildrenRender(queue);
 		}
         queue.addCommand()
-            .withBoundingMode(gorn::RenderCommand::BoundingMode::End)
-            .withTransformMode(gorn::RenderCommand::TransformMode::PopCheckpoint);
+            .withBoundingAction(gorn::RenderStackAction::Pop)
+            .withTransformAction(gorn::RenderTransformStackAction::PopCheckpoint);
 		queue.addCommand()
-			.withLayersMode(gorn::RenderCommand::LayersMode::End);
+			.withLayersAction(gorn::RenderStackAction::Pop);
     }
 
     std::shared_ptr<Entity> Entity::addChild(const std::shared_ptr<Entity>& child)

@@ -4,6 +4,7 @@
 #define __mugato__ParticleSystemProperties__
 
 #include <glm/glm.hpp>
+#include <gorn/gl/BlendMode.hpp>
 
 namespace mugato {
 
@@ -53,8 +54,8 @@ namespace mugato {
 		float _startSpinVar;
 		float _endSpin;
 		float _endSpinVar;
-		float _emissionRate;
-		int _totalCount;
+		unsigned int _totalCount;
+		gorn::BlendMode _blendMode;
 
     public:
 		ParticleSystemProperties();
@@ -93,8 +94,8 @@ namespace mugato {
 		ParticleSystemProperties& withStartSpinVariance(float var);
 		ParticleSystemProperties& withEndSpin(float spin);
 		ParticleSystemProperties& withEndSpinVariance(float var);
-		ParticleSystemProperties& withEmissionRate(float rate);
 		ParticleSystemProperties& withTotalCount(int count);
+		ParticleSystemProperties& withBlendMode(const gorn::BlendMode& mode);
 
 		const glm::vec3& getGravity() const;
 		float getSpeed() const;
@@ -131,7 +132,24 @@ namespace mugato {
 		float getEndSpin() const;
 		float getEndSpinVariance() const;
 		float getEmissionRate() const;
-		int getTotalCount() const;
+		unsigned int getTotalCount() const;
+		const gorn::BlendMode& getBlendMode() const;
+
+		float getRandomSpeed() const;
+		float getRandomTangentialAcceleration() const;
+		float getRandomRadialAcceleration() const;
+		float getRandomStartRadius() const;
+		float getRandomEndRadius() const;
+		float getRandomRotatePerSecond() const;
+		glm::vec3 getRandomSourcePosition() const;
+		float getRandomLife() const;
+		float getRandomAngle() const;
+		float getRandomStartSize() const;
+		float getRandomEndSize() const;
+		glm::vec4 getRandomStartColor() const;
+		glm::vec4 getRandomEndColor() const;
+		float getRandomStartSpin() const;
+		float getRandomEndSpin() const;
     };
 }
 

@@ -7,13 +7,13 @@
 #include <mugato/sprite/SpriteEnums.hpp>
 #include <memory>
 
-namespace gorn {
-    class RenderQueue;
+namespace gorn
+{
+    class RenderCommand;
     class Material;
 }
 
 namespace mugato {
-
 
     class SpriteAnimation
     {
@@ -21,8 +21,9 @@ namespace mugato {
         typedef SpriteResizeMode ResizeMode;
         typedef SpriteFrame Frame;
         typedef SpriteAtlasRegion Region;
+		typedef std::vector<Frame> FrameList;
     private:
-        std::vector<std::shared_ptr<Frame>> _frames;
+		FrameList _frames;
         double _frameDuration;
         double _time;
         glm::vec4 _stretchBorders;
@@ -30,17 +31,16 @@ namespace mugato {
         ResizeMode _resizeMode;
 
         void init();
-        void updateSize();
     public:
         SpriteAnimation();
         SpriteAnimation(const std::shared_ptr<gorn::Material>& material);
         SpriteAnimation(const std::shared_ptr<gorn::Material>& material,
             const Region& region);
-        SpriteAnimation(const std::shared_ptr<Frame>&);
+        SpriteAnimation(const Frame& frame);
         
         SpriteAnimation& withFrameDuration(double duration);
-        SpriteAnimation& withFrames(const std::vector<std::shared_ptr<Frame>>& frames);
-        SpriteAnimation& addFrame(const std::shared_ptr<Frame>& frame);
+        SpriteAnimation& withFrames(const FrameList& frames);
+        SpriteAnimation& addFrame(const Frame& frame);
         SpriteAnimation& addFrame(const std::shared_ptr<gorn::Material>& material);
         SpriteAnimation& addFrame(const std::shared_ptr<gorn::Material>& material,
             const Region& region);
@@ -64,7 +64,7 @@ namespace mugato {
         void setStretchBorders(const glm::vec4& borders);
 
         void update(double dt);
-        void render(gorn::RenderQueue& queue) const;
+        gorn::RenderCommand render() const;
     };
 
 }

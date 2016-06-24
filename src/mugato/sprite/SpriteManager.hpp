@@ -23,7 +23,8 @@ namespace mugato {
     public:
         typedef SpriteAtlas Atlas;
         typedef SpriteDefinition Definition;
-        typedef std::vector<std::shared_ptr<SpriteFrame>> FrameList;
+		typedef SpriteFrame Frame;
+        typedef std::vector<Frame> FrameList;
         typedef std::map<std::string, FrameList> FrameMap;
         typedef gorn::AssetManager<Atlas> Atlases;
         typedef gorn::DefinitionManager<Definition> Definitions;

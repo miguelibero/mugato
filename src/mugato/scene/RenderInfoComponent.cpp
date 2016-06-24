@@ -52,14 +52,14 @@ namespace mugato {
     void RenderInfoComponent::render(gorn::RenderQueue& queue)
     {
         queue.addCommand()
-            .withTransformMode(
-                gorn::RenderCommand::TransformMode::PushCheckpoint);
+            .withTransformAction(
+                gorn::RenderTransformStackAction::PushCheckpoint);
         queue.addCommand()
             .withTransform(_transform.getMatrix());
         _label.render(queue);
         queue.addCommand()
-            .withTransformMode(
-                gorn::RenderCommand::TransformMode::PopCheckpoint);
+            .withTransformAction(
+                gorn::RenderTransformStackAction::PopCheckpoint);
     }
 
 }

@@ -2,6 +2,7 @@
 #include <mugato/sprite/SpriteAnimation.hpp>
 #include <mugato/base/Exception.hpp>
 #include <gorn/gl/Material.hpp>
+#include <gorn/render/RenderCommand.hpp>
 
 namespace mugato {
 
@@ -12,7 +13,7 @@ namespace mugato {
 
     SpriteAnimation::SpriteAnimation(
         const std::shared_ptr<gorn::Material>& material):
-    _frames{std::make_shared<Frame>(material)}
+    _frames{Frame(material)}
     {
         init();
     }
@@ -20,12 +21,12 @@ namespace mugato {
     SpriteAnimation::SpriteAnimation(
         const std::shared_ptr<gorn::Material>& material,
         const Region& region):
-    _frames{std::make_shared<Frame>(material, region)}
+    _frames{Frame(material, region)}
     {
         init();
     }
 
-    SpriteAnimation::SpriteAnimation(const std::shared_ptr<Frame>& frame):
+    SpriteAnimation::SpriteAnimation(const Frame& frame):
     _frames{frame}
     {
         init();
@@ -45,14 +46,14 @@ namespace mugato {
     }
 
     SpriteAnimation& SpriteAnimation::withFrames(
-        const std::vector<std::shared_ptr<Frame>>& frames)
+        const FrameList& frames)
     {
         _frames = frames;
         return *this;
     }
 
     SpriteAnimation& SpriteAnimation::addFrame(
-        const std::shared_ptr<Frame>& frame)
+        const Frame& frame)
     {
         _frames.push_back(frame);
         return *this;
@@ -61,7 +62,7 @@ namespace mugato {
     SpriteAnimation& SpriteAnimation::addFrame(
         const std::shared_ptr<gorn::Material>& material)
     {
-        _frames.push_back(std::make_shared<Frame>(material));
+        _frames.push_back(Frame(material));
         return *this;
     }
 
@@ -69,7 +70,7 @@ namespace mugato {
         const std::shared_ptr<gorn::Material>& material,
         const Region& region)
     {
-        _frames.push_back(std::make_shared<Frame>(material, region));
+        _frames.push_back(Frame(material, region));
         return *this;
     }
 
@@ -77,7 +78,7 @@ namespace mugato {
     {
         for(auto& frame : _frames)
         {
-            frame->setMaterial(material);
+            frame.setMaterial(material);
         }
     }
 
@@ -88,9 +89,9 @@ namespace mugato {
         {
             if(m == nullptr)
             {
-                m = frame->getMaterial();
+                m = frame.getMaterial();
             }
-            else if(m != frame->getMaterial())
+            else if(m != frame.getMaterial())
             {
                 throw new Exception("SpriteFrames have different materials.");
             }
@@ -109,12 +110,12 @@ namespace mugato {
 
     const SpriteAnimation::Frame& SpriteAnimation::getCurrentFrame() const
     {
-        return *_frames.at(getCurrentFrameNumber());
+        return _frames.at(getCurrentFrameNumber());
     }
 
     SpriteAnimation::Frame& SpriteAnimation::getCurrentFrame()
     {
-        return *_frames.at(getCurrentFrameNumber());
+        return _frames.at(getCurrentFrameNumber());
     }
 
     double SpriteAnimation::getCurrentTime() const
@@ -137,7 +138,7 @@ namespace mugato {
         glm::vec2 size;
         for(auto& frame : _frames)
         {
-            auto& fsize = frame->getSize();
+            auto& fsize = frame.getSize();
             if(fsize.x > size.x)
             {
                 size.x = fsize.x;
@@ -193,9 +194,9 @@ namespace mugato {
         frame.update();
     }
 
-    void SpriteAnimation::render(gorn::RenderQueue& queue) const
+    gorn::RenderCommand SpriteAnimation::render() const
     {
-        getCurrentFrame().render(queue);
+        return getCurrentFrame().render();
     }
 
 }

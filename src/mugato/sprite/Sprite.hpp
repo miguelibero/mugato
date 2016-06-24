@@ -9,7 +9,7 @@
 #include <string>
 
 namespace gorn {
-    class RenderQueue;
+    class RenderCommand;
 }
 
 namespace mugato {
@@ -56,7 +56,7 @@ namespace mugato {
         void play(const std::string& name);
 
         void update(double dt);
-        void render(gorn::RenderQueue& queue) const;
+        gorn::RenderCommand render() const;
     };
 
 }

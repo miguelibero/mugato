@@ -88,14 +88,14 @@ namespace mugato
         {
             queue.addCommand()
                 .withTransform(glm::mat4(),
-                    gorn::RenderCommand::TransformMode::PushLocal);
+                    gorn::RenderTransformStackAction::PushLocal);
             queue.addCommand(_elementsMesh.render())
                 .withMaterial(_elementsMaterial);
             queue.addCommand(_nodesMesh.render())
                 .withMaterial(_nodesMaterial);
             queue.addCommand()
-                .withTransformMode(
-                    gorn::RenderCommand::TransformMode::PopLocal);
+                .withTransformAction(
+                    gorn::RenderTransformStackAction::PopLocal);
         }
     }
 }

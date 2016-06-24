@@ -7,6 +7,10 @@
 #include <mugato/label/FontAtlasRegion.hpp>
 #include <mugato/label/LabelCharacter.hpp>
 
+namespace gorn {
+	class RenderQueue;
+}
+
 namespace mugato {
 
     class LabelCharacter

@@ -10,7 +10,7 @@
 #include <mugato/sprite/SpriteEnums.hpp>
 
 namespace gorn {
-    class RenderQueue;
+    class RenderCommand;
     class Material;
 }
 
@@ -63,7 +63,7 @@ namespace mugato {
         void setStretchBorders(const glm::vec4& borders);
 
         void update();
-        void render(gorn::RenderQueue& queue) const;
+        gorn::RenderCommand render() const;
     };
 
 }

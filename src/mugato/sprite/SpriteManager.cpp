@@ -74,8 +74,7 @@ namespace mugato {
                     {
                         std::string mname = atlas->getMaterial(region.getPage());
                         auto material = _materials.load(mname);
-                        fitr->second.push_back(std::make_shared<SpriteFrame>(
-                            material, region));
+                        fitr->second.push_back(Frame(material, region));
                     }
 
                 }
