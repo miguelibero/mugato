@@ -18,6 +18,7 @@ Some functionalities that the library supports:
 * Spine skeletal animations
 * animations
 * lighting
+* particles
 
 ## Example
 
