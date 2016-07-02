@@ -12,6 +12,7 @@ namespace gorn
 {
     class RenderQueue;
 	class RenderCamera;
+	class Ray;
 }
 
 namespace mugato
@@ -121,6 +122,8 @@ namespace mugato
 		template<typename C, typename... Args>
 		C& addAction(double duration, Args&&... args);
 
+		void clearActions();
+
         template<typename C, typename... Args>
         std::shared_ptr<Entity> addChildWithComponent(Args&&... args);
 
@@ -132,6 +135,9 @@ namespace mugato
 		void setLayers(const Layers& layers);
 		void setLayer(int layer);
 		void clearLayers();
+
+		bool hitBy(const gorn::Ray& ray) const;
+		bool hitBy(const gorn::Ray& ray, glm::vec3& hp) const;
     };
 
     template<typename C, typename... Args>

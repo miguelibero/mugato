@@ -16,12 +16,10 @@ namespace mugato
     bool TouchComponent::onScreenTouched(Entity& entity,
         const gorn::RenderCamera& cam, const glm::vec2& p, TouchPhase phase)
     {
-		glm::vec3 hp;
-		auto r = cam.getScreenPointRay(p);
-		r = r.transform(entity.getModelInverse());
         if(_callback)
         {
-			if(r.hits(entity.getTransform().getLocalArea(), hp))
+			glm::vec3 hp;
+			if(entity.hitBy(cam.getScreenPointRay(p), hp))
 			{
 				return _callback(entity, hp, phase);
 			}

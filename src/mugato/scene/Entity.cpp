@@ -2,6 +2,7 @@
 #include <mugato/base/Context.hpp>
 #include <mugato/base/Exception.hpp>
 #include <mugato/scene/ActionComponent.hpp>
+#include <gorn/base/Ray.hpp>
 #include <gorn/render/RenderQueue.hpp>
 #include <gorn/render/RenderCommand.hpp>
 #include <algorithm>
@@ -394,6 +395,11 @@ namespace mugato
 		return *ptr;
 	}
 
+	void Entity::clearActions()
+	{
+		removeComponents<ActionComponent>();
+	}
+
     bool Entity::hasParent() const
     {
         return !_parent.expired();
@@ -439,5 +445,17 @@ namespace mugato
 	void Entity::clearLayers()
 	{
 		setLayers({});
+	}
+
+	bool Entity::hitBy(const gorn::Ray& ray) const
+	{
+		auto localRay = ray.transform(getModelInverse());
+		return localRay.hits(getTransform().getLocalArea());
+	}
+
+	bool Entity::hitBy(const gorn::Ray& ray, glm::vec3& hp) const
+	{
+		auto localRay = ray.transform(getModelInverse());
+		return localRay.hits(getTransform().getLocalArea(), hp);
 	}
 }
