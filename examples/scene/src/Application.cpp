@@ -105,13 +105,12 @@ void SceneApplication::load()
 void SceneApplication::moveGuy(
     std::shared_ptr<mugato::Entity> guy, float duration)
 {
-    auto& actions = guy->addComponent<mugato::ActionComponent>();
     auto endt = guy->getTransform();
     endt.setPosition(glm::vec2(
         _posXDistri(_randomAlgo),
         _posYDistri(_randomAlgo)));
     endt.setRotation(_rotDistri(_randomAlgo));
-    actions.add<mugato::TweenAction>(duration, endt)
+    guy->addAction<mugato::TweenAction>(duration, endt)
         .withComplete(std::bind(
             &SceneApplication::moveGuy, this, guy, duration));
 }

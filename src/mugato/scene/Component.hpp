@@ -20,6 +20,7 @@ namespace mugato
     {
     public:
         typedef EntityTouchPhase TouchPhase;
+		typedef size_t type_t;
 
         virtual ~Component(){};
         virtual void onAssignedToContext(Context& ctx){};
@@ -42,6 +43,20 @@ namespace mugato
         virtual void fixedUpdate(double dt){};
         virtual void render(gorn::RenderQueue& queue){};
     };
+
+	template<typename T>
+	struct ComponentType
+	{
+		static void id()
+		{
+		}
+	};
+
+	template<typename T>
+	size_t ComponentTypeId()
+	{
+		return reinterpret_cast<size_t>(&ComponentType<T>::id);
+	}
 }
 
 #endif

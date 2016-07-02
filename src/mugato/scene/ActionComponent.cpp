@@ -45,12 +45,18 @@ namespace mugato
 		}
 		if(finished())
 		{
-			_action->finish(*entity);
-			if (_finished != nullptr)
+			if(_started)
 			{
-				auto f = _finished;
-				_finished = nullptr;
-				f();
+				_action->finish(*entity);
+				if (_finished != nullptr)
+				{
+					_finished();
+				}
+				_started = false;
+			}
+			if(auto ptr = _entity.lock())
+			{
+				ptr->removeComponent(*this);
 			}
 			return;
 		}

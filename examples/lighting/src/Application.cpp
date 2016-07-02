@@ -7,8 +7,8 @@
 class LightingApplication : public mugato::Application
 {
 private:
-	void spawnEnemy(mugato::Entity& parent, const glm::vec3& position);
-	void moveEnemy(std::shared_ptr<mugato::Entity> unit);
+	void spawnUnit(mugato::Entity& parent, const glm::vec3& position);
+	void moveUnit(std::shared_ptr<mugato::Entity> unit);
 	void moveLight(std::shared_ptr<mugato::Entity> light, bool dir);
 public:
 	LightingApplication();
@@ -119,7 +119,7 @@ void LightingApplication::load()
 	{
 		for(auto y = -size.y; y < size.y; y += sep)
 		{
-			spawnEnemy(*scene3d, glm::vec3(x, 0, y));
+			spawnUnit(*scene3d, glm::vec3(x, 0, y));
 		}
 	}
 
@@ -130,7 +130,7 @@ void LightingApplication::load()
 	glLineWidth(1.0f);
 }
 
-void LightingApplication::spawnEnemy(mugato::Entity& parent, const glm::vec3& position)
+void LightingApplication::spawnUnit(mugato::Entity& parent, const glm::vec3& position)
 {
 	auto unit = parent.addChild();
 	auto size = glm::vec3(1.0f);
@@ -142,18 +142,17 @@ void LightingApplication::spawnEnemy(mugato::Entity& parent, const glm::vec3& po
 	unit->getTransform().setPivot(pivot);
 	unit->getTransform().setSize(size);
 
-	moveEnemy(unit);
+	moveUnit(unit);
 }
 
-void LightingApplication::moveEnemy(std::shared_ptr<mugato::Entity> unit)
+void LightingApplication::moveUnit(std::shared_ptr<mugato::Entity> unit)
 {
-	auto& action = unit->addComponent<mugato::ActionComponent>();
 	unit->getTransform().setRotation(0.0f);
 	auto endt = unit->getTransform();
 	endt.setRotation(glm::vec3(0.0f, 0.0f, 2 * glm::pi<float>()));
-	action.add<mugato::TweenAction>(5.0f, endt)
+	unit->addAction<mugato::TweenAction>(5.0f, endt)
 		.withComplete(std::bind(
-			&LightingApplication::moveEnemy, this, unit));
+			&LightingApplication::moveUnit, this, unit));
 }
 
 void LightingApplication::moveLight(std::shared_ptr<mugato::Entity> light, bool dir)
@@ -161,12 +160,11 @@ void LightingApplication::moveLight(std::shared_ptr<mugato::Entity> light, bool 
 	auto pos = light->getTransform().getPosition();
 	pos.x = 5.0f;
 	pos.x *= dir ? -1.0f : 1.0f;
-	auto& action = light->addComponent<mugato::ActionComponent>();
 	light->getTransform().setPosition(pos);
 	auto endt = light->getTransform();
 	pos.x *= -1.0f;
 	endt.setPosition(pos);
-	action.add<mugato::TweenAction>(5.0f, endt)
+	light->addAction<mugato::TweenAction>(5.0f, endt)
 		.withComplete(std::bind(
 			&LightingApplication::moveLight, this, light, !dir));
 }

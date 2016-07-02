@@ -120,10 +120,21 @@ void main() {
 		.withUniform(gorn::UniformKind::Color,
 			gorn::ProgramUniformDefinition("materialSpecularColor")
 				.withDefaultValue(glm::vec3(1.0)))
-		.withUniform(gorn::ProgramUniformDefinition("materialShininess").withDefaultValue(80.0f))
-		.withAttribute(gorn::AttributeKind::TexCoords, "vertTexCoord")
-		.withAttribute(gorn::AttributeKind::Normal, "vertNormal")
-		.withAttribute(gorn::AttributeKind::Position, "vert");
+		.withUniform(
+			gorn::ProgramUniformDefinition("materialShininess")
+				.withDefaultValue(80.0f))
+		.withAttribute(gorn::AttributeKind::TexCoords,
+			gorn::ProgramAttributeDefinition("vertTexCoord")
+				.withType(gorn::BasicType::Float)
+				.withCount(2))
+		.withAttribute(gorn::AttributeKind::Normal,
+			gorn::ProgramAttributeDefinition("vertNormal")
+				.withType(gorn::BasicType::Float)
+				.withCount(3))
+		.withAttribute(gorn::AttributeKind::Position,
+			gorn::ProgramAttributeDefinition("vert")
+				.withType(gorn::BasicType::Float)
+				.withCount(3));
 	}
 
 	Light& LightingSystem::add(const std::shared_ptr<Light>& light)

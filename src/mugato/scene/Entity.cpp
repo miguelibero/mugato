@@ -81,9 +81,9 @@ namespace mugato
 		{
 			return;
 		}
-        for(auto& comp : _components)
+        for(auto& elm : _components)
         {
-            comp->onEntityTransformChanged(*this);
+			elm.component->onEntityTransformChanged(*this);
         }
         if(auto parent = _parent.lock())
         {
@@ -97,9 +97,9 @@ namespace mugato
 
     void Entity::onChildTransformChanged(Entity& child)
     {
-        for(auto& comp : _components)
+        for(auto& elm : _components)
         {
-            comp->onEntityChildTransformChanged(*this, child);
+			elm.component->onEntityChildTransformChanged(*this, child);
         }
 		if (auto parent = _parent.lock())
 		{
@@ -109,9 +109,9 @@ namespace mugato
 
 	void Entity::onParentTransformChanged(Entity& parent)
 	{
-		for(auto& comp : _components)
+		for(auto& elm : _components)
 		{
-			comp->onEntityParentTransformChanged(*this, parent);
+			elm.component->onEntityParentTransformChanged(*this, parent);
 		}
 		for (auto& child : _children)
 		{
@@ -121,9 +121,9 @@ namespace mugato
 	
 	bool Entity::onScreenTouched(const gorn::RenderCamera& cam, const glm::vec2& p, TouchPhase phase)
     {
-		for(auto& comp : _components)
+		for(auto& elm : _components)
 		{
-			if(comp->onScreenTouched(*this, cam, p, phase))
+			if(elm.component->onScreenTouched(*this, cam, p, phase))
 			{
 				return true;
 			}
@@ -147,20 +147,31 @@ namespace mugato
 		bool wereEmpty = _componentsToAdd.empty();
 		_components.reserve(
 			_components.size() + _componentsToAdd.size());
-        for(auto& comp : _componentsToAdd)
+        for(auto& elm : _componentsToAdd)
         {
-            comp->onAddedToEntity(*this);
-			_components.push_back(std::move(comp));
+			elm.component->onAddedToEntity(*this);
+			_components.push_back(std::move(elm));
         }
 		_componentsToAdd.clear();
         if(!wereEmpty)
         {
-            for(auto& comp : _components)
+            for(auto& elm : _components)
             {
-                comp->onEntityComponentsLoaded(*this);
+				elm.component->onEntityComponentsLoaded(*this);
             }
         }
     }
+
+	void Entity::removePendingComponents()
+	{
+		auto comps = _removedComponents;
+		_removedComponents.clear();
+		auto itr = std::remove_if(_components.begin(), _components.end(),
+			[&comps](const ComponentData& elm) {
+			return std::find(comps.begin(), comps.end(), elm.component.get()) != comps.end();
+		});
+		_components.erase(itr, _components.end());
+	}
 
 	void Entity::updateRemovedChildren()
 	{
@@ -175,12 +186,13 @@ namespace mugato
 
     void Entity::update(double dt)
     {
+		removePendingComponents();
 		updateRemovedChildren();
 		updateTransform();
         addPendingComponents();
-        for(auto& comp : _components)
+        for(auto& elm : _components)
         {
-            comp->update(dt);
+			elm.component->update(dt);
         }
         for(auto& child : _children)
         {
@@ -190,9 +202,9 @@ namespace mugato
 
     void Entity::fixedUpdate(double dt)
     {
-        for(auto& comp : _components)
+        for(auto& elm : _components)
         {
-            comp->fixedUpdate(dt);
+			elm.component->fixedUpdate(dt);
         }
         for(auto& child : _children)
         {
@@ -211,21 +223,21 @@ namespace mugato
         queue.addCommand()
             .withTransform(_transform.getMatrix())
             .withTransformAction(gorn::RenderTransformStackAction::PushLocal);
-        for(auto& comp : _components)
+        for(auto& elm : _components)
         {
-            comp->render(queue);
+			elm.component->render(queue);
         }
-		for (auto& comp : _components)
+		for (auto& elm : _components)
 		{
-			comp->beforeEntityChildrenRender(queue);
+			elm.component->beforeEntityChildrenRender(queue);
 		}
         for(auto& child : _children)
         {
             child->render(queue);
         }
-		for (auto& comp : _components)
+		for (auto& elm : _components)
 		{
-			comp->afterEntityChildrenRender(queue);
+			elm.component->afterEntityChildrenRender(queue);
 		}
         queue.addCommand()
             .withBoundingAction(gorn::RenderStackAction::Pop)
@@ -244,9 +256,9 @@ namespace mugato
         child->updateTransform();
         child->_parent = getSharedPtr();
         _children.push_back(child);
-        for (auto& comp : _components)
+        for (auto& elm : _components)
         {
-            comp->onEntityChildAdded(*this, *child);
+            elm.component->onEntityChildAdded(*this, *child);
         }
         return child;
     }
@@ -269,20 +281,111 @@ namespace mugato
 			return false;
 		}
 		_removedChildren.push_back(*itr);
-        for (auto& comp : _components)
+        for (auto& elm : _components)
         {
-            comp->onEntityChildRemoved(*this, *child);
+			elm.component->onEntityChildRemoved(*this, *child);
         }
         return true;
     }
 
-    Component& Entity::addComponent(std::unique_ptr<Component> comp)
+    Component& Entity::addComponent(Component::type_t type, std::unique_ptr<Component> comp)
     {
         auto ptr = comp.get();
         ptr->onAssignedToContext(getContext());
-        _componentsToAdd.push_back(std::move(comp));
+		_componentsToAdd.push_back(ComponentData{
+			type, std::move(comp)
+		});
         return *ptr;
     }
+
+	bool Entity::hasComponent(Component::type_t type) const
+	{
+		for(auto& elm : _components)
+		{
+			if(elm.id == type)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	Component& Entity::getComponent(Component::type_t type)
+	{
+		for(auto& elm : _components)
+		{
+			if(elm.id == type)
+			{
+				return *elm.component;
+			}
+		}
+		throw new Exception("Could not find component.");
+	}
+
+	const Component& Entity::getComponent(Component::type_t type) const
+	{
+		for (auto& elm : _components)
+		{
+			if (elm.id == type)
+			{
+				return *elm.component;
+			}
+		}
+		throw new Exception("Could not find component.");
+	}
+
+	std::vector<Component*> Entity::getComponents(Component::type_t type)
+	{
+		std::vector<Component*> comps;
+		for (auto& elm : _components)
+		{
+			if (elm.id == type)
+			{
+				comps.push_back(elm.component.get());
+			}
+		}
+		return comps;
+	}
+
+	std::vector<const Component*> Entity::getComponents(Component::type_t type) const
+	{
+		std::vector<const Component*> comps;
+		for (auto& elm : _components)
+		{
+			if (elm.id == type)
+			{
+				comps.push_back(elm.component.get());
+			}
+		}
+		return comps;
+	}
+
+	bool Entity::removeComponent(const Component& comp)
+	{
+		for (auto& elm : _components)
+		{
+			if (elm.component.get() == &comp)
+			{
+				_removedComponents.push_back(&comp);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool Entity::removeComponents(Component::type_t type)
+	{
+		bool found = false;
+		for(auto& elm : _components)
+		{
+			if(elm.id == type)
+			{
+				found = true;
+				_removedComponents.push_back(elm.component.get());
+			}
+		}
+		return found;
+	}
 
 	Action& Entity::addAction(double duration, std::unique_ptr<Action> action)
 	{
@@ -321,9 +424,9 @@ namespace mugato
 		if(_layers != layers)
 		{
 			_layers = layers;
-			for (auto& comp : _components)
+			for (auto& elm : _components)
 			{
-				comp->onEntityLayersChanged(*this);
+				elm.component->onEntityLayersChanged(*this);
 			}
 		}
 	}
