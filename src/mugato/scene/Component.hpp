@@ -25,6 +25,7 @@ namespace mugato
         virtual ~Component(){};
         virtual void onAssignedToContext(Context& ctx){};
         virtual void onAddedToEntity(Entity& entity){};
+		virtual void onRemovedFromEntity(Entity& entity) {};
         virtual void onEntityTransformChanged(Entity& entity){};
 		virtual void onEntityParentTransformChanged(Entity& entity, Entity& parent){};
         virtual bool onScreenTouched(Entity& entity, const gorn::RenderCamera& cam,
@@ -45,17 +46,10 @@ namespace mugato
     };
 
 	template<typename T>
-	struct ComponentType
-	{
-		static void id()
-		{
-		}
-	};
-
-	template<typename T>
 	size_t ComponentTypeId()
 	{
-		return reinterpret_cast<size_t>(&ComponentType<T>::id);
+		static T* marker = nullptr;
+		return reinterpret_cast<size_t>(&marker);
 	}
 }
 

@@ -148,12 +148,13 @@ namespace mugato
 		bool wereEmpty = _componentsToAdd.empty();
 		_components.reserve(
 			_components.size() + _componentsToAdd.size());
-        for(auto& elm : _componentsToAdd)
+		auto comps = std::move(_componentsToAdd);
+		_componentsToAdd.clear();
+        for(auto& elm : comps)
         {
 			elm.component->onAddedToEntity(*this);
 			_components.push_back(std::move(elm));
         }
-		_componentsToAdd.clear();
         if(!wereEmpty)
         {
             for(auto& elm : _components)
@@ -171,6 +172,14 @@ namespace mugato
 			[&comps](const ComponentData& elm) {
 			return std::find(comps.begin(), comps.end(), elm.component.get()) != comps.end();
 		});
+		for(auto itr2 = itr; itr2 != _components.end(); ++itr2)
+		{
+			auto& comp = itr2->component;
+			if(comp != nullptr)
+			{
+				comp->onRemovedFromEntity(*this);
+			}
+		}
 		_components.erase(itr, _components.end());
 	}
 

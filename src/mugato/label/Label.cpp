@@ -202,8 +202,8 @@ namespace mugato {
                 chr.clear();
             }
         }
-        _contentSize.x = *std::max_element(
-            _lineWidths.begin(), _lineWidths.end());
+		_contentSize.x = !_lineWidths.empty() ? *std::max_element(
+			_lineWidths.begin(), _lineWidths.end()) : 0.0f;
         _contentSize.y = _font->getLineHeight()*_lineWidths.size();
         _dirtyChars = false;
     }
@@ -285,12 +285,15 @@ namespace mugato {
         queue.addCommand().withTransformAction(
                 gorn::RenderTransformStackAction::PushCheckpoint);
 
-        auto line = _lineWidths.begin();
-        queue.addCommand()
-          .withTransformAction(gorn::RenderTransformStackAction::PushLocal)
-          .withTransform(glm::translate(glm::mat4(),
-                getLineBreakTranslation(_contentSize.x, *line)));
-        line++;
+		auto line = _lineWidths.begin();
+		if(line != _lineWidths.end())
+		{
+			queue.addCommand()
+				.withTransformAction(gorn::RenderTransformStackAction::PushLocal)
+				.withTransform(glm::translate(glm::mat4(),
+					getLineBreakTranslation(_contentSize.x, *line)));
+			line++;
+		}
         for(auto& name : _characters)
         {
             if(name == kLineBreak)

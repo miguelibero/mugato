@@ -8,7 +8,7 @@
 
 namespace mugato {
 
-  	typedef float easing_t;
+  	typedef double easing_t;
 
     template<typename T>
 	class Easing
@@ -20,12 +20,12 @@ namespace mugato {
 
 	    static T linear(easing_t p, const T& b, const T& c)
 	    {
-		    return c*p + b;
+		    return c*(float)p + b;
 	    }
 
 	    static T swing(easing_t p, const T& b, const T& c)
 	    {
-		    return linear(0.5 - cosf( p*glm::pi<easing_t>() ) / 2, b, c);
+		    return linear(0.5 - cos( p*glm::pi<easing_t>() ) / 2, b, c);
 	    }
 
         static T expo(easing_t p, const T& b, const T& c)
