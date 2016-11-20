@@ -16,13 +16,25 @@ namespace mugato
 
     Entity::~Entity()
     {
-        (void)0;
     }
 
     void Entity::setContext(Context& ctx)
     {
         _ctx = &ctx;
     }
+
+	bool Entity::hasContext() const
+	{
+		if (_ctx)
+		{
+			return true;
+		}
+		else if (hasParent())
+		{
+			return getParent().hasContext();
+		}
+		return false;
+	}
 
     Context& Entity::getContext() const
     {
@@ -301,7 +313,10 @@ namespace mugato
     Component& Entity::addComponent(Component::type_t type, std::unique_ptr<Component> comp)
     {
         auto ptr = comp.get();
-        ptr->onAssignedToContext(getContext());
+		if (hasContext())
+		{
+			ptr->onAssignedToContext(getContext());
+		}
 		_componentsToAdd.push_back(ComponentData{
 			type, std::move(comp)
 		});

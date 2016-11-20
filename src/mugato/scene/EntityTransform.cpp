@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace mugato
 {
@@ -167,6 +168,17 @@ namespace mugato
             _size = val;
         }
     }
+
+	void EntityTransform::setMatrix(const Matrix& m)
+	{
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::quat orientation;
+		glm::decompose(m, _scale, orientation, _position, skew, perspective);
+		_rotation = glm::eulerAngles(orientation);
+		_matrix = m;
+		_dirty = false;
+	}
 
     EntityTransform::Vector2
         EntityTransform::getLocalToParentPoint(const Vector2& p) const

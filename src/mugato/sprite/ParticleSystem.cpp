@@ -2,7 +2,6 @@
 #include <mugato/sprite/ParticleSystem.hpp>
 #include <gorn/render/RenderQueue.hpp>
 #include <gorn/render/RenderCommand.hpp>
-#include <gorn/render/RenderKinds.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 
@@ -114,7 +113,7 @@ namespace mugato
 			.withTransform(glm::translate(glm::mat4(), _position-glm::vec3(_size, _size, 0.0f)*0.5f))
 			.withTransformAction(gorn::RenderTransformStackAction::PushLocal);
 		auto cmd = _sprite.render();
-		cmd.withRepeatAttribute(gorn::AttributeKind::Color,
+		cmd.withRepeatAttribute(gorn::AttributeType::Color,
 			buffer{ _color.r, _color.g, _color.b, _color.a });
 		queue.addCommand(std::move(cmd));
 		queue.addCommand()

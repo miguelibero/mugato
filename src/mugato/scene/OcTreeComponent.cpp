@@ -2,7 +2,6 @@
 #include <mugato/scene/Entity.hpp>
 #include <gorn/render/RenderQueue.hpp>
 #include <gorn/render/RenderCommand.hpp>
-#include <gorn/render/RenderKinds.hpp>
 #include <gorn/asset/ShapeMeshFactory.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

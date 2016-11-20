@@ -56,6 +56,8 @@ namespace mugato
         void setRotation(float val);
         void setScale(float val);
 
+		void setMatrix(const Matrix& m);
+
         bool update();
 
         EntityTransform& operator=(const EntityTransform& other);

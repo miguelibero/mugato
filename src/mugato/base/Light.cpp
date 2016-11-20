@@ -3,7 +3,6 @@
 #include <mugato/base/Kinds.hpp>
 #include <gorn/gl/ProgramDefinition.hpp>
 #include <gorn/gl/VertexArray.hpp>
-#include <gorn/render/RenderKinds.hpp>
 #include <sstream>
 #include <algorithm>
 
@@ -112,28 +111,29 @@ void main() {
 }
 
 )")
-		.withUniform(gorn::UniformKind::Model, "model")
-		.withUniform(gorn::UniformKind::NormalMatrix, "normalMatrix")
-		.withUniform(gorn::UniformKind::CameraPosition, "cameraPosition")
-		.withUniform(gorn::UniformKind::Camera, "camera")
-		.withUniform(gorn::UniformKind::Texture0, "materialTex")
-		.withUniform(gorn::UniformKind::Color,
-			gorn::ProgramUniformDefinition("materialSpecularColor")
-				.withDefaultValue(glm::vec3(1.0)))
+		.withUniform(gorn::UniformKind("model", gorn::UniformType::ModelTransform))
+		.withUniform(gorn::UniformKind("normalMatrix", gorn::UniformType::NormalTransform))
+		.withUniform(gorn::UniformKind("cameraPosition", gorn::UniformType::CameraPosition))
+		.withUniform(gorn::UniformKind("camera", gorn::UniformType::CameraTransform))
+		.withUniform(gorn::UniformKind("materialTex", gorn::UniformType::DiffuseTexture))
+		.withUniform(gorn::ProgramUniformDefinition(
+			gorn::UniformKind("materialSpecularColor", gorn::UniformType::Color),
+				glm::vec3(1.0)))
 		.withUniform(
 			gorn::ProgramUniformDefinition("materialShininess")
 				.withDefaultValue(80.0f))
-		.withAttribute(gorn::AttributeKind::TexCoords,
-			gorn::ProgramAttributeDefinition("vertTexCoord")
-				.withType(gorn::BasicType::Float)
+		.withAttribute(
+				gorn::ProgramAttributeDefinition(
+					gorn::AttributeKind("vertTexCoord", gorn::AttributeType::TexCoords))
+				.withBasicType(gorn::BasicType::Float)
 				.withCount(2))
-		.withAttribute(gorn::AttributeKind::Normal,
-			gorn::ProgramAttributeDefinition("vertNormal")
-				.withType(gorn::BasicType::Float)
+		.withAttribute(gorn::ProgramAttributeDefinition(
+					gorn::AttributeKind("vertNormal", gorn::AttributeType::Normal))
+				.withBasicType(gorn::BasicType::Float)
 				.withCount(3))
-		.withAttribute(gorn::AttributeKind::Position,
-			gorn::ProgramAttributeDefinition("vert")
-				.withType(gorn::BasicType::Float)
+		.withAttribute(gorn::ProgramAttributeDefinition(
+					gorn::AttributeKind("vert", gorn::AttributeType::Position))
+				.withBasicType(gorn::BasicType::Float)
 				.withCount(3));
 	}
 
@@ -184,7 +184,7 @@ void main() {
 				auto lightUniforms = light->getUniformValues();
 				for (auto itr = lightUniforms.begin(); itr != lightUniforms.end(); ++itr)
 				{
-					values[prefix + itr->first] = itr->second;
+					values[prefix + itr->first.getName()] = itr->second;
 				}
 			}
 		}

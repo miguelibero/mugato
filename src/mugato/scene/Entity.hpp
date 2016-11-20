@@ -64,6 +64,7 @@ namespace mugato
         std::shared_ptr<Entity> getSharedPtr();
 
         void setContext(Context& ctx);
+		bool hasContext() const;
         Context& getContext() const;
 
         Transform& getTransform();

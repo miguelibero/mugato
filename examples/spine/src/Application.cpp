@@ -51,12 +51,12 @@ void SpineApplication::load()
 
     auto& matdefs = getGorn().getMaterials().getDefinitions();
     matdefs.set("spine_slots", gorn::MaterialDefinition()
-        .withUniformValue(gorn::UniformKind::Color,
+        .withUniformValue(gorn::UniformType::Color,
             glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
         .withProgram(mugato::ProgramKind::Color));
 
     matdefs.set("spine_bones", gorn::MaterialDefinition()
-        .withUniformValue(gorn::UniformKind::Color,
+        .withUniformValue(gorn::UniformType::Color,
             glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
         .withProgram(mugato::ProgramKind::Color));
 

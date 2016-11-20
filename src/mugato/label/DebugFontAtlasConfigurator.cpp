@@ -2385,7 +2385,7 @@ namespace mugato {
         atlases.makeCustomLoader<GridFontAtlasLoader>(
             _name, materials, glm::vec2(12, 32), '.');
         materials.getDefinitions().get(_name)
-            .withTexture(_name)
+            .withTexture(gorn::UniformType::DiffuseTexture, _name)
             .withProgram(ProgramKind::Sprite);
     }
 

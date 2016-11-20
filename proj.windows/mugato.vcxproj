@@ -58,6 +58,7 @@
     <ClCompile Include="..\src\mugato\label\LabelManager.cpp" />
     <ClCompile Include="..\src\mugato\scene\ActionComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\AlignComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scene\AssimpEntityLoader.cpp" />
     <ClCompile Include="..\src\mugato\scene\ButtonComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\CameraComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\Entity.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="..\src\mugato\mugato.hpp" />
     <ClInclude Include="..\src\mugato\scene\ActionComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\AlignComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scene\AssimpEntityLoader.hpp" />
     <ClInclude Include="..\src\mugato\scene\ButtonComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\CameraComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\Component.hpp" />
@@ -203,11 +205,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\lib;..\src;..\lib\spine-c\include;..\lib\gorn\src;..\lib\gorn\lib;..\lib\gorn\lib\platform\windows\glew\include;..\lib\gorn\lib\buffer\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\lib;..\src;..\lib\spine-c\include;..\lib\gorn\src;..\lib\gorn\lib;..\lib\gorn\lib\platform\windows\glew\include;..\lib\gorn\lib\buffer\src;..\lib\assimp\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\lib;..\src;..\lib\spine-c\include;..\lib\gorn\src;..\lib\gorn\lib;..\lib\gorn\lib\platform\windows\glew\include;..\lib\gorn\lib\buffer\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\lib;..\src;..\lib\spine-c\include;..\lib\gorn\src;..\lib\gorn\lib;..\lib\gorn\lib\platform\windows\glew\include;..\lib\gorn\lib\buffer\src;..\lib\assimp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

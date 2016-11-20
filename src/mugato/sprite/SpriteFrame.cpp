@@ -2,7 +2,6 @@
 #include <mugato/sprite/SpriteFrame.hpp>
 #include <mugato/sprite/SpriteAtlasRegion.hpp>
 #include <gorn/render/RenderCommand.hpp>
-#include <gorn/render/RenderKinds.hpp>
 #include <gorn/gl/Material.hpp>
 #include <gorn/base/Math.hpp>
 
@@ -298,8 +297,8 @@ namespace mugato {
 
         return gorn::RenderCommand()
             .withMaterial(_material)
-            .withAttribute(gorn::AttributeKind::Position, _posVerts, 2)
-            .withAttribute(gorn::AttributeKind::TexCoords, _texVerts, 2)
+            .withAttribute(gorn::AttributeType::Position, _posVerts, 2)
+            .withAttribute(gorn::AttributeType::TexCoords, _texVerts, 2)
             .withElements(std::move(elms));
     }
 }

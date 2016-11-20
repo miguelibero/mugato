@@ -53,6 +53,8 @@
 #include <mugato/scene/CameraComponent.hpp>
 #include <mugato/scene/LightComponent.hpp>
 #include <mugato/scene/ParticleSystemComponent.hpp>
+#include <mugato/scene/AssimpEntityLoader.hpp>
+
 #include <mugato/action/Action.hpp>
 #include <mugato/action/EmptyAction.hpp>
 #include <mugato/action/TweenAction.hpp>

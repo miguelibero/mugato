@@ -3,7 +3,6 @@
 #include <mugato/base/Exception.hpp>
 #include <gorn/render/RenderCommand.hpp>
 #include <gorn/render/RenderQueue.hpp>
-#include <gorn/render/RenderKinds.hpp>
 #include <spine/spine.h>
 #include <buffer.hpp>
 #include <algorithm>
@@ -220,11 +219,11 @@ namespace mugato {
 
                 queue.addCommand()
                     .withMaterial(material)
-                    .withAttribute(gorn::AttributeKind::Position,
+                    .withAttribute(gorn::AttributeType::Position,
                         std::move(positions), 2)
-                    .withAttribute(gorn::AttributeKind::TexCoords,
+                    .withAttribute(gorn::AttributeType::TexCoords,
                         std::move(texcoords), 2)
-                    .withRepeatAttribute(gorn::AttributeKind::Color,
+                    .withRepeatAttribute(gorn::AttributeType::Color,
                         std::move(colors))
                     .withElements(elements);
 		    }
@@ -295,7 +294,7 @@ namespace mugato {
             }
             queue.addCommand()
                 .withMaterial(_slotsMaterial)
-                .withAttribute(gorn::AttributeKind::Position,
+                .withAttribute(gorn::AttributeType::Position,
                     std::move(positions), 2)
                 .withDrawMode(gorn::DrawMode::Lines)
                 .withElements(linelms);
@@ -316,7 +315,7 @@ namespace mugato {
             buffer positions{bone->worldX, bone->worldY, x, y};
             queue.addCommand()
                 .withMaterial(_bonesMaterial)
-                .withAttribute(gorn::AttributeKind::Position,
+                .withAttribute(gorn::AttributeType::Position,
                     std::move(positions), 2)
                 .withDrawMode(gorn::DrawMode::Lines);
 	    }

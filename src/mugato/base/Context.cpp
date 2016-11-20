@@ -9,7 +9,6 @@
 #include <mugato/label/DebugFontAtlasConfigurator.hpp>
 #include <mugato/scene/EntityStack.hpp>
 #include <gorn/gl/ProgramManager.hpp>
-#include <gorn/render/RenderKinds.hpp>
 #include <gorn/asset/FileManager.hpp>
 #include <gorn/platform/StbImageLoader.hpp>
 #include <glm/glm.hpp>
@@ -42,7 +41,7 @@ namespace mugato
         _gorn.getMaterials().getDefinitions().set(
             [](const std::string& name){
                 return gorn::MaterialDefinition()
-                    .withTexture(gorn::UniformKind::Texture0, name)
+                    .withTexture(gorn::UniformType::DiffuseTexture, name)
                     .withProgram(ProgramKind::Sprite);
             });
 
@@ -82,20 +81,20 @@ void main()
 }
 
 )")
-            .withUniform(gorn::UniformKind::Model, "model")
-            .withUniform(gorn::UniformKind::Camera, "cam")
-            .withUniform(gorn::UniformKind::Texture0, "texture")
-            .withAttribute(gorn::AttributeKind::Position,
-				gorn::ProgramAttributeDefinition("position")
-				.withType(gorn::BasicType::Float)
+            .withUniform(gorn::UniformKind("model", gorn::UniformType::ModelTransform))
+			.withUniform(gorn::UniformKind("cam", gorn::UniformType::CameraTransform))
+			.withUniform(gorn::UniformKind("texture", gorn::UniformType::DiffuseTexture))
+            .withAttribute(gorn::ProgramAttributeDefinition(
+				gorn::AttributeKind("position", gorn::AttributeType::Position))
+				.withBasicType(gorn::BasicType::Float)
 				.withCount(3))
-            .withAttribute(gorn::AttributeKind::TexCoords,
-				gorn::ProgramAttributeDefinition("texCoords")
-				.withType(gorn::BasicType::Float)
+            .withAttribute(gorn::ProgramAttributeDefinition(
+				gorn::AttributeKind("texCoords", gorn::AttributeType::TexCoords))
+				.withBasicType(gorn::BasicType::Float)
 				.withCount(2))
-			.withAttribute(gorn::AttributeKind::Color,
-				gorn::ProgramAttributeDefinition("color")
-				.withType(gorn::BasicType::Float)
+			.withAttribute(gorn::ProgramAttributeDefinition(
+				gorn::AttributeKind("color", gorn::AttributeType::Color))
+				.withBasicType(gorn::BasicType::Float)
 				.withCount(4)
 				.withDefaultValue(buffer{ 1.0f, 1.0f, 1.0f, 1.0f }));
 
@@ -128,12 +127,12 @@ void main()
 }
 
 )")
-            .withUniform(gorn::UniformKind::Model, "model")
-            .withUniform(gorn::UniformKind::Camera, "cam")
-            .withUniform(gorn::UniformKind::Color, "color")
-			.withAttribute(gorn::AttributeKind::Position,
-				gorn::ProgramAttributeDefinition("position")
-				.withType(gorn::BasicType::Float)
+			.withUniform(gorn::UniformKind("model", gorn::UniformType::ModelTransform))
+			.withUniform(gorn::UniformKind("cam", gorn::UniformType::CameraTransform))
+			.withUniform(gorn::UniformKind("color", gorn::UniformType::Color))
+			.withAttribute(gorn::ProgramAttributeDefinition(
+				gorn::AttributeKind("position", gorn::AttributeType::Position))
+				.withBasicType(gorn::BasicType::Float)
 				.withCount(3));
 
         DebugFontAtlasConfigurator().setup(*this);

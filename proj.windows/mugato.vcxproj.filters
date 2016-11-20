@@ -283,6 +283,9 @@
     <ClCompile Include="..\src\mugato\sprite\ParticleSystemProperties.cpp">
       <Filter>sprite</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\AssimpEntityLoader.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\mugato\base\Kinds.hpp">
@@ -492,6 +495,9 @@
     </ClInclude>
     <ClInclude Include="..\src\mugato\sprite\ParticleSystemProperties.hpp">
       <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\AssimpEntityLoader.hpp">
+      <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,7 +1,6 @@
 
 #include <mugato/sprite/Sprite.hpp>
 #include <gorn/render/RenderQueue.hpp>
-#include <gorn/render/RenderKinds.hpp>
 #include <mugato/base/Exception.hpp>
 
 namespace mugato
