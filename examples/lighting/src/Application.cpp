@@ -45,21 +45,21 @@ void LightingApplication::load()
 	getGorn().getTextures().getDefinitions().get("white")
 		.withImage(gorn::Image::createWithColor(glm::vec4(1.0, 1.0, 1.0, 1.0)));
 
-	auto& matdefs = getGorn().getMaterials().getDefinitions();
+  auto& matdefs = getGorn().getMaterials().getDefinitions();
 	matdefs.set("floor", gorn::MaterialDefinition()
-		.withUniformValue(gorn::UniformKind::Color,
+		.withUniformValue(gorn::UniformType::Color,
 			glm::vec3(1.0f, 1.0f, 1.0f))
-		.withTexture(gorn::UniformKind::Texture0, "white")
+		.withTexture(gorn::UniformType::DiffuseTexture, "white")
 		.withProgram(mugato::ProgramKind::Light));
 
 	matdefs.set("unit", gorn::MaterialDefinition()
-		.withUniformValue(gorn::UniformKind::Color,
+		.withUniformValue(gorn::UniformType::Color,
 			glm::vec3(1.0f, 1.0f, 1.0f))
-		.withTexture(gorn::UniformKind::Texture0, "wooden-crate.jpg")
+		.withTexture(gorn::UniformType::DiffuseTexture, "wooden-crate.png")
 		.withProgram(mugato::ProgramKind::Light));
 
 	matdefs.set("normal", gorn::MaterialDefinition()
-		.withUniformValue(gorn::UniformKind::Color,
+		.withUniformValue(gorn::UniformType::Color,
 			glm::vec4(0.0f, 1.0f, 0.0f, 1.0f))
 		.withProgram(mugato::ProgramKind::Color));
 
@@ -123,11 +123,10 @@ void LightingApplication::load()
 		}
 	}
 
-	gorn::StateChange()
-		.withEnable(gorn::TestType::Depth)
+	gorn::Capabilities()
+		.with(gorn::CapabilityType::DepthTest, true)
+		.withLineWidth(1.0f)
 		.apply();
-
-	glLineWidth(1.0f);
 }
 
 void LightingApplication::spawnUnit(mugato::Entity& parent, const glm::vec3& position)

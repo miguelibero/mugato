@@ -43,11 +43,11 @@ void GuiApplication::load()
 	getMugato().getRoot().getTransform().setSize(glm::vec2(480.0f, 320.0f));
 
     getGorn().getMaterials().getDefinitions().get("button")
-        .withTexture(gorn::UniformKind::Texture0, "button1.png");
+        .withTexture(gorn::UniformType::DiffuseTexture, "button1.png");
 
     getGorn().getMaterials().getDefinitions().get("button_pressed")
-        .withTexture(gorn::UniformKind::Texture0, "button1.png")
-        .withUniformValue(gorn::UniformKind::Color, glm::vec4(100.f/255.f));
+        .withTexture(gorn::UniformType::DiffuseTexture, "button1.png")
+        .withUniformValue(gorn::UniformType::Color, glm::vec4(100.f/255.f));
 
     getMugato().getSprites().getDefinitions().get("button")
         .withMaterial("button")

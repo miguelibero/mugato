@@ -93,7 +93,7 @@ namespace mugato
 
     void EntityTransform::setScale(float val)
     {
-        setScale(glm::vec2(val));
+        setScale(glm::vec3(val));
     }
 
     void EntityTransform::setPosition(const Vector& val)
