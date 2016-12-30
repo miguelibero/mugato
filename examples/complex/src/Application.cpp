@@ -92,7 +92,7 @@ void ComplexApplication::load()
 	auto loader = mugato::AssimpEntityLoader(getGorn().getMaterials());
 	auto entity = loader.load(buffer);
     entity->getTransform().setScale(0.03f);
-    //entity->getTransform().setPositionY(-3.0f);
+    entity->getTransform().setPositionZ(3.0f);
 	scene3d->addChild(entity);
     rotateEntity(entity);
 

@@ -92,16 +92,17 @@ namespace mugato
 	std::shared_ptr<gorn::Mesh> AssimpEntityLoader::loadMesh(const aiMesh* aimesh) const
 	{
 		auto mesh = std::make_shared<gorn::Mesh>();
-        mesh->reserveElements(aimesh->mNumFaces);
+        mesh->getElements().reserve(aimesh->mNumFaces*4);
 		for(unsigned i=0; i<aimesh->mNumFaces; i++)
 		{
 			auto& face = aimesh->mFaces[i];
-            for(int i = 0; i < face.mNumIndices; i++)
+            std::vector<gorn::Mesh::Element> elms;
+            elms.resize(face.mNumIndices);
+            for(unsigned int i = 0; i < face.mNumIndices; i++)
             {
-                auto elm = gorn::MeshElement();
-                elm.setDefault(face.mIndices[i]);
-                mesh->addElement(std::move(elm));
+                elms[i].setDefault(face.mIndices[i]);
             }
+            mesh->addFace(elms);
 		}
 
         mesh->reserveVertices<glm::vec3>(gorn::AttributeType::Position, aimesh->mNumVertices);
