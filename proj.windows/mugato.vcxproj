@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -56,9 +56,13 @@
     <ClCompile Include="..\src\mugato\label\LabelDefinition.cpp" />
     <ClCompile Include="..\src\mugato\label\LabelFont.cpp" />
     <ClCompile Include="..\src\mugato\label\LabelManager.cpp" />
+    <ClCompile Include="..\src\mugato\model\AssimpModelDataLoader.cpp" />
+    <ClCompile Include="..\src\mugato\model\Model.cpp" />
+    <ClCompile Include="..\src\mugato\model\ModelData.cpp" />
+    <ClCompile Include="..\src\mugato\model\ModelDefinition.cpp" />
+    <ClCompile Include="..\src\mugato\model\ModelManager.cpp" />
     <ClCompile Include="..\src\mugato\scene\ActionComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\AlignComponent.cpp" />
-    <ClCompile Include="..\src\mugato\scene\AssimpEntityLoader.cpp" />
     <ClCompile Include="..\src\mugato\scene\ButtonComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\CameraComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\Entity.cpp" />
@@ -67,11 +71,13 @@
     <ClCompile Include="..\src\mugato\scene\LabelComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\LightComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\MeshComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scene\ModelComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\OcTreeComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\ParticleSystemComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\RenderInfoComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\SpriteComponent.cpp" />
     <ClCompile Include="..\src\mugato\scene\TouchComponent.cpp" />
+    <ClCompile Include="..\src\mugato\scripting\ScriptingContext.cpp" />
     <ClCompile Include="..\src\mugato\spine\SpineAnimationMixDefinition.cpp" />
     <ClCompile Include="..\src\mugato\spine\SpineAtlas.cpp" />
     <ClCompile Include="..\src\mugato\spine\SpineManager.cpp" />
@@ -125,10 +131,14 @@
     <ClInclude Include="..\src\mugato\label\LabelEnums.hpp" />
     <ClInclude Include="..\src\mugato\label\LabelFont.hpp" />
     <ClInclude Include="..\src\mugato\label\LabelManager.hpp" />
+    <ClInclude Include="..\src\mugato\model\AssimpModelDataLoader.hpp" />
+    <ClInclude Include="..\src\mugato\model\Model.hpp" />
+    <ClInclude Include="..\src\mugato\model\ModelData.hpp" />
+    <ClInclude Include="..\src\mugato\model\ModelDefinition.hpp" />
+    <ClInclude Include="..\src\mugato\model\ModelManager.hpp" />
     <ClInclude Include="..\src\mugato\mugato.hpp" />
     <ClInclude Include="..\src\mugato\scene\ActionComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\AlignComponent.hpp" />
-    <ClInclude Include="..\src\mugato\scene\AssimpEntityLoader.hpp" />
     <ClInclude Include="..\src\mugato\scene\ButtonComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\CameraComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\Component.hpp" />
@@ -139,11 +149,13 @@
     <ClInclude Include="..\src\mugato\scene\LabelComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\LightComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\MeshComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scene\ModelComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\OcTreeComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\ParticleSystemComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\RenderInfoComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\SpriteComponent.hpp" />
     <ClInclude Include="..\src\mugato\scene\TouchComponent.hpp" />
+    <ClInclude Include="..\src\mugato\scripting\ScriptingContext.hpp" />
     <ClInclude Include="..\src\mugato\spine\SpineAnimationMixDefinition.hpp" />
     <ClInclude Include="..\src\mugato\spine\SpineAtlas.hpp" />
     <ClInclude Include="..\src\mugato\spine\SpineManager.hpp" />
@@ -184,13 +196,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -205,11 +217,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\lib;..\src;..\lib\spine-c\include;..\lib\gorn\src;..\lib\gorn\lib;..\lib\gorn\lib\platform\windows\glew\include;..\lib\gorn\lib\buffer\src;..\lib\assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\lib;..\src;..\lib\spine-c\include;..\lib\gorn\src;..\lib\gorn\lib;..\lib\gorn\lib\platform\windows\glew\include;..\lib\gorn\lib\buffer\src;..\lib\assimp\include;..\lib\lua\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\lib;..\src;..\lib\spine-c\include;..\lib\gorn\src;..\lib\gorn\lib;..\lib\gorn\lib\platform\windows\glew\include;..\lib\gorn\lib\buffer\src;..\lib\assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\lib;..\src;..\lib\spine-c\include;..\lib\gorn\src;..\lib\gorn\lib;..\lib\gorn\lib\platform\windows\glew\include;..\lib\gorn\lib\buffer\src;..\lib\assimp\include;..\lib\lua\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

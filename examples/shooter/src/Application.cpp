@@ -64,25 +64,25 @@ void ShooterApplication::defineAssets()
 
 	auto& matdefs = getGorn().getMaterials().getDefinitions();
 	matdefs.set("player", gorn::MaterialDefinition()
-		.withUniformValue(gorn::UniformKind::Color,
+		.withUniformValue(gorn::UniformType::Color,
 			glm::vec3(1.0f, 0.0f, 1.0f))
-		.withTexture(gorn::UniformKind::Texture0, "green")
+		.withTexture(gorn::UniformType::DiffuseTexture, "green")
 		.withProgram(mugato::ProgramKind::Light));
 
 	matdefs.set("enemy", gorn::MaterialDefinition()
-		.withUniformValue(gorn::UniformKind::Color,
+		.withUniformValue(gorn::UniformType::Color,
 			glm::vec3(1.0f, 1.0f, 1.0f))
-		.withTexture(gorn::UniformKind::Texture0, "blue")
+		.withTexture(gorn::UniformType::DiffuseTexture, "blue")
 		.withProgram(mugato::ProgramKind::Light));
 
 	matdefs.set("floor", gorn::MaterialDefinition()
-		.withUniformValue(gorn::UniformKind::Color,
+		.withUniformValue(gorn::UniformType::Color,
 			glm::vec3(1.0f, 1.0f, 1.0f))
-		.withTexture(gorn::UniformKind::Texture0, "yellow")
+		.withTexture(gorn::UniformType::DiffuseTexture, "yellow")
 		.withProgram(mugato::ProgramKind::Light));
 
 	matdefs.set("ray", gorn::MaterialDefinition()
-		.withUniformValue(gorn::UniformKind::Color,
+		.withUniformValue(gorn::UniformType::Color,
 			glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
 		.withProgram(mugato::ProgramKind::Color));
 }
@@ -122,7 +122,7 @@ void ShooterApplication::load()
 	_player->getTransform().setSize(playerShape.size);
 	_player->getTransform().setPivot(glm::vec3(-0.25f, 0.0f, -0.5f));
 	_player->addComponent<mugato::MeshComponent>(playerMesh, "player");
-	
+
 	auto playerCam = _player->addChild();
 	playerCam->setLayer(2);
 	playerCam->getTransform().setPosition(glm::vec3(1.5f, 1.5f, 4.0f));
@@ -146,10 +146,10 @@ void ShooterApplication::load()
 		spawnEnemy();
 	}
 
-	gorn::StateChange()
-		.withEnable(gorn::TestType::Depth)
-		.apply();
-	glLineWidth(3.0f);
+	gorn::Capabilities()
+        .with(gorn::CapabilityType::DepthTest, true)
+        .withLineWidth(1.0f)
+        .apply();
 }
 
 bool ShooterApplication::onEnemyTouched(mugato::Entity& entity, const glm::vec3& p,

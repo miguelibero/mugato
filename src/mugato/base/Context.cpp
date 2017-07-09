@@ -7,6 +7,7 @@
 #include <mugato/sprite/StarlingParticleLoader.hpp>
 #include <mugato/label/FntFontAtlasLoader.hpp>
 #include <mugato/label/DebugFontAtlasConfigurator.hpp>
+#include <mugato/model/AssimpModelDataLoader.hpp>
 #include <mugato/scene/EntityStack.hpp>
 #include <gorn/gl/ProgramManager.hpp>
 #include <gorn/asset/FileManager.hpp>
@@ -21,7 +22,9 @@ namespace mugato
     _sprites(_gorn.getMaterials(), _gorn.getFiles()),
 	_particles(_sprites, _gorn.getFiles()),
     _labels(_gorn.getMaterials(), _gorn.getFiles()),
+	_models(_gorn.getMaterials(), _gorn.getFiles()),
     _skeletons(_gorn.getMaterials(), _gorn.getFiles()),
+    _scripting(_gorn, *this),
     _fixedUpdateInterval(0.0),
     _fixedUpdatesPerSecond(10.0),
 	_touching(false)
@@ -38,6 +41,8 @@ namespace mugato
             <gorn::StbImageLoader>();
 		_particles.getConfigs().makeDefaultDataLoader
 			<StarlingParticleLoader>();
+		_models.getDatas().makeDefaultDataLoader
+			<AssimpModelDataLoader>(_gorn.getMaterials());
         _gorn.getMaterials().getDefinitions().set(
             [](const std::string& name){
                 return gorn::MaterialDefinition()
@@ -194,6 +199,16 @@ void main()
 		return _particles;
 	}
 
+    const ModelManager& Context::getModels() const
+    {
+        return _models;
+    }
+
+    ModelManager& Context::getModels()
+    {
+        return _models;
+    }
+
     const EntityStack& Context::getScenes() const
     {
         return *_scenes;
@@ -213,6 +228,16 @@ void main()
 	{
 		return _lighting;
 	}
+
+    const ScriptingContext& Context::getScripting() const
+    {
+        return _scripting;
+    }
+
+    ScriptingContext& Context::getScripting()
+    {
+        return _scripting;
+    }
 
     const Entity& Context::getRoot() const
     {

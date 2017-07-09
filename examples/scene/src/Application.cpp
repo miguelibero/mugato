@@ -54,6 +54,7 @@ void SceneApplication::load()
 
     getGorn().getImages()
         .makeDefaultDataLoader<gorn::StbImageLoader>();
+
     glm::vec2 portSize(480.0f, 320.0f);
 	getMugato().getRoot().getTransform().setSize(portSize);
     getGorn().getQueue().addCamera()

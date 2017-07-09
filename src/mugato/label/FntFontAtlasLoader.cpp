@@ -24,7 +24,7 @@ namespace mugato {
         }
         buffer_reader in(data);
         std::string line;
-        in.read(line);
+        in.readline(line);
         return line.find(FntSignature) == 0;
     }
 
@@ -53,7 +53,7 @@ namespace mugato {
             if(s == std::string::npos)
             {
                 break;
-            }            
+            }
             std::string name = str.substr(p, s-p);
             s++;
             if(str[s] == FntAttrGroupToken)
@@ -80,7 +80,7 @@ namespace mugato {
         while(!in.end())
         {
             std::string line;
-            in.read(line);
+            in.readline(line);
             auto map = parseData(line);
             auto name = map[""];
             map.erase("");
@@ -94,7 +94,7 @@ namespace mugato {
                 baseline = gorn::String::convertTo<float>(map["base"]);
                 atlas.setLineHeight(
                     gorn::String::convertTo<float>(map["lineHeight"]));
-            } 
+            }
             else if(name == "page")
             {
                 auto i = gorn::String::convertTo<size_t>(map["id"]);
@@ -143,7 +143,7 @@ namespace mugato {
                 atlas.setRegion(name, region);
             }
         }
-        
+
         return atlas;
     }
 

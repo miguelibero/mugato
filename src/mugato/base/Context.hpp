@@ -6,8 +6,10 @@
 #include <mugato/spine/SpineManager.hpp>
 #include <mugato/label/LabelManager.hpp>
 #include <mugato/sprite/ParticleManager.hpp>
+#include <mugato/model/ModelManager.hpp>
 #include <mugato/scene/Entity.hpp>
 #include <mugato/base/Light.hpp>
+#include <mugato/scripting/ScriptingContext.hpp>
 #include <glm/glm.hpp>
 
 namespace mugato
@@ -19,16 +21,18 @@ namespace mugato
     private:
         gorn::Context _gorn;
         SpriteManager _sprites;
+        ParticleManager _particles;
         LabelManager _labels;
         SpineManager _skeletons;
-		ParticleManager _particles;
+        ModelManager _models;
         EntityStack* _scenes;
 		LightingSystem _lighting;
+        ScriptingContext _scripting;
         std::shared_ptr<Entity> _root;
-		bool _touching;
 
         double _fixedUpdateInterval;
         double _fixedUpdatesPerSecond;
+        bool _touching;
 
         void fixedUpdate(double dt);
 		void doTouch(const glm::vec2& p, Entity::TouchPhase phase);
@@ -58,11 +62,17 @@ namespace mugato
 		const ParticleManager& getParticles() const;
 		ParticleManager& getParticles();
 
+        const ModelManager& getModels() const;
+        ModelManager& getModels();
+
         const EntityStack& getScenes() const;
         EntityStack& getScenes();
 
 		const LightingSystem& getLighting() const;
 		LightingSystem& getLighting();
+
+        const ScriptingContext& getScripting() const;
+        ScriptingContext& getScripting();
 
         const Entity& getRoot() const;
         Entity& getRoot();

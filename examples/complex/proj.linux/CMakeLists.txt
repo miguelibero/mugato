@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 2.8) 
+cmake_minimum_required(VERSION 2.8)
 
-project(mugato_sprite)
+project(mugato_complex)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -20,5 +20,5 @@ include_directories(../../../lib/gorn/lib)
 include_directories(../../../lib/gorn/lib/buffer/src)
 
 file(GLOB SOURCES "../src/*.cpp")
-add_executable(sprite ${SOURCES})
-target_link_libraries(sprite mugato)
+add_executable(complex ${SOURCES})
+target_link_libraries(complex mugato)

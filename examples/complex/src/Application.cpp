@@ -57,41 +57,33 @@ void ComplexApplication::load()
 
 	auto scene = getMugato().getScenes().push();
 
-	auto scene3d = scene->addChild();
-	scene3d->setLayer(2);
-
 	auto scene2d = scene->addChild();
 	scene2d->setLayer(1);
 	scene2d->getTransform().setSize(getSize());
 	scene2d->addComponent<mugato::RenderInfoComponent>();
+
+	auto scene3d = scene->addChild();
+	scene3d->setLayer(2);
 
     getMugato().getLighting().add(mugato::LightType::Directional)
         .withLayer(2)
         .withPosition(glm::vec3(-1, 1, 0))
         .withColor(glm::vec3(0.5f));
 
-    auto& progDefs = getGorn().getPrograms().getDefinitions();
-    progDefs.set("assimp", [&progDefs](const std::string& name) {
-        return progDefs.get(mugato::ProgramKind::Light);
-    });
+	getMugato().getModels().getDefinitions().get("castle")
+		.withData("castle.fbx")
+		.withMaterialFilter([](gorn::MaterialDefinition& matDef) {
+			matDef.withProgram(mugato::ProgramKind::Light);
+			for (auto& pair : matDef.getTextures())
+			{
+				gorn::String::combinePath(pair.second, "fake/");
+			}
+	});
 
-    auto& matDefs = getGorn().getMaterials().getDefinitions();
-    matDefs.set("assimp", [&matDefs](const std::string& name) {
-        return matDefs.get("floor");
-    });
+	auto entity = scene3d->addChild();
+	entity->addComponent<mugato::ModelComponent>("castle");
 
-    getGorn().getFiles().addFilter("assimp", [](std::string& name) {
-        auto pos = name.find("..\\..\\..\\..\\models\\Collada\\");
-        if(pos == 0)
-        {
-            name = name.substr(27);
-        }
-    });
-
-	auto buffer = getGorn().getFiles().load("duck.fbx").get();
-	auto loader = mugato::AssimpEntityLoader(getGorn().getMaterials());
-	auto entity = loader.load(buffer);
-    entity->getTransform().setScale(0.03f);
+    entity->getTransform().setScale(0.06f);
     entity->getTransform().setPositionZ(3.0f);
 	scene3d->addChild(entity);
     rotateEntity(entity);
@@ -107,7 +99,6 @@ void ComplexApplication::load()
 
     gorn::Capabilities()
         .with(gorn::CapabilityType::DepthTest, true)
-        .withLineWidth(1.0f)
         .apply();
 }
 

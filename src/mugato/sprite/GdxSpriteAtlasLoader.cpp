@@ -11,7 +11,7 @@ namespace mugato
     GdxSpriteAtlasLoader::GdxSpriteAtlasLoader()
     {
     }
-    
+
     bool GdxSpriteAtlasLoader::validate(const buffer& data) const NOEXCEPT
     {
         return !data.binary();
@@ -26,7 +26,7 @@ namespace mugato
         // texture name
         while(line.empty() && !input.end())
         {
-            input.read(line);
+            input.readline(line);
             gorn::String::trim(line);
         }
         atlas.setMaterial(line);
@@ -38,7 +38,7 @@ namespace mugato
 
         while(!input.end())
         {
-            input.read(line);
+            input.readline(line);
             std::size_t sep = line.find(':');
             std::string n = line.substr(0, sep);
             std::string v = line.substr(sep+1);
@@ -69,7 +69,7 @@ namespace mugato
                     }
                     else if(n == "xy")
                     {
-                        sep = v.find(',');                       
+                        sep = v.find(',');
                         region.setPosition(
                             gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(0, sep)),
                             gorn::String::convertTo<SpriteAtlasRegion::value_type>(v.substr(sep+1)));
@@ -106,7 +106,7 @@ namespace mugato
                     region = SpriteAtlasRegion();
                     region.setOrigin(SpriteAtlasRegionOrigin::TopLeft);
                     regionName = line;
-                }             
+                }
             }
         }
         atlas.setRegion(regionName, region, regionIndex);

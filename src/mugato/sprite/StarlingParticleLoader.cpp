@@ -15,12 +15,12 @@ namespace mugato
     }
 
 	template<typename T>
-	T StarlingParticleLoadAttribute(const xml_node<>* node, T default, const char* name = "value")
+	T StarlingParticleLoadAttribute(const xml_node<>* node, T def, const char* name = "value")
 	{
 		auto attr = node->first_attribute(name);
 		if(attr == nullptr)
 		{
-			return default;
+			return def;
 		}
 		return gorn::String::convertTo<T>(attr->value());
 	}
@@ -44,7 +44,7 @@ namespace mugato
 		);
 	}
 
-	gorn::BlendFactor StarlingParticleGetBlendFactor(int type, gorn::BlendFactor default)
+	gorn::BlendFactor StarlingParticleGetBlendFactor(int type, gorn::BlendFactor def)
 	{
 		switch (type)
 		{
@@ -58,14 +58,14 @@ namespace mugato
 		case 0x305: return gorn::BlendFactor::OneMinusDstAlpha;
 		case 0x306: return gorn::BlendFactor::DstColor;
 		case 0x307: return gorn::BlendFactor::OneMinusDstColor;
-		default:    return default;
+		default:    return def;
 		}
 	}
 
-	gorn::BlendFactor StarlingParticleLoadBlendFactor(const xml_node<>* node, gorn::BlendFactor default)
+	gorn::BlendFactor StarlingParticleLoadBlendFactor(const xml_node<>* node, gorn::BlendFactor def)
 	{
 		return StarlingParticleGetBlendFactor(StarlingParticleLoadAttribute<int>(
-			node, -1), default);
+			node, -1), def);
 	}
 
 	ParticleEmitterMode StarlingParticleLoadEmitterMode(const xml_node<>* node)
@@ -78,7 +78,7 @@ namespace mugato
 			default: return ParticleEmitterMode::Normal;
 		}
 	}
-    
+
     bool StarlingParticleLoader::validate(const buffer& data) const NOEXCEPT
     {
         if(data.binary())
@@ -87,7 +87,6 @@ namespace mugato
         }
         xml_document<> doc;
 		doc.parse<0>(const_cast<char*>(data.c_str()));
-		auto lala = doc.first_node()->name();
         return std::string(doc.first_node()->name()) == "particleEmitterConfig";
     }
 
@@ -95,7 +94,7 @@ namespace mugato
     {
         xml_document<> doc;
 		doc.parse<0>(const_cast<char*>(data.c_str()));
-        
+
 		ParticleSystemConfig config;
         auto root = doc.first_node("particleEmitterConfig");
 		auto texture = root->first_node("texture");

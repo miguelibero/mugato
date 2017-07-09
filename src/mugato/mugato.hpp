@@ -50,10 +50,10 @@
 #include <mugato/scene/ButtonComponent.hpp>
 #include <mugato/scene/AlignComponent.hpp>
 #include <mugato/scene/MeshComponent.hpp>
+#include <mugato/scene/ModelComponent.hpp>
 #include <mugato/scene/CameraComponent.hpp>
 #include <mugato/scene/LightComponent.hpp>
 #include <mugato/scene/ParticleSystemComponent.hpp>
-#include <mugato/scene/AssimpEntityLoader.hpp>
 
 #include <mugato/action/Action.hpp>
 #include <mugato/action/EmptyAction.hpp>
@@ -65,5 +65,13 @@
 #include <mugato/spine/SpineSkeleton.hpp>
 #include <mugato/spine/SpineSkeletonComponent.hpp>
 #include <mugato/spine/SpineSkeletonDefinition.hpp>
+
+#include <mugato/model/AssimpModelDataLoader.hpp>
+#include <mugato/model/ModelDefinition.hpp>
+#include <mugato/model/ModelManager.hpp>
+#include <mugato/model/ModelData.hpp>
+#include <mugato/model/Model.hpp>
+
+#include <mugato/scripting/ScriptingContext.hpp>
 
 #endif

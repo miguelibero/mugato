@@ -1,13 +1,13 @@
 
 
-#include <mugato/scene/AssimpEntityLoader.hpp>
+#include <mugato/model/AssimpModelDataLoader.hpp>
 #include <mugato/scene/Entity.hpp>
 #include <mugato/scene/MeshComponent.hpp>
 #include <mugato/base/Exception.hpp>
+#include <gorn/base/String.hpp>
 #include <gorn/asset/Mesh.hpp>
+#include <gorn/gl/MaterialDefinition.hpp>
 #include <gorn/gl/MaterialManager.hpp>
-#include <gorn/gl/TextureManager.hpp>
-#include <gorn/gl/ProgramManager.hpp>
 #include <gorn/base/String.hpp>
 #include <buffer.hpp>
 #include <buffer_reader.hpp>
@@ -15,20 +15,21 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/mesh.h>
+#include <iostream>
 
 namespace mugato
 {
-	AssimpEntityLoader::AssimpEntityLoader(gorn::MaterialManager& materials, const std::string& prefix) NOEXCEPT:
-	_materials(materials), _prefix(prefix)
+    AssimpModelDataLoader::AssimpModelDataLoader(gorn::MaterialManager& materials) NOEXCEPT:
+	_materials(materials)
 	{
 	}
 
-	bool AssimpEntityLoader::validate(const buffer& data) const NOEXCEPT
+	bool AssimpModelDataLoader::validate(const buffer& data) const NOEXCEPT
 	{
 		return true;
 	}
 
-	glm::mat4 AssimpEntityLoaderLoadMatrix(const aiMatrix4x4& from)
+	glm::mat4 AssimpModelDataLoaderLoadTransform(const aiMatrix4x4& from)
 	{
 		glm::mat4 to;
 		to[0][0] = from.a1; to[1][0] = from.a2;
@@ -56,21 +57,12 @@ namespace mugato
 		{ aiTextureType_REFLECTION, gorn::UniformType::ReflectionTexture },
 	};
 
-	std::shared_ptr<gorn::Material> AssimpEntityLoader::loadMaterial(const aiMaterial* aimaterial) const
+	gorn::MaterialDefinition AssimpModelDataLoader::loadMaterial(const aiMaterial* aimaterial) const
 	{
+        gorn::MaterialDefinition def;
 		aiString aistr;
 		aimaterial->Get(AI_MATKEY_NAME, aistr);
-        std::string materialName(aistr.data);
-        gorn::String::addTag(materialName, _prefix);
-        if(_materials.validate(materialName))
-        {
-            return _materials.load(materialName);
-        }
-
-        auto programName = materialName;
-        gorn::String::addTag(programName, _prefix);
-        auto program = _materials.getPrograms().load(programName);
-		auto material = std::make_shared<gorn::Material>(program);
+        def.withProgram(aistr.data);
 
 		for (auto& type : _textureMap)
 		{
@@ -78,21 +70,16 @@ namespace mugato
 			for (unsigned i = 0; i < texCount; i++)
 			{
                 aimaterial->GetTexture(type.first, i, &aistr);
-                std::string textureName(aistr.data);
-                gorn::String::addTag(textureName, _prefix);
-				auto texture = _materials.getTextures().load(textureName);
-				material->setTexture(
-					gorn::UniformKind(type.second, i), texture);
+                def.withTexture(gorn::UniformKind(type.second, i), aistr.data);
 			}
 		}
-        _materials.preload(materialName, material);
-		return material;
+		return def;
 	}
 
-	std::shared_ptr<gorn::Mesh> AssimpEntityLoader::loadMesh(const aiMesh* aimesh) const
+	gorn::Mesh AssimpModelDataLoader::loadMesh(const aiMesh* aimesh) const
 	{
-		auto mesh = std::make_shared<gorn::Mesh>();
-        mesh->getElements().reserve(aimesh->mNumFaces*4);
+		gorn::Mesh mesh;
+        mesh.getElements().reserve(aimesh->mNumFaces*4);
 		for(unsigned i=0; i<aimesh->mNumFaces; i++)
 		{
 			auto& face = aimesh->mFaces[i];
@@ -102,14 +89,14 @@ namespace mugato
             {
                 elms[i].setDefault(face.mIndices[i]);
             }
-            mesh->addFace(elms);
+            mesh.addFace(elms);
 		}
 
-        mesh->reserveVertices<glm::vec3>(gorn::AttributeType::Position, aimesh->mNumVertices);
+        mesh.reserveVertices<glm::vec3>(gorn::AttributeType::Position, aimesh->mNumVertices);
         for(unsigned i = 0; i < aimesh->mNumVertices; i++)
         {
             auto& pos = aimesh->mVertices[i];
-            mesh->addVertex(gorn::AttributeType::Position, glm::vec3(
+            mesh.addVertex(gorn::AttributeType::Position, glm::vec3(
                 pos.x, pos.y, pos.z
             ));
         }
@@ -120,22 +107,22 @@ namespace mugato
             {
                 break;
             }
-            mesh->reserveVertices<glm::vec2>(gorn::AttributeKind(gorn::AttributeType::TexCoords, j),
+            mesh.reserveVertices<glm::vec2>(gorn::AttributeKind(gorn::AttributeType::TexCoords, j),
                 aimesh->mNumVertices);
             for(unsigned i = 0; i < aimesh->mNumVertices; i++)
             {
                 auto& uv = tex[i];
-                mesh->addVertex(gorn::AttributeKind(gorn::AttributeType::TexCoords, j),
+                mesh.addVertex(gorn::AttributeKind(gorn::AttributeType::TexCoords, j),
                     glm::vec2(uv.x, uv.y));
             }
         }
 		if (aimesh->HasNormals())
 		{
-            mesh->reserveVertices<glm::vec3>(gorn::AttributeType::Normal, aimesh->mNumVertices);
+            mesh.reserveVertices<glm::vec3>(gorn::AttributeType::Normal, aimesh->mNumVertices);
             for(unsigned i = 0; i < aimesh->mNumVertices; i++)
             {
                 auto& n = aimesh->mNormals[i];
-                mesh->addVertex(gorn::AttributeType::Normal, glm::vec3(
+                mesh.addVertex(gorn::AttributeType::Normal, glm::vec3(
                     n.x, n.y, n.z
                 ));
             }
@@ -144,31 +131,22 @@ namespace mugato
 		return mesh;
 	}
 
-	std::shared_ptr<Entity> AssimpEntityLoader::loadNode(const aiNode* node, const AssimpContext& ctx) const
+	ModelData AssimpModelDataLoader::loadNode(const aiNode* ainode, const std::vector<ModelDataMesh>& meshes) const
 	{
-		auto e = std::make_shared<Entity>();
-		auto m = AssimpEntityLoaderLoadMatrix(node->mTransformation);
-		e->getTransform().setMatrix(m);
-
-		for(unsigned i = 0; i < node->mNumMeshes; i++)
+        ModelData node;
+		node.setTransform(AssimpModelDataLoaderLoadTransform(ainode->mTransformation));
+		for(unsigned i = 0; i < ainode->mNumMeshes; i++)
 		{
-			auto meshIdx = node->mMeshes[i];
-			auto materialIdx = ctx.scene->mMeshes[meshIdx]->mMaterialIndex;
-			e->addComponent<MeshComponent>(
-				ctx.meshes[meshIdx],
-				ctx.materials[materialIdx]
-			);
+			node.addMesh(meshes.at(ainode->mMeshes[i]));
 		}
-
-		for(unsigned i = 0; i < node->mNumChildren; i++)
+		for(unsigned i = 0; i < ainode->mNumChildren; i++)
 		{
-			auto c = loadNode(node->mChildren[i], ctx);
-			e->addChild(c);
+			node.addChild(loadNode(ainode->mChildren[i], meshes));
 		}
-		return e;
+		return node;
 	}
 
-	std::shared_ptr<Entity> AssimpEntityLoader::load(const buffer& data) const
+	ModelData AssimpModelDataLoader::load(const buffer& data) const
 	{
 		Assimp::Importer importer;
 		auto scene = importer.ReadFileFromMemory(data.data(), data.size(), 0);
@@ -176,19 +154,27 @@ namespace mugato
 		{
 			throw Exception(importer.GetErrorString());
 		}
-
-		auto ctx = AssimpContext();
-		ctx.scene = scene;
+		
+        ModelData model;
+		std::vector<std::string> matDefNames;
+		matDefNames.reserve(scene->mNumMaterials);
 		for (unsigned i = 0; i < scene->mNumMaterials; i++)
 		{
-			auto m = scene->mMaterials[i];
-			ctx.materials.push_back(loadMaterial(m));
+			auto matDef = loadMaterial(scene->mMaterials[i]);
+			auto matDefName = matDef.getProgram();
+			_materials.getDefinitions().set(matDefName, matDef);
+			matDefNames.push_back(matDefName);
 		}
+		std::vector<ModelDataMesh> meshes;
+		meshes.reserve(scene->mNumMeshes);
 		for (unsigned i = 0; i < scene->mNumMeshes; i++)
 		{
-			auto aimesh = scene->mMeshes[i];
-			ctx.meshes.push_back(loadMesh(aimesh));
+			auto mesh = scene->mMeshes[i];			
+			meshes.push_back(ModelDataMesh{
+				std::make_shared<gorn::Mesh>(loadMesh(mesh)),
+				matDefNames[mesh->mMaterialIndex]
+			});
 		}
-		return loadNode(scene->mRootNode, ctx);
+		return loadNode(scene->mRootNode, meshes);
 	}
 }

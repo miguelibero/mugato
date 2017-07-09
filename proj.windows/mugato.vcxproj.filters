@@ -29,6 +29,12 @@
     <Filter Include="action">
       <UniqueIdentifier>{94047fbb-8143-4c84-ba59-be4b67d58031}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scripting">
+      <UniqueIdentifier>{4033f528-7da9-47af-93d7-a65cdf59750e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model">
+      <UniqueIdentifier>{a7593c9f-4b80-487d-81af-8bd16124fd9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\mugato\base\Kinds.cpp">
@@ -283,7 +289,25 @@
     <ClCompile Include="..\src\mugato\sprite\ParticleSystemProperties.cpp">
       <Filter>sprite</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\mugato\scene\AssimpEntityLoader.cpp">
+    <ClCompile Include="..\src\mugato\scripting\ScriptingContext.cpp">
+      <Filter>scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\model\ModelDefinition.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\model\ModelManager.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\model\Model.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\model\ModelData.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\model\AssimpModelDataLoader.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mugato\scene\ModelComponent.cpp">
       <Filter>scene</Filter>
     </ClCompile>
   </ItemGroup>
@@ -496,7 +520,25 @@
     <ClInclude Include="..\src\mugato\sprite\ParticleSystemProperties.hpp">
       <Filter>sprite</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\mugato\scene\AssimpEntityLoader.hpp">
+    <ClInclude Include="..\src\mugato\scripting\ScriptingContext.hpp">
+      <Filter>scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\model\ModelDefinition.hpp">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\model\ModelManager.hpp">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\model\Model.hpp">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\model\ModelData.hpp">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\model\AssimpModelDataLoader.hpp">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mugato\scene\ModelComponent.hpp">
       <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
